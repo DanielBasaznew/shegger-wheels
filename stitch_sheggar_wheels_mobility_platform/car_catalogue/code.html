@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-highest": "#e5e2db", "tertiary-container": "#390c00", "on-secondary": "#ffffff", "on-primary-container": "#7d848f", "inverse-on-surface": "#f3f0e9", "on-primary-fixed-variant": "#404751", "outline": "#75777c", "on-tertiary-fixed-variant": "#76331b", "background": "#fcf9f2", "secondary-fixed": "#d1ef67", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#3e4c00", "surface": "#fcf9f2", "on-tertiary-container": "#c16d51", "secondary-container": "#ceec64", "surface-container-lowest": "#ffffff", "tertiary": "#000000", "primary-fixed": "#dce3ee", "outline-variant": "#c5c6cb", "tertiary-fixed": "#ffdbd0", "on-primary": "#ffffff", "on-background": "#1c1c18", "secondary-fixed-dim": "#b6d24d", "primary": "#000000", "error": "#ba1a1a", "surface-variant": "#e5e2db", "on-error-container": "#93000a", "primary-fixed-dim": "#c0c7d2", "primary-container": "#151c24", "on-primary-fixed": "#151c24", "on-tertiary": "#ffffff", "tertiary-fixed-dim": "#ffb59d", "on-surface": "#1c1c18", "surface-dim": "#dcdad3", "surface-container-high": "#ebe8e1", "on-tertiary-fixed": "#390c00", "surface-tint": "#585f69", "surface-container": "#f1eee7", "inverse-primary": "#c0c7d2", "inverse-surface": "#31312c", "surface-bright": "#fcf9f2", "secondary": "#536600", "on-secondary-container": "#576a00", "on-error": "#ffffff", "on-surface-variant": "#44474b", "surface-container-low": "#f6f3ec", "on-secondary-fixed": "#171e00" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xs": "0.25rem", "margin-mobile": "1.25rem", "space-sm": "0.5rem", "gutter-mobile": "1rem", "space-xl": "2.5rem", "space-md": "1rem", "margin": "3rem", "space-lg": "1.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-hero-mobile": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-hero": [ "Plus Jakarta Sans" ], "label-caps": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "specs-tabular": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "title-md": [ "16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-lg": [ "18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" } ], "body-md": [ "15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "800" } ], "body-sm": [ "13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-caps": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "specs-tabular": [ "14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-fixed"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1360px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><a class="flex items-center gap-space-sm group" data-path="explore-cars" href="#"><img alt="Sheggar Wheels Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">Sheggar Wheels</span></a><div class="hidden sm:flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Addis Ababa</div></div><nav class="hidden lg:flex items-center gap-1 p-1 bg-surface-container rounded-full" data-active-classes="bg-primary-container text-on-primary font-title-md rounded-full px-4 py-2"><a aria-current="page" class="transition-colors bg-primary-container text-on-primary font-title-md rounded-full px-4 py-2" data-path="explore-cars" href="#">Explore Cars</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="how-it-works" href="#">How It Works</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="host-a-vehicle" href="#">Host a Vehicle</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="dashboard" href="#">Dashboard</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container font-specs-tabular text-specs-tabular text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">payments</span><span class="font-bold text-on-surface">ETB</span></div><a class="hidden md:inline-flex items-center justify-center px-4 py-2 rounded-full font-title-md text-title-md text-on-surface bg-surface-container-high hover:bg-surface-container-highest hover:text-on-surface transition-colors" data-path="sign-in" href="#">Demo Sign In</a><div class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-surface-container-low shadow-[0_1px_4px_rgba(0,0,0,0.05)] cursor-pointer hover:bg-surface-container transition-colors"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWnznfQfC1FiEM5hEdXfCJLDsnm_jxjnPMEPgifh7lcgPJsJ7RNg6xShcXz6ovsJgkEvezEANugbXoVkLDEV5M89URWZd9xZB4Ejz9NgW12LMQWMkm3Qebi--giTlaBIxVOszvK5YxfV0Arvh6tTNBIVkKw0PcvnNvu3gbYmeycELwPO5pvIxNbQNeHuBQ-PW5HKL14bXNXLPU9U147yjP2lLYURSXTGe4YCXT9NgNQG8dizeJ-sOO"/><div class="hidden xl:flex flex-col text-left leading-tight"><span class="font-title-md text-[13px] text-on-surface font-semibold">Dawit T.</span><span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Renter</span></div><span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
+<!-- Top Command Surface & Dynamic Search -->
+<section class="w-full bg-surface-container-low py-space-lg px-gutter">
+<div class="max-w-[1360px] mx-auto flex flex-col gap-space-md">
+<!-- Meta & Section Headline -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-on-surface-variant">Fleet Inventory • Addis Ababa Real-Time Sync</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Explore Cars in Addis Ababa</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">84 verified vehicles available for self-drive and hosted trips with TeleBirr secure escrow protection.</p>
+</div>
+<!-- Quick Summary Metrics -->
+<div class="hidden xl:flex items-center gap-space-md bg-surface-container px-space-md py-2.5 rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Instant Pickups</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface font-bold">42 Near Bole</span>
+</div>
+<div class="w-px h-7 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Avg. Day Rate</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface font-bold">5,200 ETB</span>
+</div>
+<div class="w-px h-7 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Insurance</span>
+<span class="font-specs-tabular text-specs-tabular text-secondary font-bold">Comprehensive</span>
+</div>
+</div>
+</div>
+<!-- Quick Search Bar & Sort Bar -->
+<div class="w-full bg-surface-container-lowest p-2 rounded-2xl shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center gap-2">
+<div class="relative flex-1 flex items-center">
+<span class="material-symbols-outlined text-outline absolute left-4 text-[22px]">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-low/60 rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline focus:bg-surface-container-lowest focus:outline-none transition-all" id="searchInput" placeholder="Search by make, model, or landmark (e.g. Prado, Bole, Kazanchis)..." type="text"/>
+<span class="material-symbols-outlined text-outline-variant absolute right-4 text-[20px] cursor-pointer hover:text-on-surface">tune</span>
+</div>
+<div class="flex items-center gap-2">
+<!-- Quick Date Selector -->
+<div class="hidden sm:flex items-center gap-2 bg-surface-container-low px-4 py-3 rounded-xl cursor-pointer hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">calendar_today</span>
+<div class="flex flex-col leading-none">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Trip Window</span>
+<span class="font-specs-tabular text-[13px] text-on-surface font-semibold">Today — +3 Days</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px]">keyboard_arrow_down</span>
+</div>
+<!-- Sort Dropdown -->
+<div class="relative flex-1 sm:flex-none">
+<select class="w-full sm:w-auto appearance-none bg-surface-container px-4 py-3.5 pr-10 rounded-xl font-title-md text-title-md text-on-surface cursor-pointer focus:outline-none" id="sortSelector">
+<option value="recommended">Sort: Recommended</option>
+<option value="price-asc">Price: Low to High</option>
+<option value="price-desc">Price: High to Low</option>
+<option value="rating">Top Rated (Superhosts)</option>
+<option value="newest">Newest Additions</option>
+</select>
+<span class="material-symbols-outlined text-on-surface-variant absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[20px]">expand_more</span>
+</div>
+<!-- Mobile Filter Sheet Trigger -->
+<button class="lg:hidden flex items-center justify-center p-3 rounded-xl bg-primary text-on-primary" id="mobileFilterBtn">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Active Filter Chips Bar -->
+<div class="flex items-center flex-wrap gap-2 pt-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mr-1">Active Filters:</span>
+<button class="filter-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface font-specs-tabular text-specs-tabular text-[13px] hover:bg-surface-container-high transition-colors">
+<span>Bole &amp; Kazanchis</span>
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button class="filter-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface font-specs-tabular text-specs-tabular text-[13px] hover:bg-surface-container-high transition-colors">
+<span>Automatic</span>
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button class="filter-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface font-specs-tabular text-specs-tabular text-[13px] hover:bg-surface-container-high transition-colors">
+<span>&lt; 6,000 ETB/day</span>
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button class="filter-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface font-specs-tabular text-specs-tabular text-[13px] hover:bg-surface-container-high transition-colors">
+<span>4+ Seats</span>
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-secondary hover:text-on-surface font-title-md text-[13px] transition-colors ml-auto sm:ml-2" id="resetAllFilters">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Reset all filters</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Split View: Interactive Sidebar & Fleet Inventory Grid -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter py-space-lg">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT FILTER SIDEBAR -->
+<aside class="lg:col-span-4 xl:col-span-3 hidden lg:flex flex-col gap-space-md sticky top-24 bg-surface-container-lowest p-space-md rounded-2xl shadow-sm" id="filterSidebar">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">filter_alt</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Refine Fleet</span>
+</div>
+<span class="font-specs-tabular text-specs-tabular text-secondary bg-secondary-container px-2 py-0.5 rounded-full text-[12px]">84 Available</span>
+</div>
+<!-- Neighborhood Checkboxes -->
+<div class="flex flex-col gap-2 pt-space-xs">
+<label class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Neighborhood Hub</label>
+<div class="flex flex-col gap-2 mt-1">
+<label class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container cursor-pointer transition-colors group">
+<span class="flex items-center gap-2.5">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary">Bole (Medhanialem/Atlas)</span>
+</span>
+<span class="font-specs-tabular text-[12px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">32</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container cursor-pointer transition-colors group">
+<span class="flex items-center gap-2.5">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary">Kazanchis (UNECA)</span>
+</span>
+<span class="font-specs-tabular text-[12px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">18</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container cursor-pointer transition-colors group">
+<span class="flex items-center gap-2.5">
+<input class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary">Old Airport / Sarbet</span>
+</span>
+<span class="font-specs-tabular text-[12px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">14</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container cursor-pointer transition-colors group">
+<span class="flex items-center gap-2.5">
+<input class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary">CMC &amp; Ayat</span>
+</span>
+<span class="font-specs-tabular text-[12px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">11</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container cursor-pointer transition-colors group">
+<span class="flex items-center gap-2.5">
+<input class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary">Piassa &amp; Arat Kilo</span>
+</span>
+<span class="font-specs-tabular text-[12px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">9</span>
+</label>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Daily Rate Range Slider -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Daily Budget (ETB)</label>
+<span class="font-specs-tabular text-specs-tabular text-secondary font-bold" id="priceDisplay">Max: 6,000 ETB</span>
+</div>
+<input class="w-full accent-primary h-2 bg-surface-container-high rounded-lg cursor-pointer my-2" id="priceSlider" max="12000" min="2000" step="500" type="range" value="6000"/>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex flex-col bg-surface-container p-2 rounded-lg">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Min Price</span>
+<span class="font-specs-tabular text-specs-tabular font-bold text-on-surface">2,000 ETB</span>
+</div>
+<div class="flex flex-col bg-surface-container p-2 rounded-lg">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Max Cap</span>
+<span class="font-specs-tabular text-specs-tabular font-bold text-on-surface" id="maxPriceTag">6,000 ETB</span>
+</div>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Transmission Segmented Radio -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Gearbox</label>
+<div class="grid grid-cols-3 gap-1 bg-surface-container p-1 rounded-xl">
+<button class="py-1.5 rounded-lg text-center font-title-md text-[13px] text-on-surface-variant hover:text-on-surface transition-all">All</button>
+<button class="py-1.5 rounded-lg text-center font-title-md text-[13px] bg-primary text-on-primary shadow-sm font-semibold transition-all">Auto</button>
+<button class="py-1.5 rounded-lg text-center font-title-md text-[13px] text-on-surface-variant hover:text-on-surface transition-all">Manual</button>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Vehicle Category -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Category</label>
+<div class="flex flex-wrap gap-1.5">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-title-md text-[13px] hover:bg-surface-container-high transition-colors">Compact Sedan</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-title-md text-[13px] shadow-sm">Midsize SUV</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-title-md text-[13px] hover:bg-surface-container-high transition-colors">4x4 Offroad</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-title-md text-[13px] hover:bg-surface-container-high transition-colors">Executive</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-title-md text-[13px] hover:bg-surface-container-high transition-colors">Minibus</button>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Seating Capacity -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Seating Capacity</label>
+<div class="grid grid-cols-3 gap-1.5">
+<button class="py-2 rounded-xl bg-surface-container text-on-surface font-specs-tabular text-specs-tabular text-center hover:bg-surface-container-high transition-colors">4–5</button>
+<button class="py-2 rounded-xl bg-primary text-on-primary font-specs-tabular text-specs-tabular text-center font-bold">6–7</button>
+<button class="py-2 rounded-xl bg-surface-container text-on-surface font-specs-tabular text-specs-tabular text-center hover:bg-surface-container-high transition-colors">8+</button>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Essential Addis Amenities -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Addis Expedition Features</label>
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span>Full Air Conditioning</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span>Bluetooth &amp; Apple CarPlay</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span>4WD / Differential Lock</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span>Long Distance (Bishoftu / Hawassa Allowed)</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span>Roof Luggage Rack</span>
+</label>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full py-3 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-all flex items-center justify-center gap-2 shadow-sm">
+<span>Apply Selected Filters</span>
+<span class="material-symbols-outlined text-[18px]">done</span>
+</button>
+</div>
+</aside>
+<!-- RIGHT VEHICLE GRID & DISCOVERY CANVAS -->
+<div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-space-lg">
+<!-- Live Filter Feedback Ribbon -->
+<div class="flex items-center justify-between bg-surface-container p-space-sm rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">local_shipping</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface">Showing <strong class="font-bold">6</strong> of <strong class="font-bold">84</strong> verified vehicles in Addis Ababa</span>
+</div>
+<div class="hidden sm:flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary-container"></span>
+<span>Live TeleBirr instant booking enabled</span>
+</div>
+</div>
+<!-- 6 Bespoke Automotive Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-space-md">
+<!-- CARD 1: Prado TXL -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+<!-- Image Showcase -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Modern dark charcoal 2023 Toyota Land Cruiser Prado TXL parked in front of contemporary glass highrise architecture in Bole Addis Ababa, clean soft natural daylight, cinematic vehicle showcase with obsidian reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZqYasoU20M8UuLX0S8FE7jKeTeZOcCFXXCQGhKUZoEUmA7Ga_9Sv6YVKINJIdRdqApO3C2TGxcC0Aot7TBFDO6SMKWaFqE9XjsD1CvhXLFwgXRCyKZuda2EZWW5NdbGPcCQTTQFcvPCrAdGMCRuV2JijdcWDQFAkXHN__8E9nXWJKSmKC4J9HOKDIuzD_9Lqe1SUVXEn37SaxR_U4eL-09R8xogP2tYMRSdsk5N8RkKvQGRJdTvNT"/>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/85 backdrop-blur-md text-on-primary font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-secondary-fixed text-[14px]">bolt</span>
+<span>INSTANT EXPEDITION</span>
+</div>
+<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase">
+                Bole Medhanialem
+              </div>
+<div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-secondary-container text-on-secondary-fixed font-specs-tabular text-[12px] font-bold">
+                7 Seater • 4x4
+              </div>
+</div>
+<!-- Content Body -->
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Executive 4x4</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+<span class="material-symbols-outlined text-secondary text-[16px]">star</span>
+<span class="font-bold">4.98</span>
+<span class="text-on-surface-variant">(42 trips)</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors">
+                  Toyota Land Cruiser Prado TXL
+                </h2>
+<span class="font-specs-tabular text-[13px] text-on-surface-variant">2023 • Automatic • Dual Tank Offroad</span>
+</div>
+<!-- Specs Strip -->
+<div class="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">airline_seat_recline_normal</span> 7 Seats</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">settings</span> Auto AWD</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">local_gas_station</span> Diesel</span>
+</div>
+<!-- Host Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">AK</div>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-[13px] text-on-surface">Abebe K.</span>
+<span class="font-label-caps text-[9px] text-secondary uppercase font-bold">Superhost</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
+<span>ID &amp; TeleBirr OK</span>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="font-specs-tabular text-headline-sm font-bold text-on-surface">9,500 <span class="text-[13px] font-normal text-on-surface-variant">ETB / day</span></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">Includes Comprehensive Cover</span>
+</div>
+<a class="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- CARD 2: Hyundai Tucson SmartStream -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+<!-- Image Showcase -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Glossy silver 2022 Hyundai Tucson crossover parked in Kazanchis near modern ECA conference hall, soft evening city glow, warm limestone reflections, high detail sharp editorial automotive photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6f_SjYwhtZChDXrlVjKJ-yU9KhL9SmxErlUlvUMNUofNTfBY-1HmEo_Uy7B3XoxUBOFfkzPbdgAG8qRZDt2vp-aRuE6eMharRCAcLX54TwzGxPYe60e_typQ2hlhD40hK1pGrGkHpWMlF4T1AW42vpV0jtQDjTE5u-PRFbAxWvnTbhQ_R5MfDX-A9Tgnh8As2CHJk8zoClSw6SXp_giVTd5Q2GVj3ev_VjjsF9J5qfct8BC2TUPhU"/>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-fixed font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">electric_bolt</span>
+<span>INSTANT BOOK</span>
+</div>
+<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase">
+                Kazanchis UNECA
+              </div>
+<div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-surface-container-highest text-on-surface font-specs-tabular text-[12px] font-bold">
+                SmartStream • AWD
+              </div>
+</div>
+<!-- Content Body -->
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Midsize Urban SUV</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+<span class="material-symbols-outlined text-secondary text-[16px]">star</span>
+<span class="font-bold">4.93</span>
+<span class="text-on-surface-variant">(31 trips)</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors">
+                  Hyundai Tucson SmartStream
+                </h2>
+<span class="font-specs-tabular text-[13px] text-on-surface-variant">2022 • Automatic • Panoramic Sunroof</span>
+</div>
+<!-- Specs Strip -->
+<div class="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">airline_seat_recline_normal</span> 5 Seats</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">settings</span> Auto Smart</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">local_gas_station</span> Petrol</span>
+</div>
+<!-- Host Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">SM</div>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-[13px] text-on-surface">Sara M.</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant uppercase">Verified Host</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">flash_on</span>
+<span>Instant Confirmation</span>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="font-specs-tabular text-headline-sm font-bold text-on-surface">4,800 <span class="text-[13px] font-normal text-on-surface-variant">ETB / day</span></span>
+<span class="font-label-caps text-[10px] text-secondary font-bold">Great Addis Commuter Value</span>
+</div>
+<a class="px-4 py-2.5 rounded-xl bg-secondary-container text-on-secondary-fixed font-title-md text-title-md hover:bg-secondary-fixed-dim transition-colors inline-flex items-center gap-1.5 font-bold" href="#">
+<span>Instant Book</span>
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+</a>
+</div>
+</div>
+</div>
+<!-- CARD 3: Suzuki Dzire GLX -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+<!-- Image Showcase -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Clean pearl white Suzuki Dzire GLX compact sedan parked along modern CMC boulevard in Addis Ababa, bright natural midday lighting, clean composition, high clarity automotive render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdWgfuR_So5ymFVn3Jx6Igq0fc2ysWwiNBa8jsO37UejIhVOlAABijHipnAsOXArrTddnsgostX0kSCqy0XiDxdT5SkPNSXGSgYp08OzYLd5aEGREgc78s5A6P0Q54o12pDUh_HQLYJMRBNCM_cDo5NLU45JUuZjfTB32vOJEyCraDzBO9joXYiqOKBXIDiTVA1ZxqsnPgOomITOIxWF7BFN5OeuA7nWYNDaxRzB00zPQXtE1-Ol9g"/>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-secondary text-[14px]">eco</span>
+<span>ULTRA ECONOMY</span>
+</div>
+<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase">
+                CMC Michael
+              </div>
+<div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-surface-container-highest text-on-surface font-specs-tabular text-[12px] font-bold">
+                1.2L • Low Fuel
+              </div>
+</div>
+<!-- Content Body -->
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Compact Sedan</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+<span class="material-symbols-outlined text-secondary text-[16px]">star</span>
+<span class="font-bold">4.89</span>
+<span class="text-on-surface-variant">(19 trips)</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors">
+                  Suzuki Dzire GLX
+                </h2>
+<span class="font-specs-tabular text-[13px] text-on-surface-variant">2021 • Manual 5-Speed • 22km/L Economy</span>
+</div>
+<!-- Specs Strip -->
+<div class="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">airline_seat_recline_normal</span> 5 Seats</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">settings</span> Manual</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">local_gas_station</span> 1.2L Petrol</span>
+</div>
+<!-- Host Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">YT</div>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-[13px] text-on-surface">Yonas T.</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant uppercase">Local Resident</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+<span>Free Cancellation</span>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="font-specs-tabular text-headline-sm font-bold text-on-surface">2,200 <span class="text-[13px] font-normal text-on-surface-variant">ETB / day</span></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">Deposit: 5,000 ETB (TeleBirr Hold)</span>
+</div>
+<a class="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- CARD 4: Toyota RAV4 Hybrid -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+<!-- Image Showcase -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Metallic deep blue 2022 Toyota RAV4 Hybrid crossover parked on a tree-lined residential street in Old Airport Sarbet Addis Ababa, morning golden sunlight, architectural framing, sleek crisp composition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-oRmqTAp2lpKUXQn5FfXv4sYeh7nlapIkuxl8lb6EUVyttY-tPKuGc-FwAkOrgqLmDUOkh-PkbiR-_AaopvrGnm2NL1v1Os1UK5rtK791WUCVHkBhapb8VwMJRro33NJHPotlFfaEXmzaUp3tbr0zceX8eR2LiYpcRsyUy31veWMON998yIY7nSpEXAAESKChntHSxgY8trHK3CItCG8JeT0lSzxNpbhbXG6PRV1ZNX5Vxbr_Jg4x"/>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-secondary text-[14px]">battery_charging_full</span>
+<span>SELF-CHARGING HYBRID</span>
+</div>
+<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase">
+                Sarbet Old Airport
+              </div>
+<div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-secondary-container text-on-secondary-fixed font-specs-tabular text-[12px] font-bold">
+                E-Four AWD
+              </div>
+</div>
+<!-- Content Body -->
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Eco SUV</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+<span class="material-symbols-outlined text-secondary text-[16px]">star</span>
+<span class="font-bold">4.95</span>
+<span class="text-on-surface-variant">(28 trips)</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors">
+                  Toyota RAV4 Hybrid AWD
+                </h2>
+<span class="font-specs-tabular text-[13px] text-on-surface-variant">2022 • e-CVT Automatic • Low Emissions</span>
+</div>
+<!-- Specs Strip -->
+<div class="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">airline_seat_recline_normal</span> 5 Seats</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">electric_car</span> Hybrid AWD</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">luggage</span> 580L Boot</span>
+</div>
+<!-- Host Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">TB</div>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-[13px] text-on-surface">Tigist B.</span>
+<span class="font-label-caps text-[9px] text-secondary uppercase font-bold">Superhost</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">offline_pin</span>
+<span>Doorstep Dropoff</span>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="font-specs-tabular text-headline-sm font-bold text-on-surface">5,400 <span class="text-[13px] font-normal text-on-surface-variant">ETB / day</span></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">Unlimited Km in Sheggar Basin</span>
+</div>
+<a class="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- CARD 5: Mitsubishi Pajero Sport -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+<!-- Image Showcase -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Rugged metallic bronze 2020 Mitsubishi Pajero Sport 4WD off-road SUV ready for travel, parked near Bole Atlas Addis Ababa, dramatic mountain backdrop in far distance, sharp studio-level lighting on obsidian navy body" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDaBQEFA-4_t13UhSJ6Qs2FvHrfppmOMe84VSTafguCsKWQqqpB0e6m8DFV1SqgOyZ28NqXUda5eQggp0teCdyPA42puaPcrRSYnzEPjjg6R9uckfg_aXGSlRPt2mYEnhYhIZ_6-W2Jil2p1AQzR6m9TgtsPlu_Y5gZrsElSUvXp0mWVJPHU_VRg_Ft7zLufYI-zJoETXckw-1v2tsIPhaS45YZ13af602qh6u-vUQW057dRhed42g"/>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/85 backdrop-blur-md text-on-primary font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-secondary-fixed text-[14px]">terrain</span>
+<span>EXPEDITION READY</span>
+</div>
+<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase">
+                Bole Atlas
+              </div>
+<div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-surface-container-highest text-on-surface font-specs-tabular text-[12px] font-bold">
+                Super Select 4WD-II
+              </div>
+</div>
+<!-- Content Body -->
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Heavy Duty 7-Seat</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+<span class="material-symbols-outlined text-secondary text-[16px]">star</span>
+<span class="font-bold">4.91</span>
+<span class="text-on-surface-variant">(38 trips)</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors">
+                  Mitsubishi Pajero Sport
+                </h2>
+<span class="font-specs-tabular text-[13px] text-on-surface-variant">2020 • 8-Speed Auto • Rear Diff Lock</span>
+</div>
+<!-- Specs Strip -->
+<div class="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">airline_seat_recline_normal</span> 7 Seats</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">tune</span> 4WD High/Low</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">roofing</span> Heavy Rack</span>
+</div>
+<!-- Host Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">HG</div>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-[13px] text-on-surface">Henok G.</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant uppercase">Diaspora Host</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">explore</span>
+<span>Bishoftu / Wenchi OK</span>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="font-specs-tabular text-headline-sm font-bold text-on-surface">7,200 <span class="text-[13px] font-normal text-on-surface-variant">ETB / day</span></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">Rift Valley Clearance Included</span>
+</div>
+<a class="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- CARD 6: Mercedes-Benz C200 AMG Line -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+<!-- Image Showcase -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Obsidian black 2023 Mercedes-Benz C200 AMG Line executive luxury sedan parked near diplomatic compound around Japanese Embassy in Bole Addis Ababa, refined warm dusk lighting, reflections on polished body, high luxury style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA13Jb1KrLwz6BOTQspbLrP02BvicK63T6wVkblfMb6aVlwT7VMgL5BTMjebCTm6fE8_yHbBenyZKnr2NuwFW8Sqhe3jW6yXATdrlqrqU9So9MP6razSeJRHAB39qaQvl9l3Yyk4H1-UwvyRO1dR2RtVZ_9Ve856Xq9ZFG4vpTie-r0OpyT_7d0V1nVpjtEdXcd6VWGuhoQAD4n5Z62U4uiRvbzmp9rMdH4K9B6mfkCvqJtOGpLP4WF"/>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-fixed font-label-caps text-label-caps font-bold">
+<span class="material-symbols-outlined text-[14px]">hotel_class</span>
+<span>EXECUTIVE CLASS</span>
+</div>
+<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase">
+                Bole Embassy
+              </div>
+<div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-primary text-on-primary font-specs-tabular text-[12px] font-bold">
+                AMG Sport Pack
+              </div>
+</div>
+<!-- Content Body -->
+<div class="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Prestige Executive</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+<span class="material-symbols-outlined text-secondary text-[16px]">star</span>
+<span class="font-bold">4.99</span>
+<span class="text-on-surface-variant">(53 trips)</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors">
+                  Mercedes C200 AMG Line
+                </h2>
+<span class="font-specs-tabular text-[13px] text-on-surface-variant">2023 • 9G-Tronic • Burmester Surround Sound</span>
+</div>
+<!-- Specs Strip -->
+<div class="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">airline_seat_recline_normal</span> 5 Seats</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">auto_transmission</span> 9-Speed</span>
+<span class="text-outline-variant">/</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">workspace_premium</span> Chauffeur Ready</span>
+</div>
+<!-- Host Meta -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">DW</div>
+<div class="flex flex-col leading-tight">
+<span class="font-title-md text-[13px] text-on-surface">Daniel W.</span>
+<span class="font-label-caps text-[9px] text-secondary uppercase font-bold">Top Ambassador</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">security</span>
+<span>VIP Chauffeur Option</span>
+</div>
+</div>
+<!-- Pricing & Action -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="font-specs-tabular text-headline-sm font-bold text-on-surface">8,200 <span class="text-[13px] font-normal text-on-surface-variant">ETB / day</span></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">VIP Airport Meet &amp; Greet Included</span>
+</div>
+<a class="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5" href="#">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination Controls -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-sm mt-space-sm">
+<div class="font-specs-tabular text-specs-tabular text-on-surface-variant">
+            Showing <span class="font-bold text-on-surface">1–6</span> of <span class="font-bold text-on-surface">84</span> cars in Addis Ababa
+          </div>
+<div class="flex items-center gap-1.5">
+<button class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-primary text-on-primary font-specs-tabular text-specs-tabular font-bold shadow-sm">1</button>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-on-surface font-specs-tabular text-specs-tabular hover:bg-surface-container-high transition-colors">2</button>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-on-surface font-specs-tabular text-specs-tabular hover:bg-surface-container-high transition-colors">3</button>
+<span class="px-1 text-on-surface-variant font-bold">…</span>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-on-surface font-specs-tabular text-specs-tabular hover:bg-surface-container-high transition-colors">14</button>
+<button class="px-3 h-10 rounded-xl bg-surface-container text-on-surface flex items-center gap-1 font-title-md text-[13px] hover:bg-surface-container-high transition-colors">
+<span>Next Page</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Interactive Empty State Preview (Interactive Toggle for UI Testing) -->
+<div class="w-full bg-surface-container-low p-space-lg rounded-2xl flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[28px] text-secondary">manage_search</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Can't locate a specific model?</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5 max-w-xl">
+                No cars match your exact criteria? Try widening your price range, relaxing transmission locks, or exploring nearby neighborhoods like Bole Atlas or Sarbet.
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="px-4 py-2.5 rounded-xl bg-surface-container-highest hover:bg-surface-container text-on-surface font-title-md text-title-md transition-colors" id="resetFromBanner">
+              Reset Filters
+            </button>
+<a class="px-4 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-title-md text-title-md transition-colors flex items-center gap-1.5" data-path="host-a-vehicle" href="#">
+<span>Request Custom Model</span>
+<span class="material-symbols-outlined text-[16px]">north_east</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  // Price Slider Live Binding
+  const slider = document.getElementById('priceSlider');
+  const priceDisplay = document.getElementById('priceDisplay');
+  const maxPriceTag = document.getElementById('maxPriceTag');
+
+  if (slider && priceDisplay && maxPriceTag) {
+    slider.addEventListener('input', (e) => {
+      const val = Number(e.target.value).toLocaleString();
+      priceDisplay.textContent = `Max: ${val} ETB`;
+      maxPriceTag.textContent = `${val} ETB`;
+    });
+  }
+
+  // Filter Chip Removal Micro-interaction
+  const filterChips = document.querySelectorAll('.filter-chip');
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.style.transform = 'scale(0.85)';
+      chip.style.opacity = '0';
+      setTimeout(() => {
+        chip.remove();
+      }, 180);
+    });
+  });
+
+  // Reset Filters Demo
+  const resetBtn = document.getElementById('resetAllFilters');
+  const resetBannerBtn = document.getElementById('resetFromBanner');
+  const searchInput = document.getElementById('searchInput');
+
+  const triggerReset = () => {
+    if (searchInput) searchInput.value = '';
+    if (slider) {
+      slider.value = 12000;
+      slider.dispatchEvent(new Event('input'));
+    }
+  };
+
+  if (resetBtn) resetBtn.addEventListener('click', triggerReset);
+  if (resetBannerBtn) resetBannerBtn.addEventListener('click', triggerReset);
+
+  // Mobile Filter Drawer Toggle
+  const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+  const filterSidebar = document.getElementById('filterSidebar');
+  if (mobileFilterBtn && filterSidebar) {
+    mobileFilterBtn.addEventListener('click', () => {
+      filterSidebar.classList.toggle('hidden');
+      filterSidebar.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+</script></main><footer class="w-full bg-surface-container-low text-on-surface-variant mt-space-xl"><div class="max-w-[1360px] mx-auto px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl"><div class="lg:col-span-5 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Sheggar Wheels Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"/><span class="font-headline-sm text-headline-sm text-on-surface">Sheggar Wheels</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Next-generation peer-to-peer automotive mobility in Addis Ababa. Direct, verified car sharing built for effortless metropolitan transit and diaspora expeditions without traditional car rental friction.</p><div class="flex items-center gap-space-sm"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-specs-tabular text-specs-tabular"><span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span><span>100% Verified Hosts &amp; TeleBirr Escrow</span></div></div></div><div class="lg:col-span-3 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Active Hubs in Addis</span><ul class="flex flex-wrap gap-2"><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Bole</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Kazanchis</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Old Airport</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Piassa</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Sarbet</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">CMC</li></ul></div><div class="lg:col-span-2 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Platform</span><div class="flex flex-col gap-2 font-body-md text-body-md"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="explore-cars" href="#">Fleet Inventory</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#">Protection &amp; Terms</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="host-a-vehicle" href="#">List Your Car</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard" href="#">Fleet Portal</a></div></div><div class="lg:col-span-2 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Verification</span><div class="flex flex-col gap-2 font-body-md text-body-md"><span class="text-on-surface-variant">Addis Ababa Transport Bureau Sync</span><span class="text-on-surface-variant">Chapa &amp; TeleBirr Rails</span><span class="text-on-surface-variant">24/7 Roadside Assistance</span></div></div></div><div class="pt-space-md bg-surface-container-high/40 rounded-xl px-space-md py-space-sm flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[20px]">info</span><span class="font-specs-tabular text-specs-tabular text-on-surface">Simulated Prototype for Demonstration Purposes</span></div><span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Sheggar Wheels P2P Inc. Addis Ababa, Ethiopia. All rights reserved.</span></div></div></footer></body></html>

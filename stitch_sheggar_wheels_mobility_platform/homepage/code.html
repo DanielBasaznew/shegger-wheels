@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-highest": "#e5e2db", "tertiary-container": "#390c00", "on-secondary": "#ffffff", "on-primary-container": "#7d848f", "inverse-on-surface": "#f3f0e9", "on-primary-fixed-variant": "#404751", "outline": "#75777c", "on-tertiary-fixed-variant": "#76331b", "background": "#fcf9f2", "secondary-fixed": "#d1ef67", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#3e4c00", "surface": "#fcf9f2", "on-tertiary-container": "#c16d51", "secondary-container": "#ceec64", "surface-container-lowest": "#ffffff", "tertiary": "#000000", "primary-fixed": "#dce3ee", "outline-variant": "#c5c6cb", "tertiary-fixed": "#ffdbd0", "on-primary": "#ffffff", "on-background": "#1c1c18", "secondary-fixed-dim": "#b6d24d", "primary": "#000000", "error": "#ba1a1a", "surface-variant": "#e5e2db", "on-error-container": "#93000a", "primary-fixed-dim": "#c0c7d2", "primary-container": "#151c24", "on-primary-fixed": "#151c24", "on-tertiary": "#ffffff", "tertiary-fixed-dim": "#ffb59d", "on-surface": "#1c1c18", "surface-dim": "#dcdad3", "surface-container-high": "#ebe8e1", "on-tertiary-fixed": "#390c00", "surface-tint": "#585f69", "surface-container": "#f1eee7", "inverse-primary": "#c0c7d2", "inverse-surface": "#31312c", "surface-bright": "#fcf9f2", "secondary": "#536600", "on-secondary-container": "#576a00", "on-error": "#ffffff", "on-surface-variant": "#44474b", "surface-container-low": "#f6f3ec", "on-secondary-fixed": "#171e00" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xs": "0.25rem", "margin-mobile": "1.25rem", "space-sm": "0.5rem", "gutter-mobile": "1rem", "space-xl": "2.5rem", "space-md": "1rem", "margin": "3rem", "space-lg": "1.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-hero-mobile": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-hero": [ "Plus Jakarta Sans" ], "label-caps": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "specs-tabular": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "title-md": [ "16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-lg": [ "18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" } ], "body-md": [ "15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "800" } ], "body-sm": [ "13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-caps": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "specs-tabular": [ "14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-fixed"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1360px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><a class="flex items-center gap-space-sm group" data-path="explore-cars" href="#"><img alt="Sheggar Wheels Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">Sheggar Wheels</span></a><div class="hidden sm:flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Addis Ababa</div></div><nav class="hidden lg:flex items-center gap-1 p-1 bg-surface-container rounded-full" data-active-classes="bg-primary-container text-on-primary font-title-md rounded-full px-4 py-2"><a aria-current="page" class="transition-colors bg-primary-container text-on-primary font-title-md rounded-full px-4 py-2" data-path="explore-cars" href="#">Explore Cars</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="how-it-works" href="#">How It Works</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="host-a-vehicle" href="#">Host a Vehicle</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="dashboard" href="#">Dashboard</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container font-specs-tabular text-specs-tabular text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">payments</span><span class="font-bold text-on-surface">ETB</span></div><a class="hidden md:inline-flex items-center justify-center px-4 py-2 rounded-full font-title-md text-title-md text-on-surface bg-surface-container-high hover:bg-surface-container-highest hover:text-on-surface transition-colors" data-path="sign-in" href="#">Demo Sign In</a><div class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-surface-container-low shadow-[0_1px_4px_rgba(0,0,0,0.05)] cursor-pointer hover:bg-surface-container transition-colors"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWnznfQfC1FiEM5hEdXfCJLDsnm_jxjnPMEPgifh7lcgPJsJ7RNg6xShcXz6ovsJgkEvezEANugbXoVkLDEV5M89URWZd9xZB4Ejz9NgW12LMQWMkm3Qebi--giTlaBIxVOszvK5YxfV0Arvh6tTNBIVkKw0PcvnNvu3gbYmeycELwPO5pvIxNbQNeHuBQ-PW5HKL14bXNXLPU9U147yjP2lLYURSXTGe4YCXT9NgNQG8dizeJ-sOO"/><div class="hidden xl:flex flex-col text-left leading-tight"><span class="font-title-md text-[13px] text-on-surface font-semibold">Dawit T.</span><span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Renter</span></div><span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
+<!-- Top Subtle Notice Badge -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter pt-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-high/60 backdrop-blur-sm rounded-full py-2 px-space-md">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="inline-flex w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface">New in Sheggar: TeleBirr Escrow direct verification active across 6 metropolitan hubs</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="hidden sm:inline font-specs-tabular text-specs-tabular text-on-surface-variant">Live Fleet Availability: 84 Cars</span>
+<a class="inline-flex items-center gap-1 font-label-caps text-label-caps text-secondary uppercase hover:underline" data-path="explore-cars" href="#">
+          Browse Live Map
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Hero Section -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter pt-space-lg pb-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+<!-- Text & Value Prop -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-surface-container font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
+          Verified Addis Ababa Car Sharing
+        </div>
+<h1 class="font-display-hero text-display-hero text-on-surface tracking-tight">
+          Effortless car rental for <span class="text-secondary underline decoration-secondary/30 underline-offset-8">modern Addis Ababa</span>.
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+          Unlock vetted local vehicles from trusted hosts across Bole, Kazanchis, Old Airport, and beyond. Instant booking, transparent ETB pricing, and seamless simulated TeleBirr escrow.
+        </p>
+<!-- Trust Badges Strip -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs pt-space-sm">
+<div class="flex flex-col bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">350+</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Vetted Vehicles</span>
+</div>
+<div class="flex flex-col bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">4.96 ★</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Avg Host Rating</span>
+</div>
+<div class="flex flex-col bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">0 ETB</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Hidden Deposit Fee</span>
+</div>
+<div class="flex flex-col bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<span class="font-headline-sm text-headline-sm text-secondary">Instant</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">TeleBirr Escrow</span>
+</div>
+</div>
+</div>
+<!-- Hero Visual Articulation -->
+<div class="lg:col-span-5 relative">
+<div class="relative w-full h-[460px] rounded-2xl overflow-hidden shadow-xl bg-primary-container">
+<img class="w-full h-full object-cover" data-alt="Modern black luxury SUV parked along the contemporary architectural glass facade of Bole Road in Addis Ababa during golden hour sunset, showing warm limestone reflections, geometric modern urban backdrop, pristine vehicle details, editorial automotive photography in warm mineral tones and deep obsidian shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkoQCVokNx-AtTfU36yH5-khyiPu33FhoYLPwIgmjQkMxXqJ3ZT62GA26ZZlPypMkny8lbc8fluY8mqm4gr2tDk41N8xIuSadKZ-NfAj_vDnniCUSXN1xTB_zcqtBgeJH4Jnp6ruhu58_mGzizTDc4mwttS4Yb0noIfBw6nzOmMcJ5BgTI1jEigZ4s-I2BvdUnHOPbadzeYdCH2QWtfBvu0U0vBGU4E95eQ3ljPOiy2ksJaoX1BS4i"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent opacity-85"></div>
+<!-- Floating Status Capsule -->
+<div class="absolute bottom-5 left-5 right-5 p-4 rounded-xl bg-surface-container-lowest/95 backdrop-blur-md shadow-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[20px]">electric_car</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Available in Bole Medhanialem</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Toyota Land Cruiser TXL • Ready in 15m</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-specs-tabular text-specs-tabular text-on-surface block">9,500 ETB</span>
+<span class="font-label-caps text-[10px] text-secondary font-bold uppercase">Escrow Locked</span>
+</div>
+</div>
+</div>
+<!-- Decorative Asymmetrical Floating Accent Card -->
+<div class="hidden sm:flex absolute -top-4 -right-4 p-3 bg-secondary-fixed text-on-secondary-fixed rounded-xl shadow-md items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">shield_with_heart</span>
+<span class="font-specs-tabular text-specs-tabular">Full Comprehensive Coverage Included</span>
+</div>
+</div>
+</div>
+<!-- Integrated Booking & Engine Filter Panel -->
+<div class="mt-space-lg w-full bg-surface-container-lowest rounded-2xl shadow-xl p-space-md sm:p-space-lg">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">tune</span>
+<span class="font-title-md text-title-md text-on-surface">Quick Reserve Dispatch</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-high p-1 rounded-full text-on-surface">
+<button class="px-3 py-1 rounded-full text-title-md font-title-md bg-surface text-on-surface shadow-sm">Daily Rental</button>
+<button class="px-3 py-1 rounded-full text-title-md font-title-md text-on-surface-variant hover:text-on-surface">Chauffeured / VIP</button>
+<button class="px-3 py-1 rounded-full text-title-md font-title-md text-on-surface-variant hover:text-on-surface">Airport Transfer</button>
+</div>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-sm" onsubmit="event.preventDefault(); window.location.href='#fleet';">
+<!-- Pick-up Hub -->
+<div class="lg:col-span-3 flex flex-col bg-surface-container-low hover:bg-surface-container p-3 rounded-xl transition-colors">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+            Pick-up Hub in Addis
+          </label>
+<select class="bg-transparent font-title-md text-title-md text-on-surface outline-none cursor-pointer">
+<option value="bole-medhanialem">Bole (Medhanialem / Atlas)</option>
+<option value="kazanchis">Kazanchis Diplomatic Quarter</option>
+<option value="old-airport">Old Airport &amp; Sarbet</option>
+<option value="cmc">CMC / Ayat Hub</option>
+<option value="piassa">Piassa &amp; Churchill Ave</option>
+<option value="gerji">Gerji &amp; Jackros</option>
+</select>
+</div>
+<!-- Date Range -->
+<div class="lg:col-span-3 flex flex-col bg-surface-container-low hover:bg-surface-container p-3 rounded-xl transition-colors">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            Pick-up &amp; Drop-off
+          </label>
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Oct 24, 10:00 AM</span>
+<span class="text-on-surface-variant font-specs-tabular">→</span>
+<span class="font-title-md text-title-md text-on-surface">Oct 27, 6:00 PM</span>
+</div>
+<span class="font-label-caps text-[10px] text-secondary font-bold mt-1">3 Days Rental Duration</span>
+</div>
+<!-- Vehicle Category / Transmission -->
+<div class="lg:col-span-3 flex flex-col bg-surface-container-low hover:bg-surface-container p-3 rounded-xl transition-colors">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[14px]">directions_car</span>
+            Vehicle Class
+          </label>
+<select class="bg-transparent font-title-md text-title-md text-on-surface outline-none cursor-pointer">
+<option value="all">All Vehicle Types (84)</option>
+<option value="suv">4x4 &amp; Luxury SUV (28)</option>
+<option value="automatic">Automatic Transmission (62)</option>
+<option value="sedan">Fuel-Efficient Sedans (34)</option>
+<option value="electric">EV / Hybrid Fleet (12)</option>
+</select>
+</div>
+<!-- CTA Button -->
+<div class="lg:col-span-3 flex items-stretch">
+<button class="w-full flex items-center justify-center gap-2 bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim rounded-xl p-4 font-headline-sm text-headline-sm transition-transform active:scale-[0.99] shadow-md" type="submit">
+<span>Search 84+ Cars</span>
+<span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</section>
+<!-- Live Fleet Inventory -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter py-space-xl" id="fleet">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm mb-space-lg">
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Available Today in Addis</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Handpicked for urban commutes &amp; countryside getaways</h2>
+</div>
+<a class="inline-flex items-center gap-1 font-title-md text-title-md text-on-surface hover:text-secondary group transition-colors" data-path="explore-cars" href="#">
+<span>View all 84 cars</span>
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">trending_flat</span>
+</a>
+</div>
+<!-- Vehicles Grid (4 bespoke cards) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: Toyota Land Cruiser Prado TXL -->
+<article class="bg-surface-container-lowest rounded-xl p-space-sm shadow-md hover:shadow-xl transition-all flex flex-col justify-between group">
+<div>
+<!-- Media Frame -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="2023 Toyota Land Cruiser Prado TXL in pearl white, elevated 4x4 stance on asphalt in Bole Addis Ababa, front three-quarter angle in cinematic lighting with sharp automotive reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFnp69kiNhncQYlohiuSxGuvay_EiOViNYCLre2Ws7_RTtHEF1E3-O342TDEJIJquEh6BnrB_ujvm1p0YXwJK0wNBtJqXSCFDsMbNoleV4_c14_uIacBU5wP5cjpU6XKRxBW0Q7Mp6GKGL4_THNPiAM93-QEHI93t_Qg7nvJ74Fc397LO_3Zkrq0WLEt_rIZzvK9qa4BztOuLbKHWrkQxFNX4yuJQDV1mcyOW9yvP0r0WIHU5MJEBu"/>
+<span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps uppercase shadow-sm">
+              Top Rated
+            </span>
+<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-primary-container/80 backdrop-blur-sm text-on-primary font-specs-tabular text-[11px]">
+              Bole Atlas
+            </div>
+</div>
+<!-- Content Details -->
+<div class="pt-3 pb-2 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">SUV • 4x4</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-specs-tabular">
+<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
+<span class="font-bold">4.96</span>
+<span class="text-on-surface-variant">(38 trips)</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1">Toyota Land Cruiser Prado TXL</h3>
+<!-- Specs Strip -->
+<div class="flex items-center gap-2 mt-1 py-1.5 px-2 rounded-md bg-surface-container font-specs-tabular text-[12px] text-on-surface-variant">
+<span>Automatic</span>
+<span>•</span>
+<span>7 Seats</span>
+<span>•</span>
+<span>Diesel 3.0L</span>
+</div>
+</div>
+</div>
+<!-- Footer Pricing and Action -->
+<div class="pt-2 flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">9,500</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface-variant">ETB / day</span>
+</div>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Instant booking enabled</span>
+</div>
+<a class="px-4 py-2 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-surface-container-highest hover:text-on-surface transition-colors shadow-sm" data-path="explore-cars" href="#">
+            Rent
+          </a>
+</div>
+</article>
+<!-- Card 2: Hyundai Tucson 2.0L -->
+<article class="bg-surface-container-lowest rounded-xl p-space-sm shadow-md hover:shadow-xl transition-all flex flex-col justify-between group">
+<div>
+<!-- Media Frame -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="2022 Hyundai Tucson dark charcoal grey crossover vehicle parked near Kazanchis UNECA conference district Addis Ababa, pristine detailing, clean pavement, sharp design lines, midday sunshine" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6kP2N1x11r9vokDpRStx9BEBkaxR_pU2Re7osJJSCKAbSCb85oz3yGUGc9td6EjGM1OU0kTtkJdwO73Yh0q6iYsq_N7EbWmHJzYy69KrxSFb2lWiR_wnFTCL95eQxzz1khbD1gy_IYTGPdUMCvIaztrEyANBd3Qn3XqT-bef1ZzodQIzKUzpH0VHDxjaFXTKRAOV-2SfeBsEB_6gPoLdMKiwIE27br_nUP8YkVnOzBe0uB61y9mbi"/>
+<span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-surface-container-lowest text-on-surface font-label-caps text-label-caps uppercase shadow-sm">
+              Instant Book
+            </span>
+<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-primary-container/80 backdrop-blur-sm text-on-primary font-specs-tabular text-[11px]">
+              Kazanchis
+            </div>
+</div>
+<!-- Content Details -->
+<div class="pt-3 pb-2 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Crossover AWD</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-specs-tabular">
+<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
+<span class="font-bold">4.92</span>
+<span class="text-on-surface-variant">(24 trips)</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1">Hyundai Tucson 2.0L AWD</h3>
+<!-- Specs Strip -->
+<div class="flex items-center gap-2 mt-1 py-1.5 px-2 rounded-md bg-surface-container font-specs-tabular text-[12px] text-on-surface-variant">
+<span>Automatic</span>
+<span>•</span>
+<span>5 Seats</span>
+<span>•</span>
+<span>Petrol 2.0L</span>
+</div>
+</div>
+</div>
+<!-- Footer Pricing and Action -->
+<div class="pt-2 flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">4,800</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface-variant">ETB / day</span>
+</div>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Free Kazanchis drop-off</span>
+</div>
+<a class="px-4 py-2 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-surface-container-highest hover:text-on-surface transition-colors shadow-sm" data-path="explore-cars" href="#">
+            Rent
+          </a>
+</div>
+</article>
+<!-- Card 3: Suzuki Dzire Sedan -->
+<article class="bg-surface-container-lowest rounded-xl p-space-sm shadow-md hover:shadow-xl transition-all flex flex-col justify-between group">
+<div>
+<!-- Media Frame -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="2021 Suzuki Dzire compact sedan in metallic silver parked in CMC residential lane Addis Ababa, bright sunny morning light, clean vehicle profile, suburban Ethiopian greenery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC91_YPvkctFbAptznHVks0uK7RFBS0vEzN1yWFii3tI3gMVj2gMWL0ozANDAGb8fNJF97oh78UjbW9Wj1mzWDI8uYj9Qf0Ml1YfqH0iut0jk1EvgO8rtXlFlcf-ujgI8vMEOLH1pjBkjHvGzAeMlx34qICQRGzZ5nFNJeJfbUG6zr_ojyOH8yOPi7eC16g6vmxprizwvEzxE-G_Fw4GqrzU_2Eb9_SCP2SX1eG0vDAvN5wrbZ-ZUtP"/>
+<span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-surface-container-lowest text-on-surface font-label-caps text-label-caps uppercase shadow-sm">
+              Economy
+            </span>
+<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-primary-container/80 backdrop-blur-sm text-on-primary font-specs-tabular text-[11px]">
+              CMC Area
+            </div>
+</div>
+<!-- Content Details -->
+<div class="pt-3 pb-2 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">City Sedan</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-specs-tabular">
+<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
+<span class="font-bold">4.88</span>
+<span class="text-on-surface-variant">(45 trips)</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1">Suzuki Dzire Sedan</h3>
+<!-- Specs Strip -->
+<div class="flex items-center gap-2 mt-1 py-1.5 px-2 rounded-md bg-surface-container font-specs-tabular text-[12px] text-on-surface-variant">
+<span>Manual</span>
+<span>•</span>
+<span>5 Seats</span>
+<span>•</span>
+<span>18 km/L</span>
+</div>
+</div>
+</div>
+<!-- Footer Pricing and Action -->
+<div class="pt-2 flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">2,200</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface-variant">ETB / day</span>
+</div>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Fuel saver favorite</span>
+</div>
+<a class="px-4 py-2 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-surface-container-highest hover:text-on-surface transition-colors shadow-sm" data-path="explore-cars" href="#">
+            Rent
+          </a>
+</div>
+</article>
+<!-- Card 4: Mercedes-Benz C200 Executive -->
+<article class="bg-surface-container-lowest rounded-xl p-space-sm shadow-md hover:shadow-xl transition-all flex flex-col justify-between group">
+<div>
+<!-- Media Frame -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="2023 Mercedes-Benz C200 Executive sedan obsidian black exterior parked in Old Airport luxury residential zone Addis Ababa, dusk ambient lighting, sleek LED headlights illuminated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOCOZVlKukf0NXKDQ5kjrudJ56wXsDkPz9Vz_OxprzK3EY0ms-N9CifhjdPbjFm3_HLUKLfNGm_aoUpFBYuhI7BRkgp6CHaEJk3Lt_wobIYYRWjE-UR5xF6J0Yfc0l5A38p_1UjVKYB4RZoULabtVg6HrKwZDk6isTNy9XfPRlLK3CzJZdPqnm5c5FfkDiAP4Du9K99pzTZK4lpwIzXnTCjUGvXswSzzrCCFYXKHuZBYNTr7jgWR_S"/>
+<span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps uppercase shadow-sm">
+              Executive Choice
+            </span>
+<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-primary-container/80 backdrop-blur-sm text-on-primary font-specs-tabular text-[11px]">
+              Old Airport
+            </div>
+</div>
+<!-- Content Details -->
+<div class="pt-3 pb-2 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Executive Sedan</span>
+<div class="flex items-center gap-1 text-on-surface font-specs-tabular text-specs-tabular">
+<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
+<span class="font-bold">4.98</span>
+<span class="text-on-surface-variant">(19 trips)</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1">Mercedes-Benz C200</h3>
+<!-- Specs Strip -->
+<div class="flex items-center gap-2 mt-1 py-1.5 px-2 rounded-md bg-surface-container font-specs-tabular text-[12px] text-on-surface-variant">
+<span>Automatic</span>
+<span>•</span>
+<span>5 Seats</span>
+<span>•</span>
+<span>Leather interior</span>
+</div>
+</div>
+</div>
+<!-- Footer Pricing and Action -->
+<div class="pt-2 flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">8,200</span>
+<span class="font-specs-tabular text-specs-tabular text-on-surface-variant">ETB / day</span>
+</div>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Diaspora &amp; VIP favorite</span>
+</div>
+<a class="px-4 py-2 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-surface-container-highest hover:text-on-surface transition-colors shadow-sm" data-path="explore-cars" href="#">
+            Rent
+          </a>
+</div>
+</article>
+</div>
+</section>
+<!-- Neighborhood Quick Discovery Strip -->
+<section class="w-full bg-surface-container-high/40 py-space-xl">
+<div class="max-w-[1360px] mx-auto px-gutter">
+<div class="flex flex-col gap-space-sm mb-space-md">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Local Addis Presence</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Explore by verified neighborhood hubs</h3>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-space-sm">
+<a class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface transition-all shadow-sm flex flex-col justify-between group" data-path="explore-cars" href="#">
+<div class="flex items-center justify-between text-secondary">
+<span class="material-symbols-outlined text-[24px]">flight_takeoff</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+<div class="mt-4 flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Bole International</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">32 cars available</span>
+</div>
+</a>
+<a class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface transition-all shadow-sm flex flex-col justify-between group" data-path="explore-cars" href="#">
+<div class="flex items-center justify-between text-secondary">
+<span class="material-symbols-outlined text-[24px]">domain</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+<div class="mt-4 flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Kazanchis Diplomatic</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">18 cars available</span>
+</div>
+</a>
+<a class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface transition-all shadow-sm flex flex-col justify-between group" data-path="explore-cars" href="#">
+<div class="flex items-center justify-between text-secondary">
+<span class="material-symbols-outlined text-[24px]">villa</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+<div class="mt-4 flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Sarbet &amp; Old Airport</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">14 cars available</span>
+</div>
+</a>
+<a class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface transition-all shadow-sm flex flex-col justify-between group" data-path="explore-cars" href="#">
+<div class="flex items-center justify-between text-secondary">
+<span class="material-symbols-outlined text-[24px]">location_city</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+<div class="mt-4 flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Bole Bulbula</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">9 cars available</span>
+</div>
+</a>
+<a class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface transition-all shadow-sm flex flex-col justify-between group" data-path="explore-cars" href="#">
+<div class="flex items-center justify-between text-secondary">
+<span class="material-symbols-outlined text-[24px]">home_work</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+<div class="mt-4 flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">CMC Real Estate</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">11 cars available</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Three-Step Rental Flow -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter py-space-xl">
+<div class="text-center max-w-2xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container font-label-caps text-label-caps text-secondary uppercase mb-2">
+<span class="material-symbols-outlined text-[16px]">touch_app</span>
+        Simple, Transparent &amp; Secure
+      </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">How Sheggar Wheels Works</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">
+        Skip traditional rental bureaucracies. Experience peer-to-peer automotive mobility built specifically for Ethiopian roadways and verified payments.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg relative">
+<!-- Step 01 -->
+<div class="flex flex-col bg-surface-container-lowest p-space-md rounded-2xl shadow-sm relative">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-display-hero text-display-hero text-surface-container-highest">01</span>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[24px]">saved_search</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Discover &amp; Select</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Browse verified local listings in your neighborhood with genuine photos, detailed condition reports, and upfront daily ETB rates. No surprise surcharges.
+        </p>
+</div>
+<!-- Step 02 -->
+<div class="flex flex-col bg-surface-container-lowest p-space-md rounded-2xl shadow-sm relative">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-display-hero text-display-hero text-surface-container-highest">02</span>
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Book in 60 Seconds</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Select your dates, review full insurance protection, and confirm through secure simulated TeleBirr escrow. Funds are held safely until handoff completion.
+        </p>
+</div>
+<!-- Step 03 -->
+<div class="flex flex-col bg-surface-container-lowest p-space-md rounded-2xl shadow-sm relative">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-display-hero text-display-hero text-surface-container-highest">03</span>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[24px]">key</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Key Handover &amp; Drive</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Meet your verified host in Bole or Kazanchis, complete a rapid 4-point mobile photo check-in, and cruise with 24/7 dedicated Sheggar roadside support.
+        </p>
+</div>
+</div>
+</section>
+<!-- Host-Partner Callout Banner -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter pb-space-xl">
+<div class="w-full bg-primary-container text-on-primary rounded-3xl overflow-hidden shadow-2xl relative">
+<!-- Ambient Graphic Vector Glow -->
+<div class="absolute -top-32 -right-32 w-96 h-96 bg-secondary/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg p-space-lg md:p-space-xl items-center relative z-10">
+<!-- Text Column -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-surface-container-highest/20 font-label-caps text-label-caps text-secondary-fixed uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">monetization_on</span>
+            Host Partnership Program
+          </div>
+<h2 class="font-headline-lg text-headline-lg text-on-primary tracking-tight">
+            Turn your parked car into <span class="text-secondary-fixed">monthly revenue</span>.
+          </h2>
+<p class="font-body-lg text-body-lg text-primary-fixed-dim max-w-xl">
+            Active hosts in Bole and Sarbet earn on average <strong class="text-on-primary">up to 85,000 ETB / month</strong> sharing their vehicle while working or traveling abroad. We handle identity vetting, GPS telematics, and automated escrow payouts.
+          </p>
+<div class="flex flex-wrap items-center gap-space-sm pt-2">
+<a class="px-6 py-3 rounded-full bg-secondary-fixed text-on-secondary-fixed font-title-md text-title-md hover:bg-secondary-fixed-dim transition-transform active:scale-95 shadow-md inline-flex items-center gap-2" data-path="host-a-vehicle" href="#">
+<span>List Your Vehicle Today</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="px-6 py-3 rounded-full bg-surface-container-highest/10 text-on-primary font-title-md text-title-md hover:bg-surface-container-highest/20 transition-colors inline-flex items-center gap-2" data-path="how-it-works" href="#">
+<span class="material-symbols-outlined text-[18px]">calculate</span>
+<span>Calculate Potential Earnings</span>
+</a>
+</div>
+</div>
+<!-- Metric Card / Illustration Column -->
+<div class="lg:col-span-5 bg-surface-container-highest/10 rounded-2xl p-space-md backdrop-blur-md border border-white/5 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between pb-space-xs border-b border-white/10">
+<span class="font-title-md text-title-md text-on-primary">Addis Host Monthly Benchmark</span>
+<span class="font-label-caps text-label-caps text-secondary-fixed uppercase">Real Payouts</span>
+</div>
+<!-- Earnings Breakdown Bar Simulation -->
+<div class="flex flex-col gap-2 pt-2">
+<div class="flex justify-between items-baseline">
+<span class="font-body-md text-body-md text-primary-fixed-dim">Toyota RAV4 / Tucson (14 days)</span>
+<span class="font-specs-tabular text-specs-tabular text-on-primary font-bold">~64,000 ETB</span>
+</div>
+<div class="w-full bg-surface-container-highest/20 h-2.5 rounded-full overflow-hidden">
+<div class="bg-secondary-fixed h-full rounded-full w-[75%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-baseline">
+<span class="font-body-md text-body-md text-primary-fixed-dim">Prado / Patrol (10 days)</span>
+<span class="font-specs-tabular text-specs-tabular text-on-primary font-bold">~88,000 ETB</span>
+</div>
+<div class="w-full bg-surface-container-highest/20 h-2.5 rounded-full overflow-hidden">
+<div class="bg-secondary-fixed h-full rounded-full w-[95%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-baseline">
+<span class="font-body-md text-body-md text-primary-fixed-dim">Suzuki Dzire / Vitz (18 days)</span>
+<span class="font-specs-tabular text-specs-tabular text-on-primary font-bold">~39,600 ETB</span>
+</div>
+<div class="w-full bg-surface-container-highest/20 h-2.5 rounded-full overflow-hidden">
+<div class="bg-secondary-fixed h-full rounded-full w-[45%]"></div>
+</div>
+</div>
+<div class="mt-2 p-3 rounded-xl bg-surface-container-highest/10 flex items-center gap-2 text-on-primary text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-secondary-fixed text-[20px]">security</span>
+<span>Comprehensive insurance and host damage protection backed automatically.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Community Testimonials / Diaspora Trust -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter pb-space-xl">
+<div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm grid grid-cols-1 md:grid-cols-3 gap-space-lg items-center">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-fixed shrink-0">
+<span class="material-symbols-outlined text-[24px]">support_agent</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-md text-title-md text-on-surface">24/7 Roadside Assistance</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live dispatch team stationed across ring roads and expressway links.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-md text-title-md text-on-surface">Identity &amp; License Vetted</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Direct integration with Addis Ababa Transport Bureau registry.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-md text-title-md text-on-surface">TeleBirr Secure Escrow</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Renter payments protected until verified car key transfer.</p>
+</div>
+</div>
+</div>
+</section>
+</div></main><footer class="w-full bg-surface-container-low text-on-surface-variant mt-space-xl"><div class="max-w-[1360px] mx-auto px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl"><div class="lg:col-span-5 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Sheggar Wheels Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"/><span class="font-headline-sm text-headline-sm text-on-surface">Sheggar Wheels</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Next-generation peer-to-peer automotive mobility in Addis Ababa. Direct, verified car sharing built for effortless metropolitan transit and diaspora expeditions without traditional car rental friction.</p><div class="flex items-center gap-space-sm"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-specs-tabular text-specs-tabular"><span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span><span>100% Verified Hosts &amp; TeleBirr Escrow</span></div></div></div><div class="lg:col-span-3 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Active Hubs in Addis</span><ul class="flex flex-wrap gap-2"><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Bole</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Kazanchis</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Old Airport</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Piassa</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Sarbet</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">CMC</li></ul></div><div class="lg:col-span-2 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Platform</span><div class="flex flex-col gap-2 font-body-md text-body-md"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="explore-cars" href="#">Fleet Inventory</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#">Protection &amp; Terms</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="host-a-vehicle" href="#">List Your Car</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard" href="#">Fleet Portal</a></div></div><div class="lg:col-span-2 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Verification</span><div class="flex flex-col gap-2 font-body-md text-body-md"><span class="text-on-surface-variant">Addis Ababa Transport Bureau Sync</span><span class="text-on-surface-variant">Chapa &amp; TeleBirr Rails</span><span class="text-on-surface-variant">24/7 Roadside Assistance</span></div></div></div><div class="pt-space-md bg-surface-container-high/40 rounded-xl px-space-md py-space-sm flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[20px]">info</span><span class="font-specs-tabular text-specs-tabular text-on-surface">Simulated Prototype for Demonstration Purposes</span></div><span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Sheggar Wheels P2P Inc. Addis Ababa, Ethiopia. All rights reserved.</span></div></div></footer></body></html>

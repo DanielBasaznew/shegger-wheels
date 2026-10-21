@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-highest": "#e5e2db", "tertiary-container": "#390c00", "on-secondary": "#ffffff", "on-primary-container": "#7d848f", "inverse-on-surface": "#f3f0e9", "on-primary-fixed-variant": "#404751", "outline": "#75777c", "on-tertiary-fixed-variant": "#76331b", "background": "#fcf9f2", "secondary-fixed": "#d1ef67", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#3e4c00", "surface": "#fcf9f2", "on-tertiary-container": "#c16d51", "secondary-container": "#ceec64", "surface-container-lowest": "#ffffff", "tertiary": "#000000", "primary-fixed": "#dce3ee", "outline-variant": "#c5c6cb", "tertiary-fixed": "#ffdbd0", "on-primary": "#ffffff", "on-background": "#1c1c18", "secondary-fixed-dim": "#b6d24d", "primary": "#000000", "error": "#ba1a1a", "surface-variant": "#e5e2db", "on-error-container": "#93000a", "primary-fixed-dim": "#c0c7d2", "primary-container": "#151c24", "on-primary-fixed": "#151c24", "on-tertiary": "#ffffff", "tertiary-fixed-dim": "#ffb59d", "on-surface": "#1c1c18", "surface-dim": "#dcdad3", "surface-container-high": "#ebe8e1", "on-tertiary-fixed": "#390c00", "surface-tint": "#585f69", "surface-container": "#f1eee7", "inverse-primary": "#c0c7d2", "inverse-surface": "#31312c", "surface-bright": "#fcf9f2", "secondary": "#536600", "on-secondary-container": "#576a00", "on-error": "#ffffff", "on-surface-variant": "#44474b", "surface-container-low": "#f6f3ec", "on-secondary-fixed": "#171e00" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xs": "0.25rem", "margin-mobile": "1.25rem", "space-sm": "0.5rem", "gutter-mobile": "1rem", "space-xl": "2.5rem", "space-md": "1rem", "margin": "3rem", "space-lg": "1.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-hero-mobile": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-hero": [ "Plus Jakarta Sans" ], "label-caps": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "specs-tabular": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "title-md": [ "16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-lg": [ "18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" } ], "body-md": [ "15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "800" } ], "body-sm": [ "13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-caps": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "specs-tabular": [ "14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-fixed"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1360px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><a class="flex items-center gap-space-sm group" data-path="explore-cars" href="#"><img alt="Sheggar Wheels Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">Sheggar Wheels</span></a><div class="hidden sm:flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Addis Ababa</div></div><nav class="hidden lg:flex items-center gap-1 p-1 bg-surface-container rounded-full" data-active-classes="bg-primary-container text-on-primary font-title-md rounded-full px-4 py-2"><a aria-current="page" class="transition-colors bg-primary-container text-on-primary font-title-md rounded-full px-4 py-2" data-path="explore-cars" href="#">Explore Cars</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="how-it-works" href="#">How It Works</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="host-a-vehicle" href="#">Host a Vehicle</a><a class="px-4 py-2 rounded-full font-title-md text-title-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="dashboard" href="#">Dashboard</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container font-specs-tabular text-specs-tabular text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">payments</span><span class="font-bold text-on-surface">ETB</span></div><a class="hidden md:inline-flex items-center justify-center px-4 py-2 rounded-full font-title-md text-title-md text-on-surface bg-surface-container-high hover:bg-surface-container-highest hover:text-on-surface transition-colors" data-path="sign-in" href="#">Demo Sign In</a><div class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-surface-container-low shadow-[0_1px_4px_rgba(0,0,0,0.05)] cursor-pointer hover:bg-surface-container transition-colors"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWnznfQfC1FiEM5hEdXfCJLDsnm_jxjnPMEPgifh7lcgPJsJ7RNg6xShcXz6ovsJgkEvezEANugbXoVkLDEV5M89URWZd9xZB4Ejz9NgW12LMQWMkm3Qebi--giTlaBIxVOszvK5YxfV0Arvh6tTNBIVkKw0PcvnNvu3gbYmeycELwPO5pvIxNbQNeHuBQ-PW5HKL14bXNXLPU9U147yjP2lLYURSXTGe4YCXT9NgNQG8dizeJ-sOO"/><div class="hidden xl:flex flex-col text-left leading-tight"><span class="font-title-md text-[13px] text-on-surface font-semibold">Dawit T.</span><span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Renter</span></div><span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
+<!-- Interactive Checkout Experience Container -->
+<div class="max-w-[1360px] mx-auto px-gutter py-space-lg lg:py-space-xl w-full">
+<!-- Top Stepper Header -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md lg:p-space-lg mb-space-lg shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-outline mb-1 block">Checkout Step 2 of 4</span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Confirm Booking &amp; Escrow</h1>
+</div>
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface font-specs-tabular text-specs-tabular self-start md:self-auto">
+<span class="material-symbols-outlined text-secondary text-[18px]">lock</span>
+<span>Encrypted Escrow Rail • Simulated Environment</span>
+</div>
+</div>
+<!-- Stepper Trail -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-space-md pt-space-md">
+<!-- Step 1 -->
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container-high/60">
+<div class="w-7 h-7 rounded-full bg-primary-container text-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-[10px] uppercase text-outline">Step 1</span>
+<span class="font-title-md text-[13px] text-on-surface font-semibold truncate">Vehicle Reserved</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 font-specs-tabular text-[13px] font-bold">
+            2
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-[10px] uppercase text-secondary font-bold">Active Now</span>
+<span class="font-title-md text-[13px] text-on-surface font-bold truncate">Review &amp; Driver Info</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container/60 opacity-80">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0 font-specs-tabular text-[13px]">
+            3
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-[10px] uppercase text-outline">Upcoming</span>
+<span class="font-title-md text-[13px] text-on-surface-variant truncate">TeleBirr Escrow</span>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center gap-3 p-2.5 rounded-lg bg-surface-container/60 opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0 font-specs-tabular text-[13px]">
+            4
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-[10px] uppercase text-outline">Final</span>
+<span class="font-title-md text-[13px] text-on-surface-variant truncate">Confirmed Trip</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Asymmetric Grid (7:5) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Primary Checkout Workflow (7 Cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<!-- SECTION 1: Driver Verification -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex items-center justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-specs-tabular text-[11px] font-bold">1</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Primary Driver &amp; Verification</h2>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/50 text-on-secondary-fixed-variant font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+              Identity Synced
+            </div>
+</div>
+<!-- Driver Profile Card Component -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="High-resolution, natural headshot of a confident 32-year-old Ethiopian male professional driver, Dawit Tesfaye, wearing a clean charcoal knit crewneck in soft studio lighting against a warm limestone textured background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEADJ9ZMM4me_yvXI-G6SszbHPIHlzAJTmFybBUk7Pp2n6BaApMJ-G9zODnEre1j6N1BHDxs-041l0gcq-636dVCwx3G2CgRp9Bn3-EbU8zSxk_rewQ5Tykw0o2H5Zyi6lSXjslQllB__JgEPuJKQ3vIiFqIjkZwDrYqPoD38Wv_oXCV52ywryWcS1wzl6NIoCutXFhytbt6vLAnSxvjzbvX6PYhs1F0OPcSWSrdv0SxHSy7gn2pk-"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface font-bold">Dawit Tesfaye</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-specs-tabular text-[11px]">Tier 1 Driver</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">+251 91 123 4567 • dawit.t@example.et</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface font-specs-tabular text-specs-tabular hover:bg-surface-container-highest transition-colors" type="button">
+              Edit Persona
+            </button>
+</div>
+<!-- Official Registry Telemetry Badge -->
+<div class="bg-surface-container-high/40 rounded-xl p-space-md mb-space-lg flex flex-col sm:flex-row items-start sm:items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center text-secondary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">license</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-title-md text-[14px] text-on-surface font-bold">Ethiopian Driver's License Status</span>
+<span class="inline-flex items-center gap-1 text-secondary font-specs-tabular text-[12px] font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Validated Active
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                Directly authenticated via Addis Ababa Transport Bureau API • Record <code class="font-specs-tabular font-bold text-on-surface">ET-AA-882194</code>
+</p>
+</div>
+</div>
+<!-- Handover Preferences Radios -->
+<fieldset>
+<legend class="font-label-caps text-label-caps uppercase tracking-wider text-outline mb-space-sm block">Select Vehicle Handover Preference</legend>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<!-- Option 1 (Selected) -->
+<label class="cursor-pointer relative p-space-md rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+<input checked="" class="peer sr-only" name="handover" type="radio" value="pickup"/>
+<div class="flex items-start justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">Host Self-Pickup</span>
+</div>
+<div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-[14px] font-bold">check</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3">
+                  Bole Medhanialem Hub, Behind Edna Mall. Direct garage key handover with host Abebe.
+                </p>
+<div class="flex items-center justify-between pt-2">
+<span class="font-label-caps text-label-caps text-secondary uppercase font-bold">Included Free</span>
+<span class="font-specs-tabular text-specs-tabular font-bold text-on-surface">0 ETB</span>
+</div>
+<div class="absolute inset-0 rounded-xl pointer-events-none peer-checked:ring-2 peer-checked:ring-primary/20"></div>
+</label>
+<!-- Option 2 -->
+<label class="cursor-pointer relative p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col justify-between group">
+<input class="peer sr-only" name="handover" type="radio" value="concierge"/>
+<div class="flex items-start justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">flight_land</span>
+<span class="font-title-md text-title-md text-on-surface font-semibold">Airport Concierge</span>
+</div>
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-transparent">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3">
+                  Curbside delivery directly at Addis Ababa Bole International Airport (Terminal 2 Arrivals).
+                </p>
+<div class="flex items-center justify-between pt-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Optional Add-on</span>
+<span class="font-specs-tabular text-specs-tabular font-bold text-on-surface">+400 ETB</span>
+</div>
+<div class="absolute inset-0 rounded-xl pointer-events-none peer-checked:ring-2 peer-checked:ring-primary"></div>
+</label>
+</div>
+</fieldset>
+</div>
+<!-- SECTION 2: Simulated TeleBirr Escrow Payment Method -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex items-center justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-specs-tabular text-[11px] font-bold">2</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Simulated TeleBirr Escrow</h2>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed font-specs-tabular text-[11px] font-bold tracking-tight">
+              Test Harness v2.4
+            </span>
+</div>
+<!-- Demo Disclaimer Ribbon -->
+<div class="bg-surface-container-high/60 rounded-xl p-3.5 mb-space-md flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[22px] shrink-0">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+<strong class="text-on-surface font-semibold">Interactive Sandbox Simulation:</strong> No physical TeleBirr accounts or real capital balances will be debited. This executes the complete state machine lifecycle.
+            </p>
+</div>
+<!-- TeleBirr Branded Box Container -->
+<div class="bg-primary-container text-on-primary rounded-xl p-space-md lg:p-space-lg shadow-md mb-space-md">
+<!-- Telebirr Header -->
+<div class="flex items-center justify-between gap-space-sm pb-space-sm mb-space-sm">
+<div class="flex items-center gap-2.5">
+<!-- Telebirr Logo mark representation with brand colors -->
+<div class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center shadow-sm">
+<div class="w-7 h-7 rounded-lg bg-[#005CA9] flex items-center justify-center relative overflow-hidden">
+<span class="text-[#FED100] font-headline-sm text-[16px] font-extrabold italic select-none">tb</span>
+</div>
+</div>
+<div>
+<span class="font-title-md text-[16px] text-on-primary font-bold block leading-none">TeleBirr SuperApp Rail</span>
+<span class="font-label-caps text-[10px] text-on-primary-container uppercase tracking-wider">Ethio Telecom Certified Channel</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-caps text-[10px] text-on-primary-container uppercase">Status</span>
+<span class="font-specs-tabular text-[12px] text-secondary-fixed flex items-center gap-1 justify-end">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span> Connected
+                </span>
+</div>
+</div>
+<!-- Linked Account Data -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm bg-surface-container-lowest/10 rounded-xl p-space-sm mb-space-md">
+<div>
+<span class="font-label-caps text-[10px] uppercase text-on-primary-container block mb-1">Linked TeleBirr Account</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed text-[18px]">account_balance_wallet</span>
+<span class="font-specs-tabular text-[15px] font-bold tracking-wider text-on-primary">+251 91 •••• 4567</span>
+</div>
+</div>
+<div>
+<span class="font-label-caps text-[10px] uppercase text-on-primary-container block mb-1">Simulated Available Balance</span>
+<span class="font-specs-tabular text-[15px] font-bold text-secondary-fixed">84,500.00 ETB</span>
+</div>
+</div>
+<!-- Escrow Protocol Explanation -->
+<div class="flex items-start gap-3 bg-surface-container-lowest/5 p-space-sm rounded-lg">
+<span class="material-symbols-outlined text-secondary-fixed text-[20px] shrink-0 mt-0.5">verified_user</span>
+<p class="font-body-sm text-[13px] leading-relaxed text-on-primary/90">
+<strong class="text-on-primary">Escrow Protection Protocol:</strong> Rental funds of <span class="font-specs-tabular font-bold text-secondary-fixed">39,900 ETB</span> are impounded into Sheggar Municipal Vault. Escrow release to Host Abebe Kebede is strictly withheld until in-person QR handoff confirmation at vehicle pickup.
+              </p>
+</div>
+</div>
+<!-- Payment Simulation Lifecycle Tabs / States -->
+<div class="mb-space-md">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-outline mb-2 block">Simulated Execution Lifecycle</span>
+<div class="flex flex-wrap gap-2 p-1.5 bg-surface-container rounded-xl">
+<button class="flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-all text-center" id="tabReady" onclick="setSimState('ready')" type="button">
+                1. Ready to Pay
+              </button>
+<button class="flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold text-on-surface-variant hover:text-on-surface transition-all text-center" id="tabProcessing" onclick="setSimState('processing')" type="button">
+                2. Processing Rails
+              </button>
+<button class="flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold text-on-surface-variant hover:text-on-surface transition-all text-center" id="tabReceipt" onclick="setSimState('receipt')" type="button">
+                3. Receipt Generated
+              </button>
+</div>
+</div>
+<!-- Dynamic State Display Panes -->
+<div class="mb-space-lg" id="stateContainer">
+<!-- STATE: READY -->
+<div class="block space-y-3" id="stateReady">
+<div class="p-space-md rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">pin</span>
+<span class="font-body-md text-body-md text-on-surface">Simulated USSD PIN Protocol</span>
+</div>
+<span class="font-specs-tabular text-specs-tabular font-bold text-on-surface">•••• (Auto-authorized)</span>
+</div>
+<!-- Primary CTA Button (Electric Citron with obsidian navy text) -->
+<button class="w-full py-4 px-space-md rounded-xl bg-secondary-fixed hover:bg-secondary-fixed-dim text-on-secondary-fixed font-title-md text-[17px] font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group" id="payButton" onclick="triggerSimulatedPayment()" type="button">
+<span id="payBtnLabel">Complete Simulated Payment (39,900 ETB)</span>
+<span class="material-symbols-outlined transition-transform group-hover:translate-x-1" id="payBtnIcon">arrow_forward</span>
+</button>
+</div>
+<!-- STATE: PROCESSING (Hidden by default) -->
+<div class="hidden p-space-lg rounded-xl bg-surface-container-low text-center flex-col items-center justify-center space-y-3" id="stateProcessing">
+<div class="w-12 h-12 rounded-full border-4 border-surface-container-highest border-t-primary animate-spin mx-auto"></div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Pinging TeleBirr Core Engine...</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mx-auto">
+                Negotiating multi-sig smart escrow lock between Ethio Telecom API and Sheggar Transit vault.
+              </p>
+<div class="w-full max-w-xs h-1.5 bg-surface-container-highest rounded-full overflow-hidden mx-auto mt-2">
+<div class="h-full bg-primary rounded-full w-3/4 animate-pulse"></div>
+</div>
+</div>
+<!-- STATE: RECEIPT (Hidden by default) -->
+<div class="hidden p-space-md rounded-xl bg-surface-container-low space-y-4" id="stateReceipt">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+<span class="font-title-md text-[15px] font-bold">Escrow Successfully Vaulted!</span>
+</div>
+<span class="font-specs-tabular text-specs-tabular text-on-surface-variant">TX-TB-994821</span>
+</div>
+<div class="p-3 bg-surface-container-lowest rounded-lg font-specs-tabular text-[13px] space-y-1.5">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Sender Wallet:</span>
+<span class="text-on-surface font-semibold">+251 91 123 4567</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Escrow Beneficiary:</span>
+<span class="text-on-surface font-semibold">Abebe Kebede (Pending QR scan)</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Timestamp:</span>
+<span class="text-on-surface font-semibold" id="receiptTime">Just Now</span>
+</div>
+<div class="flex justify-between text-secondary font-bold pt-1">
+<span>Locked Escrow:</span>
+<span>39,900 ETB</span>
+</div>
+</div>
+<div class="flex items-center justify-between gap-2">
+<a class="flex-1 py-3 px-4 rounded-xl bg-primary text-on-primary font-title-md text-center text-[14px] hover:bg-primary-container transition-colors" data-path="dashboard" href="#">
+                  Go to Trips Dashboard
+                </a>
+<button class="py-3 px-4 rounded-xl bg-surface-container-high text-on-surface font-specs-tabular text-[13px] hover:bg-surface-container-highest transition-colors" onclick="setSimState('ready')" type="button">
+                  Reset Demo
+                </button>
+</div>
+</div>
+</div>
+<!-- Trust & Security Micro-Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-space-md">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-outline">lock</span>
+<span class="font-specs-tabular text-[12px]">256-bit Simulated SSL</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-outline">sms</span>
+<span class="font-specs-tabular text-[12px]">Instant SMS Dispatch</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-outline">assignment_return</span>
+<span class="font-specs-tabular text-[12px]">100% Handover Refund</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Transparent Rental Order Summary Card (5 Cols Sticky) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md sticky top-28">
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-outline">Reservation Summary</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high font-specs-tabular text-[11px] text-on-surface font-bold">
+              ID #SW-7492
+            </span>
+</div>
+<!-- Mini Vehicle Header with Photo -->
+<div class="flex gap-space-sm items-start pb-space-md mb-space-md">
+<div class="w-24 h-20 rounded-lg overflow-hidden shrink-0 bg-surface-container shadow-sm">
+<img class="w-full h-full object-cover" data-alt="High-contrast editorial automotive portrait of a glossy silver 2023 Toyota Land Cruiser Prado TXL parked in Bole Medhanialem Addis Ababa, warm architectural golden hour sidelight, crisp metallic reflections, 8k resolution commercial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvfgmYFo_P3mgIg70-_w8hgrRAFbgMXhtIEIbzgBUOKXXeKSEPpteDcJwaVeYsJfso_eqaSLwQYIe-f6XEXtXZSDNKI64ujplN0APMh2IPNqMYd7z4vLC9RWTrfLWsc_aS2HxqaDMNA9dDueQXTg-JIWFInODqpdtvQ2l9zeS8nCq4-1_oE3hdXhxVATQJ_Yw8ByV-HPM4G60lqpV6KWib8yQJskB_exRpvsAHMsQp55nQu1dRzGxE"/>
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-label-caps text-[10px] text-secondary font-bold uppercase tracking-wider block">SUV • Automatic</span>
+<h3 class="font-headline-sm text-[18px] leading-tight text-on-surface font-bold truncate">2023 Toyota Land Cruiser Prado TXL</h3>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mt-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="truncate">Bole Medhanialem, Addis Ababa</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-specs-tabular text-[12px] font-bold text-on-surface">4.96</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">• Host: Abebe Kebede</span>
+</div>
+</div>
+</div>
+<!-- Rental Period Schedule Box -->
+<div class="bg-surface-container-low rounded-xl p-space-sm mb-space-md">
+<div class="grid grid-cols-2 gap-space-sm">
+<div>
+<span class="font-label-caps text-[10px] uppercase text-outline block mb-0.5">Pick-Up Date</span>
+<span class="font-specs-tabular text-[13px] font-bold text-on-surface block">Fri, Oct 24, 2025</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">10:00 AM (EAT)</span>
+</div>
+<div>
+<span class="font-label-caps text-[10px] uppercase text-outline block mb-0.5">Return Date</span>
+<span class="font-specs-tabular text-[13px] font-bold text-on-surface block">Mon, Oct 27, 2025</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">6:00 PM (EAT)</span>
+</div>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-on-surface">
+<span class="font-label-caps text-[10px] uppercase text-outline">Total Billable Time</span>
+<span class="font-specs-tabular text-[12px] font-bold">3 Days, 8 Hours <span class="text-on-surface-variant font-normal">(Billed as 4 days)</span></span>
+</div>
+</div>
+<!-- Transparent Cost Breakdown -->
+<div class="space-y-2.5 mb-space-md">
+<div class="flex items-center justify-between text-on-surface-variant font-body-md text-body-md">
+<span class="flex items-center gap-1.5">
+<span>9,500 ETB × 4 days</span>
+<span class="material-symbols-outlined text-[14px] text-outline" title="Daily standard rate">help_outline</span>
+</span>
+<span class="font-specs-tabular font-semibold text-on-surface">38,000 ETB</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-md text-body-md">
+<span class="flex items-center gap-1.5">
+<span>Marketplace Platform Fee (5%)</span>
+<span class="material-symbols-outlined text-[14px] text-outline" title="Escrow mediation and verified host fleet support">help_outline</span>
+</span>
+<span class="font-specs-tabular font-semibold text-on-surface">1,900 ETB</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-md text-body-md">
+<span class="flex items-center gap-1.5">
+<span>Comprehensive Nyala Insurance</span>
+</span>
+<span class="font-specs-tabular text-secondary font-bold uppercase text-[12px]">Included (0 ETB)</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-md text-body-md">
+<span class="flex items-center gap-1.5">
+<span>24/7 Roadside Assistance</span>
+</span>
+<span class="font-specs-tabular text-secondary font-bold uppercase text-[12px]">Included (0 ETB)</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-md text-body-md">
+<div class="flex items-center gap-1">
+<span>Refundable Security Bond</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary-fixed/50 text-[10px] font-specs-tabular text-on-secondary-fixed font-bold">Verified Waived</span>
+</div>
+<span class="font-specs-tabular font-semibold text-on-surface">0 ETB</span>
+</div>
+<!-- Total Amount Payable -->
+<div class="pt-space-sm mt-space-sm flex items-end justify-between">
+<div>
+<span class="font-label-caps text-label-caps uppercase text-outline block">Total Payable Now</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">All-Inclusive Escrow</span>
+</div>
+<div class="text-right">
+<span class="font-headline-lg text-[28px] font-black text-on-surface leading-none block">39,900 <span class="text-sm font-title-md text-on-surface-variant">ETB</span></span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Inclusive of all local Ethiopian VAT</span>
+</div>
+</div>
+</div>
+<!-- Renter Guarantee Banner (Restrained Terracotta / Warm Clay accents) -->
+<div class="rounded-xl bg-surface-container-high/70 p-space-sm flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-tertiary-container text-on-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div>
+<span class="font-title-md text-[13px] text-on-surface font-bold block mb-0.5">Sheggar Handover Guarantee</span>
+<p class="font-body-sm text-[12px] leading-snug text-on-surface-variant">
+                If the vehicle condition does not match listing upon in-person handover, receive <strong>100% immediate escrow refund</strong> plus a <strong>1,500 ETB</strong> mobility voucher credited to your account.
+              </p>
+</div>
+</div>
+<!-- Host Communication Preview -->
+<div class="mt-space-md pt-space-sm flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">chat</span> Host responds in ~4 mins
+            </span>
+<span class="font-specs-tabular text-on-surface font-medium">Bole, Woreda 03</span>
+</div>
+</div>
+<!-- Telebirr Security Watermark Badge -->
+<div class="px-space-md py-2.5 rounded-xl bg-surface-container-low flex items-center justify-between text-on-surface-variant font-specs-tabular text-[12px]">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-outline">shield</span> Secure Escrow Protocol AA-2025
+          </span>
+<span class="font-bold text-on-surface">No Surcharge</span>
+</div>
+</div>
+</div>
+<!-- Supplementary Information Cards: Handover Protocol & FAQ -->
+<div class="mt-space-xl grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">qr_code_scanner</span>
+<h4 class="font-title-md text-title-md text-on-surface">Dual QR Scan Handoff</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          At pickup, you and host Abebe scan each other's Sheggar app to execute the vehicle inspection and unlock the TeleBirr escrow vault.
+        </p>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">car_crash</span>
+<h4 class="font-title-md text-title-md text-on-surface">Zero-Deductible Nyala Cover</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Collision damage waiver and third-party liabilities in Addis Ababa and surrounding Oromia region routes are fully covered under policy NYL-883.
+        </p>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">event_repeat</span>
+<h4 class="font-title-md text-title-md text-on-surface">Free Cancellation Window</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Cancel up to 24 hours prior to Oct 24, 10:00 AM for a 100% instant refund straight back into your TeleBirr wallet with zero penalties.
+        </p>
+</div>
+</div>
+</div>
+<!-- Inline Script Handling Simulated TeleBirr Lifecycle -->
+<script>
+    function setSimState(state) {
+      const stateReady = document.getElementById('stateReady');
+      const stateProcessing = document.getElementById('stateProcessing');
+      const stateReceipt = document.getElementById('stateReceipt');
+
+      const tabReady = document.getElementById('tabReady');
+      const tabProcessing = document.getElementById('tabProcessing');
+      const tabReceipt = document.getElementById('tabReceipt');
+
+      // Reset classes
+      [tabReady, tabProcessing, tabReceipt].forEach(tab => {
+        tab.className = "flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold text-on-surface-variant hover:text-on-surface transition-all text-center";
+      });
+
+      stateReady.classList.add('hidden');
+      stateProcessing.classList.add('hidden');
+      stateReceipt.classList.add('hidden');
+
+      if (state === 'ready') {
+        stateReady.classList.remove('hidden');
+        tabReady.className = "flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-all text-center";
+      } else if (state === 'processing') {
+        stateProcessing.classList.remove('hidden');
+        stateProcessing.classList.add('flex');
+        tabProcessing.className = "flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-all text-center";
+      } else if (state === 'receipt') {
+        stateReceipt.classList.remove('hidden');
+        tabReceipt.className = "flex-1 py-2 px-3 rounded-lg font-specs-tabular text-[13px] font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-all text-center";
+        
+        // Update receipt timestamp
+        const now = new Date();
+        document.getElementById('receiptTime').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' EAT';
+      }
+    }
+
+    function triggerSimulatedPayment() {
+      const btn = document.getElementById('payButton');
+      const label = document.getElementById('payBtnLabel');
+      
+      label.innerText = 'Communicating with Ethio Telecom...';
+      setSimState('processing');
+
+      // Simulate network latency of 1.6s
+      setTimeout(() => {
+        setSimState('receipt');
+        label.innerText = 'Complete Simulated Payment (39,900 ETB)';
+      }, 1600);
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-low text-on-surface-variant mt-space-xl"><div class="max-w-[1360px] mx-auto px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl"><div class="lg:col-span-5 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Sheggar Wheels Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"/><span class="font-headline-sm text-headline-sm text-on-surface">Sheggar Wheels</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Next-generation peer-to-peer automotive mobility in Addis Ababa. Direct, verified car sharing built for effortless metropolitan transit and diaspora expeditions without traditional car rental friction.</p><div class="flex items-center gap-space-sm"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-specs-tabular text-specs-tabular"><span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span><span>100% Verified Hosts &amp; TeleBirr Escrow</span></div></div></div><div class="lg:col-span-3 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Active Hubs in Addis</span><ul class="flex flex-wrap gap-2"><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Bole</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Kazanchis</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Old Airport</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Piassa</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">Sarbet</li><li class="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface">CMC</li></ul></div><div class="lg:col-span-2 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Platform</span><div class="flex flex-col gap-2 font-body-md text-body-md"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="explore-cars" href="#">Fleet Inventory</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#">Protection &amp; Terms</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="host-a-vehicle" href="#">List Your Car</a><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard" href="#">Fleet Portal</a></div></div><div class="lg:col-span-2 flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">Verification</span><div class="flex flex-col gap-2 font-body-md text-body-md"><span class="text-on-surface-variant">Addis Ababa Transport Bureau Sync</span><span class="text-on-surface-variant">Chapa &amp; TeleBirr Rails</span><span class="text-on-surface-variant">24/7 Roadside Assistance</span></div></div></div><div class="pt-space-md bg-surface-container-high/40 rounded-xl px-space-md py-space-sm flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[20px]">info</span><span class="font-specs-tabular text-specs-tabular text-on-surface">Simulated Prototype for Demonstration Purposes</span></div><span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Sheggar Wheels P2P Inc. Addis Ababa, Ethiopia. All rights reserved.</span></div></div></footer></body></html>
