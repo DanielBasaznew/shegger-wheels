@@ -1,0 +1,467 @@
+/**
+ * Shegger Wheels — Demo Seed Data
+ * 
+ * Realistic, internally consistent demo data for Addis Ababa, Ethiopia.
+ * Fictional identities and simulated operational data for frontend testing.
+ */
+
+import { User, Car, Booking, Review, Dispute, Announcement } from './types';
+
+// ==========================================
+// Seed Users
+// ==========================================
+
+export const SEED_USERS: User[] = [
+  {
+    id: 'user_admin_01',
+    name: 'Yared Mulugeta (Admin)',
+    email: 'admin@sheggerwheels.et',
+    phone: '+251911000001',
+    roles: ['admin'],
+    status: 'active',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80',
+    neighbourhood: 'Bole',
+    createdAt: '2025-01-10T08:00:00Z',
+  },
+  {
+    id: 'user_owner_01',
+    name: 'Dawit Tadesse',
+    email: 'dawit.tadesse@example.et',
+    phone: '+251911223344',
+    // Demonstrates coexisting roles: both owner and renter on one account
+    roles: ['owner', 'renter'],
+    status: 'active',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+    neighbourhood: 'Bole',
+    createdAt: '2025-01-15T09:30:00Z',
+  },
+  {
+    id: 'user_owner_02',
+    name: 'Abebe Kebede',
+    email: 'abebe.kebede@example.et',
+    phone: '+251911556677',
+    roles: ['owner'],
+    status: 'active',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
+    neighbourhood: 'Kazanchis',
+    createdAt: '2025-01-20T11:15:00Z',
+  },
+  {
+    id: 'user_renter_01',
+    name: 'Sara Hailu',
+    email: 'sara.hailu@example.et',
+    phone: '+251922334455',
+    roles: ['renter'],
+    status: 'active',
+    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=256&q=80',
+    neighbourhood: 'CMC',
+    createdAt: '2025-02-01T14:20:00Z',
+  },
+  {
+    id: 'user_suspended_01',
+    name: 'Kibreab Tesfaye (Suspended)',
+    email: 'kibreab.suspended@example.et',
+    phone: '+251933445566',
+    roles: ['renter'],
+    status: 'suspended',
+    avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=256&q=80',
+    neighbourhood: 'Sarbet',
+    createdAt: '2025-01-25T16:00:00Z',
+  },
+];
+
+// ==========================================
+// Seed Cars (Addis Ababa Neighbourhoods)
+// ==========================================
+
+export const SEED_CARS: Car[] = [
+  {
+    id: 'car_01',
+    ownerId: 'user_owner_02', // Abebe Kebede
+    make: 'Toyota',
+    model: 'RAV4 Hybrid',
+    year: 2022,
+    transmission: 'Automatic',
+    seats: 5,
+    fuelType: 'Hybrid',
+    city: 'Addis Ababa',
+    neighbourhood: 'Bole',
+    latitude: 8.9952,
+    longitude: 38.7891,
+    pricePerDay: 4500,
+    photos: [
+      'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80',
+    description: 'Immaculate condition Toyota RAV4 Hybrid with great fuel efficiency. Ideal for city commutes and family weekend outings around Addis Ababa and Bishoftu.',
+    features: ['Air Conditioning', 'Bluetooth', 'Backup Camera', 'Apple CarPlay', 'Cruise Control'],
+    status: 'approved',
+    unavailableDates: ['2026-11-01', '2026-11-02'],
+    createdAt: '2025-02-05T10:00:00Z',
+  },
+  {
+    id: 'car_02',
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    make: 'Hyundai',
+    model: 'Tucson Executive',
+    year: 2023,
+    transmission: 'Automatic',
+    seats: 5,
+    fuelType: 'Petrol',
+    city: 'Addis Ababa',
+    neighbourhood: 'Kazanchis',
+    latitude: 9.0185,
+    longitude: 38.7667,
+    pricePerDay: 5200,
+    photos: [
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
+    description: 'Modern executive SUV with leather interior, panoramic roof, and smooth suspension. Pick-up spot directly in Kazanchis near UNECA.',
+    features: ['Panoramic Sunroof', 'Heated Seats', 'GPS Navigation', 'Parking Sensors', 'Leather Seats'],
+    status: 'approved',
+    unavailableDates: [],
+    createdAt: '2025-02-06T11:30:00Z',
+  },
+  {
+    id: 'car_03',
+    ownerId: 'user_owner_02', // Abebe Kebede
+    make: 'Suzuki',
+    model: 'Dzire GLX',
+    year: 2021,
+    transmission: 'Manual',
+    seats: 5,
+    fuelType: 'Petrol',
+    city: 'Addis Ababa',
+    neighbourhood: 'Sarbet',
+    latitude: 8.9892,
+    longitude: 38.7429,
+    pricePerDay: 2800,
+    photos: [
+      'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80',
+    description: 'Extremely economical compact sedan. Agile in urban traffic, easy to park, and very reliable for everyday city errands in Sarbet and Mexico.',
+    features: ['Air Conditioning', 'Power Steering', 'Bluetooth', 'Central Locking'],
+    status: 'approved',
+    unavailableDates: [],
+    createdAt: '2025-02-10T14:00:00Z',
+  },
+  {
+    id: 'car_04',
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    make: 'Toyota',
+    model: 'Land Cruiser Prado TX',
+    year: 2020,
+    transmission: 'Automatic',
+    seats: 7,
+    fuelType: 'Diesel',
+    city: 'Addis Ababa',
+    neighbourhood: 'Old Airport',
+    latitude: 8.9781,
+    longitude: 38.7354,
+    pricePerDay: 9500,
+    photos: [
+      'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80',
+    description: 'Rugged luxury 4x4 with 7 comfortable seats. High ground clearance, all-terrain capabilities, and roof rack ready for regional trips across Ethiopia.',
+    features: ['Four-Wheel Drive', '7 Passenger Seating', 'Roof Rack', 'Tow Hook', 'Air Conditioning'],
+    status: 'approved',
+    unavailableDates: [],
+    createdAt: '2025-02-12T09:00:00Z',
+  },
+  {
+    id: 'car_05',
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    make: 'Toyota',
+    model: 'Corolla Prestige',
+    year: 2020,
+    transmission: 'Automatic',
+    seats: 5,
+    fuelType: 'Petrol',
+    city: 'Addis Ababa',
+    neighbourhood: 'CMC',
+    latitude: 9.0234,
+    longitude: 38.8251,
+    pricePerDay: 3200,
+    photos: [
+      'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80',
+    description: 'Dependable and smooth automatic Corolla. Clean interior, well-serviced, located convenient to CMC and Summit residential zones.',
+    features: ['Air Conditioning', 'Keyless Entry', 'Bluetooth', 'USB Charger'],
+    status: 'approved',
+    unavailableDates: [],
+    createdAt: '2025-02-15T15:20:00Z',
+  },
+  {
+    id: 'car_06',
+    ownerId: 'user_owner_02', // Abebe Kebede
+    make: 'Volkswagen',
+    model: 'ID.4 Pro EV',
+    year: 2023,
+    transmission: 'Automatic',
+    seats: 5,
+    fuelType: 'Electric',
+    city: 'Addis Ababa',
+    neighbourhood: 'Bole',
+    latitude: 8.9981,
+    longitude: 38.7845,
+    pricePerDay: 6000,
+    photos: [
+      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80',
+    description: 'Fully electric zero-emission SUV with up to 480km range. Modern digital cockpit, wireless charging, and silent city driving.',
+    features: ['100% Electric', 'Fast Charging Support', 'Lane Assist', 'Touchscreen Cockpit'],
+    status: 'approved',
+    unavailableDates: [],
+    createdAt: '2025-02-18T16:45:00Z',
+  },
+  {
+    id: 'car_07',
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    make: 'Hyundai',
+    model: 'Elantra GLS',
+    year: 2022,
+    transmission: 'Automatic',
+    seats: 5,
+    fuelType: 'Petrol',
+    city: 'Addis Ababa',
+    neighbourhood: 'Piassa',
+    latitude: 9.0345,
+    longitude: 38.7512,
+    pricePerDay: 3800,
+    photos: [
+      'https://images.unsplash.com/photo-1619682817481-e994891cd1f5?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1619682817481-e994891cd1f5?auto=format&fit=crop&w=1200&q=80',
+    description: 'Sharp-styled compact sedan with low mileage. Excellent sound system and responsive braking. Awaiting admin moderation review.',
+    features: ['Air Conditioning', 'Bluetooth', 'Touchscreen', 'Reverse Sensors'],
+    // Seeded with pending status for testing admin approval workflow
+    status: 'pending',
+    unavailableDates: [],
+    createdAt: '2025-02-22T08:30:00Z',
+  },
+  {
+    id: 'car_08',
+    ownerId: 'user_owner_02', // Abebe Kebede
+    make: 'Mitsubishi',
+    model: 'Pajero Sport',
+    year: 2019,
+    transmission: 'Manual',
+    seats: 7,
+    fuelType: 'Diesel',
+    city: 'Addis Ababa',
+    neighbourhood: 'Lideta',
+    latitude: 9.0112,
+    longitude: 38.7398,
+    pricePerDay: 7000,
+    photos: [
+      'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80',
+    ],
+    featuredImage: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80',
+    description: 'Robust 7-seater currently deactivated for scheduled brake service and scheduled maintenance.',
+    features: ['4WD', '7 Seats', 'Heavy Duty Suspension'],
+    // Seeded with inactive status for testing owner fleet filters
+    status: 'inactive',
+    unavailableDates: [],
+    createdAt: '2025-01-05T12:00:00Z',
+  },
+];
+
+// ==========================================
+// Seed Bookings (Valid Lifecycle Transitions)
+// ==========================================
+
+export const SEED_BOOKINGS: Booking[] = [
+  {
+    id: 'booking_01',
+    carId: 'car_01', // Toyota RAV4
+    renterId: 'user_renter_01', // Sara Hailu
+    ownerId: 'user_owner_02', // Abebe Kebede
+    startDate: '2025-02-01',
+    endDate: '2025-02-04',
+    days: 3,
+    pricePerDay: 4500,
+    subtotal: 13500,
+    fee: 1350,
+    securityDeposit: 5000,
+    total: 19850,
+    paymentStatus: 'paid',
+    paymentMethod: 'TeleBirr',
+    paymentReference: 'TB-MOCK-771829',
+    status: 'reviewed', // Completed and reviewed
+    createdAt: '2025-01-28T10:00:00Z',
+    updatedAt: '2025-02-05T12:00:00Z',
+  },
+  {
+    id: 'booking_02',
+    carId: 'car_02', // Hyundai Tucson
+    renterId: 'user_renter_01', // Sara Hailu
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    startDate: '2026-10-20',
+    endDate: '2026-10-24',
+    days: 4,
+    pricePerDay: 5200,
+    subtotal: 20800,
+    fee: 2080,
+    securityDeposit: 5000,
+    total: 27880,
+    paymentStatus: 'held_in_escrow',
+    paymentMethod: 'TeleBirr',
+    paymentReference: 'TB-MOCK-994812',
+    status: 'in_progress', // Active ongoing rental, eligible for simulated tracking
+    createdAt: '2026-10-18T14:30:00Z',
+    updatedAt: '2026-10-20T08:00:00Z',
+  },
+  {
+    id: 'booking_03',
+    carId: 'car_03', // Suzuki Dzire
+    renterId: 'user_renter_01', // Sara Hailu
+    ownerId: 'user_owner_02', // Abebe Kebede
+    startDate: '2026-11-05',
+    endDate: '2026-11-08',
+    days: 3,
+    pricePerDay: 2800,
+    subtotal: 8400,
+    fee: 840,
+    securityDeposit: 3000,
+    total: 12240,
+    paymentStatus: 'held_in_escrow',
+    paymentMethod: 'TeleBirr',
+    paymentReference: 'TB-MOCK-330192',
+    status: 'confirmed', // Confirmed upcoming rental
+    createdAt: '2026-10-19T16:00:00Z',
+    updatedAt: '2026-10-19T17:15:00Z',
+  },
+  {
+    id: 'booking_04',
+    carId: 'car_04', // Toyota Land Cruiser Prado
+    renterId: 'user_renter_01', // Sara Hailu
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    startDate: '2026-11-15',
+    endDate: '2026-11-17',
+    days: 2,
+    pricePerDay: 9500,
+    subtotal: 19000,
+    fee: 1900,
+    securityDeposit: 10000,
+    total: 30900,
+    paymentStatus: 'held_in_escrow',
+    paymentMethod: 'TeleBirr',
+    paymentReference: 'TB-MOCK-661094',
+    status: 'requested', // Newly requested, awaiting Dawit's approval
+    createdAt: '2026-10-21T07:45:00Z',
+    updatedAt: '2026-10-21T07:45:00Z',
+  },
+  {
+    id: 'booking_05',
+    carId: 'car_05', // Toyota Corolla
+    renterId: 'user_renter_01', // Sara Hailu
+    ownerId: 'user_owner_01', // Dawit Tadesse
+    startDate: '2025-01-15',
+    endDate: '2025-01-16',
+    days: 1,
+    pricePerDay: 3200,
+    subtotal: 3200,
+    fee: 320,
+    total: 3520,
+    paymentStatus: 'refunded',
+    status: 'cancelled', // Cancelled rental demonstration
+    cancellationReason: 'Renter trip schedule changed',
+    createdAt: '2025-01-10T11:00:00Z',
+    updatedAt: '2025-01-11T09:30:00Z',
+  },
+  {
+    id: 'booking_06',
+    carId: 'car_01', // Toyota RAV4
+    renterId: 'user_owner_01', // Dawit acting as renter
+    ownerId: 'user_owner_02', // Abebe Kebede
+    startDate: '2025-02-10',
+    endDate: '2025-02-12',
+    days: 2,
+    pricePerDay: 4500,
+    subtotal: 9000,
+    fee: 900,
+    securityDeposit: 5000,
+    total: 14900,
+    paymentStatus: 'held_in_escrow',
+    status: 'disputed', // Under dispute for admin resolution testing
+    createdAt: '2025-02-08T14:00:00Z',
+    updatedAt: '2025-02-13T10:00:00Z',
+  },
+];
+
+// ==========================================
+// Seed Reviews
+// ==========================================
+
+export const SEED_REVIEWS: Review[] = [
+  {
+    id: 'review_01',
+    bookingId: 'booking_01',
+    carId: 'car_01',
+    renterId: 'user_renter_01', // Sara Hailu
+    ownerId: 'user_owner_02', // Abebe Kebede
+    rating: 5,
+    comment: 'The RAV4 was immaculate and very fuel-efficient. Host Abebe was punctual for key handoff near Bole Medhanialem. Smooth, transparent experience!',
+    ownerReply: 'Thank you Sara! You took great care of the vehicle. You are welcome back anytime.',
+    createdAt: '2025-02-05T12:30:00Z',
+  },
+  {
+    id: 'review_02',
+    bookingId: 'booking_historic_00',
+    carId: 'car_02',
+    renterId: 'user_renter_01',
+    ownerId: 'user_owner_01',
+    rating: 5,
+    comment: 'Comfortable executive ride for diplomatic meetings around Kazanchis. Clean interior and clear communication.',
+    createdAt: '2025-01-30T16:00:00Z',
+  },
+];
+
+// ==========================================
+// Seed Disputes
+// ==========================================
+
+export const SEED_DISPUTES: Dispute[] = [
+  {
+    id: 'dispute_01',
+    bookingId: 'booking_06',
+    openedBy: 'user_owner_01', // Dawit (renter in this booking)
+    openedByRole: 'renter',
+    reason: 'Security Deposit Delay',
+    description: 'Vehicle was returned without any scratches on Feb 12, but security deposit release has not yet been unlocked by the host.',
+    status: 'open',
+    createdAt: '2025-02-13T10:00:00Z',
+  },
+];
+
+// ==========================================
+// Seed Announcements
+// ==========================================
+
+export const SEED_ANNOUNCEMENTS: Announcement[] = [
+  {
+    id: 'announcement_01',
+    title: 'Welcome to the Shegger Wheels Addis Ababa Prototype',
+    message: 'Shegger Wheels is a frontend capstone project demonstrating peer-to-peer car sharing. All bookings, payments, and tracking are simulated using local browser storage.',
+    active: true,
+    category: 'info',
+    createdAt: '2025-01-01T00:00:00Z',
+    createdBy: 'user_admin_01',
+  },
+  {
+    id: 'announcement_02',
+    title: 'TeleBirr Escrow Simulation Active',
+    message: 'Mock TeleBirr smart escrow verification is live across Bole, Kazanchis, Sarbet, Old Airport, and CMC hubs.',
+    active: true,
+    category: 'feature',
+    createdAt: '2025-02-01T00:00:00Z',
+    createdBy: 'user_admin_01',
+  },
+];
