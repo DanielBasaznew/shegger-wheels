@@ -1,336 +1,236 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 
 export default function Home() {
-  return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-amber-100 selection:text-amber-900">
-      {/* Brand Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 group"
-              id="brand-logo"
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-white shadow-sm shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-                  />
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-amber-600 transition-colors">
-                  Shegger Wheels
-                </span>
-                <span className="text-[10px] uppercase font-semibold tracking-wider text-amber-700">
-                  Addis Ababa P2P
-                </span>
-              </div>
-            </Link>
-          </div>
+  const steps = [
+    {
+      num: "01",
+      title: "Find Your Vehicle",
+      desc: "Browse vetted sedans, SUVs, and compact cars by neighbourhood, seats, transmission, and upfront ETB daily price.",
+    },
+    {
+      num: "02",
+      title: "Request Booking",
+      desc: "Select your trip dates, inspect itemized pricing, and submit your request directly to the vehicle owner.",
+    },
+    {
+      num: "03",
+      title: "Meet & Drive",
+      desc: "Connect with the host in Bole, Kazanchis, or your selected hub for key handover, vehicle inspection, and secure escrow lock.",
+    },
+    {
+      num: "04",
+      title: "Return & Review",
+      desc: "Conclude your trip at the agreed time, release the simulated escrow, and leave feedback to help build community trust.",
+    },
+  ];
 
-          {/* Simple Navigation */}
-          <nav
-            aria-label="Main Navigation"
-            className="flex items-center gap-1 sm:gap-2"
-          >
-            <Link
-              href="/"
-              className="px-3 py-2 text-sm font-medium text-amber-600 rounded-lg hover:bg-amber-50 transition-colors"
-              id="nav-home"
-            >
-              Home
-            </Link>
+  return (
+    <div className="flex flex-col w-full pb-16 sm:pb-24">
+      {/* Top Notice Capsule */}
+      <section className="w-full pt-4 sm:pt-6">
+        <Container>
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-[#EBE8E1]/80 backdrop-blur-sm rounded-full py-2 px-4 sm:px-6 border border-[#66717D]/12 text-xs">
+            <div className="flex items-center gap-2 text-[#111820]">
+              <span className="w-2 h-2 rounded-full bg-[#536600] animate-pulse shrink-0" />
+              <span className="font-specs-tabular">
+                New in Shegger: TeleBirr Escrow direct verification active across 6 metropolitan hubs
+              </span>
+            </div>
             <Link
               href="/cars"
-              className="px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:text-amber-600 hover:bg-slate-100 transition-colors"
-              id="nav-explore-cars"
+              className="inline-flex items-center gap-1 font-label-caps text-[10px] text-[#536600] uppercase hover:underline font-bold"
             >
-              Explore Cars
+              Browse Fleet
+              <span aria-hidden="true">→</span>
             </Link>
-            <Link
-              href="/signin"
-              className="ml-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm transition-all hover:shadow hover:-translate-y-0.5"
-              id="nav-sign-in"
-            >
-              Sign In
-            </Link>
-          </nav>
-        </div>
-      </header>
+          </div>
+        </Container>
+      </section>
 
-      {/* Main Content Shell */}
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-white border-b border-slate-200/80 py-16 sm:py-24 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-50/50 via-transparent to-transparent pointer-events-none" />
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-              {/* Context Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100/80 text-amber-900 text-xs font-semibold mb-6">
-                <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                Addis Ababa&apos;s Peer-to-Peer Car Rental Marketplace
-              </div>
+      {/* Hero Section */}
+      <section className="w-full pt-8 sm:pt-14 pb-12 sm:pb-16">
+        <Container>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7 flex flex-col items-start gap-5">
+              <Badge variant="neutral" dot>
+                Verified Addis Ababa Car Sharing
+              </Badge>
 
-              {/* Hero Title */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-950 tracking-tight leading-[1.15]">
-                Rent trusted cars directly from{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">
-                  local owners
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#111820] tracking-tight leading-[1.12]">
+                Effortless car rental for{" "}
+                <span className="text-[#536600] underline decoration-[#D5F36A] decoration-wavy underline-offset-8">
+                  modern Addis Ababa
                 </span>
+                .
               </h1>
 
-              {/* Hero Subtitle */}
-              <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl">
-                Skip traditional rental counters. Connect directly with vehicle
-                owners across Bole, Kazanchis, CMC, Sarbet, and all Addis Ababa
-                neighbourhoods for transparent daily rates and easy booking.
+              <p className="text-base sm:text-lg text-[#44474B] leading-relaxed max-w-xl">
+                Unlock vetted local vehicles from trusted hosts across Bole, Kazanchis, Old Airport, and beyond. Instant booking, transparent ETB pricing, and seamless simulated TeleBirr escrow.
               </p>
 
-              {/* Call to Actions */}
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
+              {/* Actions */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Button
                   href="/cars"
-                  id="hero-cta-explore"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-semibold text-base shadow-md shadow-amber-600/25 transition-all hover:-translate-y-0.5"
+                  variant="primary"
+                  size="lg"
+                  id="hero-explore-cars"
                 >
                   Explore Cars
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </Link>
-
-                <a
-                  href="#how-it-works"
-                  id="hero-cta-how-it-works"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 font-semibold text-base bg-white transition-colors"
+                </Button>
+                <Button
+                  href="/#how-it-works"
+                  variant="outline"
+                  size="lg"
+                  id="hero-how-it-works"
                 >
                   How It Works
-                </a>
+                </Button>
               </div>
 
-              {/* Quick highlights */}
-              <div className="mt-12 pt-8 border-t border-slate-200/80 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div>
-                  <div className="text-2xl font-bold text-slate-900">10+</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">
-                    Addis Sub-cities
-                  </div>
+              {/* Trust Badges Strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full pt-6 border-t border-[#66717D]/15 mt-2">
+                <div className="bg-white p-3.5 rounded-xl border border-[#66717D]/12 shadow-xs">
+                  <span className="text-xl sm:text-2xl font-bold text-[#111820] block">350+</span>
+                  <span className="font-label-caps text-[9px] text-[#66717D] uppercase">Vetted Vehicles</span>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-900">100%</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">
-                    Peer-to-Peer
-                  </div>
+                <div className="bg-white p-3.5 rounded-xl border border-[#66717D]/12 shadow-xs">
+                  <span className="text-xl sm:text-2xl font-bold text-[#111820] block">4.96 ★</span>
+                  <span className="font-label-caps text-[9px] text-[#66717D] uppercase">Avg Host Rating</span>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-900">ETB</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">
-                    Direct Daily Rates
-                  </div>
+                <div className="bg-white p-3.5 rounded-xl border border-[#66717D]/12 shadow-xs">
+                  <span className="text-xl sm:text-2xl font-bold text-[#111820] block">0 ETB</span>
+                  <span className="font-label-caps text-[9px] text-[#66717D] uppercase">Hidden Fees</span>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-900">Mock</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">
-                    TeleBirr Checkout
-                  </div>
+                <div className="bg-white p-3.5 rounded-xl border border-[#66717D]/12 shadow-xs">
+                  <span className="text-xl sm:text-2xl font-bold text-[#536600] block">Instant</span>
+                  <span className="font-label-caps text-[9px] text-[#66717D] uppercase">TeleBirr Escrow</span>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* Rental Concept Section ("How It Works") */}
-        <section
-          id="how-it-works"
-          className="py-16 sm:py-20 lg:py-24 bg-slate-50"
-        >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto">
-              <span className="text-xs uppercase font-bold tracking-wider text-amber-700">
-                Simple & Transparent
-              </span>
-              <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                How Shegger Wheels Works
-              </h2>
-              <p className="mt-3 text-base sm:text-lg text-slate-600">
-                A seamless peer-to-peer car sharing model tailored for vehicle
-                owners and renters in Addis Ababa.
+            {/* Right Hero Visual Card */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative w-full h-[400px] sm:h-[460px] rounded-3xl overflow-hidden shadow-xl bg-[#111820]">
+                <Image
+                  src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80"
+                  alt="Modern SUV in Addis Ababa"
+                  fill
+                  priority
+                  unoptimized
+                  className="object-cover opacity-90 hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111820]/90 via-transparent to-transparent" />
+
+                {/* Floating Status Capsule */}
+                <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-white/95 backdrop-blur-md shadow-lg border border-white/40 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#CEEC64] flex items-center justify-center text-[#171E00] font-bold">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-[#111820]">Available in Bole</span>
+                      <span className="text-xs text-[#66717D]">Toyota RAV4 • Ready in 15m</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-specs-tabular text-sm font-bold text-[#111820] block">
+                      4,500 ETB
+                    </span>
+                    <span className="font-label-caps text-[9px] text-[#536600] font-bold uppercase">
+                      Escrow Locked
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Shield Tag */}
+              <div className="hidden sm:flex absolute -top-3 -right-3 px-3.5 py-2 bg-[#D1EF67] text-[#171E00] font-semibold text-xs rounded-xl shadow-md items-center gap-2 border border-[#B6D24D]">
+                <span>✓ 100% Host Inspection Protocol</span>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="w-full py-16 sm:py-24 bg-[#F1EEE7]/50 border-t border-[#66717D]/12">
+        <Container>
+          <SectionHeading
+            eyebrow="Simple & Transparent"
+            title="How Shegger Wheels Works"
+            subtitle="A streamlined peer-to-peer automotive sharing model tailored for vehicle owners and renters in Addis Ababa."
+            badgeDot
+          />
+
+          {/* 4 Steps Grid */}
+          <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((step) => (
+              <Card
+                key={step.num}
+                variant="default"
+                className="flex flex-col justify-between hover:border-[#111820]/30 transition-colors"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-[#EBE8E1] text-[#111820] flex items-center justify-center font-bold text-sm mb-4">
+                    {step.num}
+                  </div>
+                  <h3 className="text-lg font-bold text-[#111820] tracking-tight">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-[#44474B] leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {/* Dual Value Cards */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* For Renters Card */}
+            <Card variant="default" className="p-8">
+              <Badge variant="citron">For Renters</Badge>
+              <h3 className="mt-3 text-2xl font-bold text-[#111820] tracking-tight">
+                Need a reliable car in Addis?
+              </h3>
+              <p className="mt-2.5 text-sm text-[#44474B] leading-relaxed">
+                Skip commercial rental agency markups. Access privately owned, well-maintained cars parked in your own sub-city with transparent daily rates and TeleBirr protection.
               </p>
-            </div>
-
-            {/* 4 Steps Grid */}
-            <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Step 1 */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-amber-200 transition-colors">
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base mb-4">
-                    01
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    Find Your Vehicle
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                    Browse sedans, SUVs, and compact cars by neighbourhood,
-                    seats, transmission, and daily price.
-                  </p>
-                </div>
+              <div className="mt-6">
+                <Button href="/cars" variant="secondary" size="md">
+                  Browse Available Cars
+                </Button>
               </div>
+            </Card>
 
-              {/* Step 2 */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-amber-200 transition-colors">
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base mb-4">
-                    02
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    Request Booking
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                    Select your rental dates, review the upfront price
-                    calculation, and submit your request directly to the owner.
-                  </p>
-                </div>
+            {/* For Car Owners Card */}
+            <Card variant="obsidian" className="p-8">
+              <Badge variant="citron">For Car Owners</Badge>
+              <h3 className="mt-3 text-2xl font-bold text-white tracking-tight">
+                Have an idle car parked in Addis?
+              </h3>
+              <p className="mt-2.5 text-sm text-[#DCDAD3] leading-relaxed">
+                Turn your vehicle into passive income when you are not driving. Control your calendar, approve requests, and earn securely with verified local drivers.
+              </p>
+              <div className="mt-6">
+                <Button href="/signin?role=owner" variant="primary" size="md">
+                  List Your Car
+                </Button>
               </div>
-
-              {/* Step 3 */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-amber-200 transition-colors">
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base mb-4">
-                    03
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    Meet & Drive
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                    After owner confirmation, pick up the keys, inspect the car,
-                    and enjoy your trip across the city or country.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 4 */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-amber-200 transition-colors">
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base mb-4">
-                    04
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    Return & Review
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                    Return the vehicle at the agreed time, conclude the trip, and
-                    leave a review to build trust in our community.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Community Dual Cards */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
-                <span className="text-xs uppercase font-bold tracking-wider text-amber-700">
-                  For Renters
-                </span>
-                <h3 className="mt-1 text-xl font-bold text-slate-900">
-                  Need a reliable car for a few days?
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                  Avoid the hassle and expense of commercial rental agencies.
-                  Access well-maintained cars parked in your own sub-city with
-                  transparent daily rates.
-                </p>
-                <Link
-                  href="/cars"
-                  className="mt-4 inline-flex items-center text-sm font-semibold text-amber-600 hover:text-amber-500 gap-1"
-                >
-                  Browse available cars →
-                </Link>
-              </div>
-
-              <div className="p-6 sm:p-8 rounded-2xl bg-slate-900 text-white shadow-sm">
-                <span className="text-xs uppercase font-bold tracking-wider text-amber-400">
-                  For Car Owners
-                </span>
-                <h3 className="mt-1 text-xl font-bold text-white">
-                  Have an idle car parked in Addis?
-                </h3>
-                <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-                  Turn your car into passive earnings when you aren&apos;t driving.
-                  Control your calendar, approve rental requests, and earn safely
-                  with vetted local drivers.
-                </p>
-                <Link
-                  href="/signin"
-                  className="mt-4 inline-flex items-center text-sm font-semibold text-amber-400 hover:text-amber-300 gap-1"
-                >
-                  Sign in to list your car →
-                </Link>
-              </div>
-            </div>
+            </Card>
           </div>
-        </section>
-      </main>
-
-      {/* Brand Footer */}
-      <footer className="w-full bg-white border-t border-slate-200 py-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start">
-            <span className="font-bold text-base text-slate-900">
-              Shegger Wheels
-            </span>
-            <span className="text-xs text-slate-600 mt-0.5">
-              Peer-to-peer car rental prototype • Addis Ababa, Ethiopia
-            </span>
-          </div>
-
-          <div className="flex items-center gap-6 text-sm text-slate-600">
-            <Link href="/" className="hover:text-slate-900">
-              Home
-            </Link>
-            <Link href="/cars" className="hover:text-slate-900">
-              Explore Cars
-            </Link>
-            <Link href="/signin" className="hover:text-slate-900">
-              Sign In
-            </Link>
-          </div>
-
-          <div className="text-xs text-slate-600 text-center md:text-right">
-            <span>Simulated Frontend Prototype</span>
-            <span className="block text-[11px] text-slate-600">
-              Data persisted in browser storage
-            </span>
-          </div>
-        </div>
-      </footer>
+        </Container>
+      </section>
     </div>
   );
 }
-
