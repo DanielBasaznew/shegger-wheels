@@ -106,6 +106,11 @@ export function writeStorage<T>(key: string, value: T): boolean {
   try {
     const serialized = JSON.stringify(value);
     window.localStorage.setItem(key, serialized);
+    try {
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { key } }));
+    } catch {
+      window.dispatchEvent(new Event('shegger-storage-change'));
+    }
     return true;
   } catch (error) {
     console.error(`[Shegger Storage] Failed to write key "${key}":`, error);
@@ -120,6 +125,11 @@ export function removeStorage(key: string): void {
   if (!isBrowser()) return;
   try {
     window.localStorage.removeItem(key);
+    try {
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { key } }));
+    } catch {
+      window.dispatchEvent(new Event('shegger-storage-change'));
+    }
   } catch (error) {
     console.warn(`[Shegger Storage] Failed to remove key "${key}":`, error);
   }
