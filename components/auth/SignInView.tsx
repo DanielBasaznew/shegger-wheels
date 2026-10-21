@@ -17,7 +17,10 @@ export function SignInView() {
   const searchParams = useSearchParams();
 
   // Extract safe return URL
-  const rawRedirect = searchParams.get('redirect') || searchParams.get('next');
+  const rawRedirect =
+    searchParams.get('redirect') ||
+    searchParams.get('next') ||
+    searchParams.get('returnUrl');
   const roleParam = searchParams.get('role') as UserRole | null;
 
   // Selected persona state (default to Dawit or matching role)
