@@ -40,8 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Local-only AI agent instructions
 /AGENTS.md
 
-# Local-only capstone specification
 /Sheggar_Wheels_Frontend_Capstone_Brief_Updated.pdf
