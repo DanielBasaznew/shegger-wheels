@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sheggar Wheels — Peer-to-Peer Car Rental in Addis Ababa",
+  title: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
   description:
     "Peer-to-peer car rental marketplace for Addis Ababa. Rent verified vehicles directly from local owners or list your car to earn.",
 };

@@ -35,7 +35,7 @@ export default function Home() {
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-amber-600 transition-colors">
-                  Sheggar Wheels
+                  Shegger Wheels
                 </span>
                 <span className="text-[10px] uppercase font-semibold tracking-wider text-amber-700">
                   Addis Ababa P2P
@@ -177,7 +177,7 @@ export default function Home() {
                 Simple & Transparent
               </span>
               <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                How Sheggar Wheels Works
+                How Shegger Wheels Works
               </h2>
               <p className="mt-3 text-base sm:text-lg text-slate-600">
                 A seamless peer-to-peer car sharing model tailored for vehicle
@@ -303,7 +303,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start">
             <span className="font-bold text-base text-slate-900">
-              Sheggar Wheels
+              Shegger Wheels
             </span>
             <span className="text-xs text-slate-600 mt-0.5">
               Peer-to-peer car rental prototype • Addis Ababa, Ethiopia
