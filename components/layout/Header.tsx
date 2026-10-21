@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useState, useSyncExternalStore } from 'react';
+import React, { useState, useSyncExternalStore, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getUserById } from '@/lib/storage';
-import { User, DemoSession } from '@/lib/types';
+import { User, DemoSession, UserRole } from '@/lib/types';
+import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
 
 function subscribe(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
   window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
+  window.addEventListener('shegger-session-change', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('shegger-session-change', callback);
+  };
 }
 
 function getSessionSnapshot(): string {
@@ -27,7 +33,10 @@ function getServerSnapshot(): string {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   const sessionRaw = useSyncExternalStore(subscribe, getSessionSnapshot, getServerSnapshot);
   let session: DemoSession | null = null;
@@ -45,10 +54,38 @@ export function Header() {
     }
   }
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSignOut = () => {
+    signOutDemoUser();
+    setUserDropdownOpen(false);
+    setMobileMenuOpen(false);
+    if (pathname.startsWith('/dashboard') || pathname.startsWith('/checkout')) {
+      router.push('/');
+    }
+  };
+
+  const handleRoleSwitch = (newRole: UserRole) => {
+    switchActiveRole(newRole);
+    setUserDropdownOpen(false);
+  };
+
   const navLinks = [
     { href: '/cars', label: 'Explore Cars' },
     { href: '/#how-it-works', label: 'How It Works' },
-    { href: '/signin?role=owner', label: 'Host a Vehicle' },
+    {
+      href: session?.activeRole === 'owner' ? '/dashboard/host' : '/signin?role=owner',
+      label: 'Host a Vehicle',
+    },
     { href: '/dashboard', label: 'Dashboard' },
   ];
 
@@ -140,34 +177,129 @@ export function Header() {
 
           {/* User Capsule or Sign In Button */}
           {session && currentUser ? (
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-[#FFFFFF] border border-[#66717D]/20 shadow-xs hover:border-[#111820]/40 transition-colors"
-              id="header-user-profile"
-            >
-              {currentUser.avatarUrl ? (
-                <Image
-                  src={currentUser.avatarUrl}
-                  alt={currentUser.name}
-                  width={28}
-                  height={28}
-                  unoptimized
-                  className="w-7 h-7 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-[#111820] text-[#D5F36A] flex items-center justify-center text-xs font-bold">
-                  {currentUser.name.charAt(0)}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white border border-[#66717D]/25 shadow-xs hover:border-[#111820] transition-colors cursor-pointer"
+                id="header-user-profile"
+                aria-expanded={userDropdownOpen}
+                aria-haspopup="true"
+              >
+                {currentUser.avatarUrl ? (
+                  <Image
+                    src={currentUser.avatarUrl}
+                    alt={currentUser.name}
+                    width={28}
+                    height={28}
+                    unoptimized
+                    className="w-7 h-7 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-[#111820] text-[#D5F36A] flex items-center justify-center text-xs font-bold">
+                    {currentUser.name.charAt(0)}
+                  </div>
+                )}
+                <div className="hidden xl:flex flex-col text-left leading-tight">
+                  <span className="text-xs font-bold text-[#111820]">
+                    {currentUser.name.split(' ')[0]}
+                  </span>
+                  <span className="text-[9px] font-label-caps uppercase text-[#536600] font-bold">
+                    {session.activeRole}
+                  </span>
+                </div>
+                <span className="text-xs text-[#66717D] ml-0.5">▾</span>
+              </button>
+
+              {/* User Dropdown Menu */}
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-[#66717D]/20 shadow-xl p-3 flex flex-col gap-2 z-50 animate-scale-in">
+                  <div className="p-3 rounded-xl bg-[#F6F3EC] flex flex-col gap-1">
+                    <span className="text-xs font-bold text-[#111820]">{currentUser.name}</span>
+                    <span className="text-[11px] text-[#66717D] truncate">{currentUser.email}</span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="px-2 py-0.5 rounded-full bg-[#111820] text-white text-[9px] font-label-caps uppercase font-bold">
+                        Active: {session.activeRole}
+                      </span>
+                      {currentUser.roles.length > 1 && (
+                        <span className="text-[10px] text-[#536600] font-semibold">
+                          Multi-Role Account
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Multi-role Switcher if account holds multiple roles */}
+                  {currentUser.roles.length > 1 && (
+                    <div className="p-2 border-t border-b border-[#66717D]/12 flex flex-col gap-1">
+                      <span className="text-[10px] font-label-caps uppercase text-[#66717D] font-bold">
+                        Switch Active Role
+                      </span>
+                      <div className="flex gap-1.5">
+                        {currentUser.roles.map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => handleRoleSwitch(r)}
+                            className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold uppercase transition-colors cursor-pointer ${
+                              session?.activeRole === r
+                                ? 'bg-[#111820] text-white shadow-xs'
+                                : 'bg-[#EBE8E1] text-[#44474B] hover:bg-[#DCDAD3]'
+                            }`}
+                          >
+                            {r}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Navigation Links in Menu */}
+                  <div className="flex flex-col gap-1 text-xs font-semibold text-[#111820]">
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-[#F6F3EC] transition-colors flex items-center justify-between"
+                    >
+                      <span>Dashboard Overview</span>
+                      <span>→</span>
+                    </Link>
+                    {session.activeRole === 'owner' && (
+                      <Link
+                        href="/dashboard/host"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="px-3 py-2 rounded-xl hover:bg-[#F6F3EC] transition-colors flex items-center justify-between"
+                      >
+                        <span>Host Fleet &amp; Blackouts</span>
+                        <span>→</span>
+                      </Link>
+                    )}
+                    {session.activeRole === 'admin' && (
+                      <Link
+                        href="/dashboard/admin"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="px-3 py-2 rounded-xl hover:bg-[#F6F3EC] transition-colors flex items-center justify-between"
+                      >
+                        <span>Admin Audit Ledger</span>
+                        <span>→</span>
+                      </Link>
+                    )}
+                  </div>
+
+                  {/* Sign Out Action */}
+                  <div className="pt-2 border-t border-[#66717D]/12">
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="w-full py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>🚪</span>
+                      <span>Sign Out (Clear Session)</span>
+                    </button>
+                  </div>
                 </div>
               )}
-              <div className="hidden xl:flex flex-col text-left leading-tight">
-                <span className="text-xs font-bold text-[#111820]">
-                  {currentUser.name.split(' ')[0]}
-                </span>
-                <span className="text-[9px] font-label-caps uppercase text-[#66717D]">
-                  {session.activeRole}
-                </span>
-              </div>
-            </Link>
+            </div>
           ) : (
             <Link
               href="/signin"
@@ -215,20 +347,63 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="pt-3 border-t border-[#66717D]/15 flex items-center justify-between">
-            <span className="text-xs text-[#66717D] font-specs-tabular">
-              Addis Ababa Fleet • ETB TeleBirr
-            </span>
-            <Link
-              href="/signin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-2 rounded-full text-xs font-semibold bg-[#111820] text-white"
-            >
-              {session ? 'Switch Account' : 'Demo Sign In'}
-            </Link>
+          <div className="pt-3 border-t border-[#66717D]/15 flex flex-col gap-2">
+            {session && currentUser ? (
+              <div className="flex flex-col gap-2 p-3 rounded-2xl bg-white border border-[#66717D]/15">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs text-[#111820]">{currentUser.name}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-[#111820] text-white text-[9px] font-label-caps uppercase">
+                      {session.activeRole}
+                    </span>
+                  </div>
+                </div>
+
+                {currentUser.roles.length > 1 && (
+                  <div className="flex gap-2 pt-1 border-t border-[#66717D]/10">
+                    {currentUser.roles.map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => handleRoleSwitch(r)}
+                        className={`flex-1 py-1 text-[10px] font-bold uppercase rounded-lg ${
+                          session?.activeRole === r
+                            ? 'bg-[#111820] text-white'
+                            : 'bg-[#F1EEE7] text-[#44474B]'
+                        }`}
+                      >
+                        {r}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="w-full py-2 rounded-xl bg-red-50 text-red-700 font-bold text-xs text-center"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#66717D] font-specs-tabular">
+                  Addis Ababa Fleet • ETB TeleBirr
+                </span>
+                <Link
+                  href="/signin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-2 rounded-full text-xs font-semibold bg-[#111820] text-white"
+                >
+                  Demo Sign In
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
     </header>
   );
 }
+

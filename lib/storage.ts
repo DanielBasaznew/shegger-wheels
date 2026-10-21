@@ -462,11 +462,26 @@ export function getCurrentSession(): DemoSession | null {
 }
 
 export function setCurrentSession(session: DemoSession): boolean {
-  return writeSession(SESSION_KEYS.SESSION, session);
+  const result = writeSession(SESSION_KEYS.SESSION, session);
+  if (result && isBrowser()) {
+    try {
+      window.dispatchEvent(new Event('shegger-session-change'));
+    } catch {
+      // Ignore if event constructor fails in non-standard environments
+    }
+  }
+  return result;
 }
 
 export function clearCurrentSession(): void {
   removeSession(SESSION_KEYS.SESSION);
+  if (isBrowser()) {
+    try {
+      window.dispatchEvent(new Event('shegger-session-change'));
+    } catch {
+      // Ignore if event constructor fails in non-standard environments
+    }
+  }
 }
 
 // ==========================================
