@@ -65,6 +65,9 @@ export interface Car {
   description: string;
   features: string[]; // e.g. ['Air Conditioning', 'Bluetooth', 'Backup Camera']
   status: CarStatus;
+  rejectionReason?: string; // Administrative rejection rationale
+  moderatedAt?: string; // ISO date-time string of moderation decision
+  moderatedBy?: string; // Admin user ID who reviewed the listing
   unavailableDates: string[]; // ISO date strings (YYYY-MM-DD)
   createdAt: string; // ISO date-time string
   updatedAt?: string;

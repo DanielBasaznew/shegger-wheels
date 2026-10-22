@@ -44,7 +44,23 @@ export interface UpdateCarListingInput {
   photos?: string[];
   featuredImage?: string;
   status?: CarStatus;
+  rejectionReason?: string;
   unavailableDates?: string[];
+}
+
+export interface ModerateCarInput {
+  action: 'approve' | 'reject';
+  reason?: string; // Required when action is 'reject'
+  notes?: string;
+}
+
+export interface AdminModerationMetrics {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+  inactive: number;
+  pendingCars: Car[];
 }
 
 export interface FleetMetrics {
@@ -326,11 +342,18 @@ export function updateCarListing(
   }
 
   // Self-approval Guard: Owners cannot self-approve pending or rejected cars
-  if (updates.status && updates.status === 'approved' && !isAdmin) {
-    if (existingCar.status === 'pending' || existingCar.status === 'rejected') {
+  if (updates.status && updates.status === 'approved') {
+    if (!isAdmin) {
+      if (existingCar.status === 'pending' || existingCar.status === 'rejected') {
+        return {
+          success: false,
+          error: 'Owners cannot self-approve vehicle listings. Moderation must be performed by a platform administrator.',
+        };
+      }
+    } else if (isOwner && (existingCar.status === 'pending' || existingCar.status === 'rejected')) {
       return {
         success: false,
-        error: 'Owners cannot self-approve vehicle listings. Moderation must be performed by a platform administrator.',
+        error: 'Conflict of interest: Administrators cannot approve or moderate their own vehicle listings.',
       };
     }
   }
@@ -359,6 +382,10 @@ export function updateCarListing(
     photos: updates.photos ?? existingCar.photos,
     featuredImage: updates.featuredImage ?? existingCar.featuredImage,
     status: updates.status ?? existingCar.status,
+    rejectionReason:
+      updates.rejectionReason !== undefined
+        ? updates.rejectionReason
+        : existingCar.rejectionReason,
     unavailableDates: updates.unavailableDates ?? existingCar.unavailableDates,
     updatedAt: new Date().toISOString(),
   };
@@ -457,4 +484,106 @@ export function updateCarBlackoutDates(
   // Deduplicate and sort
   const cleanDates = Array.from(new Set(dates)).sort();
   return updateCarListing(carId, actor, { unavailableDates: cleanDates });
+}
+
+// ==========================================
+// Admin Listing Moderation Engine
+// ==========================================
+
+/**
+ * Moderates a vehicle listing (approval or rejection with mandatory reason).
+ * 
+ * Security and Integrity Rules:
+ * 1. Actor must have an active session with role 'admin'.
+ * 2. Actor account must not be suspended.
+ * 3. Self-moderation conflict of interest: Admins cannot moderate listings for vehicles they own.
+ * 4. Rejection requires a non-empty descriptive reason (minimum 5 characters).
+ * 5. Approving a vehicle clears any existing rejection reason and sets status to 'approved'.
+ * 6. Preserves vehicle ownership (ownerId), specifications, pricing snapshot integrity, and existing bookings.
+ */
+export function moderateCarListing(
+  carId: string,
+  adminActor: { userId: string; role: UserRole },
+  input: ModerateCarInput
+): FleetOperationResult {
+  // 1. Session check
+  const session = getCurrentSession();
+  if (!session || session.userId !== adminActor.userId) {
+    return { success: false, error: 'Authentication required to moderate vehicle listings.' };
+  }
+
+  // 2. Role validation: Must have admin role
+  if (adminActor.role !== 'admin' || session.activeRole !== 'admin') {
+    return {
+      success: false,
+      error: 'Unauthorized: Only platform administrators can moderate vehicle listings.',
+    };
+  }
+
+  // 3. User status check
+  const user = getUserById(adminActor.userId);
+  if (!user || user.status === 'suspended') {
+    return { success: false, error: 'Your account is suspended. Administrative operations are restricted.' };
+  }
+
+  // 4. Retrieve vehicle
+  const car = getCarById(carId);
+  if (!car) {
+    return { success: false, error: 'Vehicle listing not found.' };
+  }
+
+  // 5. Conflict of interest guard: cannot moderate own vehicle
+  if (car.ownerId === adminActor.userId) {
+    return {
+      success: false,
+      error: 'Conflict of interest: Administrators cannot approve or moderate their own vehicle listings.',
+    };
+  }
+
+  // 6. Action specific validation
+  if (input.action === 'reject') {
+    if (!input.reason || input.reason.trim().length < 5) {
+      return {
+        success: false,
+        error: 'A detailed rejection reason (at least 5 characters) is required when rejecting a listing.',
+      };
+    }
+  }
+
+  const now = new Date().toISOString();
+  const updatedCar: Car = {
+    ...car,
+    status: input.action === 'approve' ? 'approved' : 'rejected',
+    rejectionReason: input.action === 'reject' ? input.reason!.trim() : undefined,
+    moderatedAt: now,
+    moderatedBy: adminActor.userId,
+    updatedAt: now,
+  };
+
+  const saved = saveCar(updatedCar);
+  if (!saved) {
+    return { success: false, error: 'Storage failure: Failed to save moderation decision.' };
+  }
+
+  return { success: true, car: updatedCar };
+}
+
+/**
+ * Calculates aggregate vehicle metrics across the entire platform for the admin moderation portal.
+ */
+export function getAdminModerationMetrics(allCarsInput?: Car[]): AdminModerationMetrics {
+  const cars = allCarsInput || getCars();
+  const pending = cars.filter((c) => c.status === 'pending');
+  const approved = cars.filter((c) => c.status === 'approved');
+  const rejected = cars.filter((c) => c.status === 'rejected');
+  const inactive = cars.filter((c) => c.status === 'inactive');
+
+  return {
+    total: cars.length,
+    pending: pending.length,
+    approved: approved.length,
+    rejected: rejected.length,
+    inactive: inactive.length,
+    pendingCars: pending,
+  };
 }
