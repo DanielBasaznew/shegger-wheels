@@ -18,6 +18,7 @@ import {
   Review,
   Dispute,
   Announcement,
+  Notification,
   DemoSession,
   CheckoutDraft,
 } from './types';
@@ -28,6 +29,7 @@ import {
   SEED_REVIEWS,
   SEED_DISPUTES,
   SEED_ANNOUNCEMENTS,
+  SEED_NOTIFICATIONS,
 } from './seeds';
 
 // ==========================================
@@ -41,6 +43,7 @@ export const STORAGE_KEYS = {
   REVIEWS: 'sw_reviews_v1',
   DISPUTES: 'sw_disputes_v1',
   ANNOUNCEMENTS: 'sw_announcements_v1',
+  NOTIFICATIONS: 'sw_notifications_v1',
 } as const;
 
 export const SESSION_KEYS = {
@@ -275,6 +278,21 @@ function isAnnouncement(item: unknown): item is Announcement {
   );
 }
 
+function isNotification(item: unknown): item is Notification {
+  if (!item || typeof item !== 'object') return false;
+  const n = item as Partial<Notification>;
+  return (
+    typeof n.id === 'string' &&
+    typeof n.recipientId === 'string' &&
+    typeof n.type === 'string' &&
+    typeof n.title === 'string' &&
+    typeof n.message === 'string' &&
+    typeof n.link === 'string' &&
+    typeof n.read === 'boolean' &&
+    typeof n.createdAt === 'string'
+  );
+}
+
 // ==========================================
 // Seed Data Initialization
 // ==========================================
@@ -307,6 +325,9 @@ export function initializeDemoData(forceReset = false): void {
     }
     if (forceReset || !window.localStorage.getItem(STORAGE_KEYS.ANNOUNCEMENTS)) {
       writeStorage(STORAGE_KEYS.ANNOUNCEMENTS, SEED_ANNOUNCEMENTS);
+    }
+    if (forceReset || !window.localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS)) {
+      writeStorage(STORAGE_KEYS.NOTIFICATIONS, SEED_NOTIFICATIONS);
     }
   }
 }
@@ -461,6 +482,97 @@ export function saveAnnouncement(announcement: Announcement): boolean {
     announcements.push(announcement);
   }
   return writeStorage(STORAGE_KEYS.ANNOUNCEMENTS, announcements);
+}
+
+// Notifications
+export function getNotifications(): Notification[] {
+  return readStorage<Notification[]>(
+    STORAGE_KEYS.NOTIFICATIONS,
+    SEED_NOTIFICATIONS,
+    (v): v is Notification[] => isArrayWithItems(v, isNotification)
+  );
+}
+
+export function getNotificationsForUser(userId: string): Notification[] {
+  return getNotifications()
+    .filter((n) => n.recipientId === userId)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export function saveNotification(notification: Notification): boolean {
+  const list = getNotifications();
+  const index = list.findIndex((n) => n.id === notification.id);
+  if (index >= 0) {
+    list[index] = notification;
+  } else {
+    list.unshift(notification); // Add new notifications to front
+  }
+  const saved = writeStorage(STORAGE_KEYS.NOTIFICATIONS, list);
+  if (saved && isBrowser()) {
+    try {
+      window.dispatchEvent(new Event('shegger-notification-change'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'notifications' } }));
+    } catch {
+      // Ignore in non-standard environments
+    }
+  }
+  return saved;
+}
+
+export function markNotificationAsRead(id: string, userId: string): boolean {
+  const list = getNotifications();
+  const index = list.findIndex((n) => n.id === id && n.recipientId === userId);
+  if (index < 0) return false;
+  list[index] = { ...list[index], read: true };
+  const saved = writeStorage(STORAGE_KEYS.NOTIFICATIONS, list);
+  if (saved && isBrowser()) {
+    try {
+      window.dispatchEvent(new Event('shegger-notification-change'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'notifications' } }));
+    } catch {
+      // Ignore
+    }
+  }
+  return saved;
+}
+
+export function markAllNotificationsAsRead(userId: string): boolean {
+  const list = getNotifications();
+  let modified = false;
+  const updated = list.map((n) => {
+    if (n.recipientId === userId && !n.read) {
+      modified = true;
+      return { ...n, read: true };
+    }
+    return n;
+  });
+  if (!modified) return true;
+  const saved = writeStorage(STORAGE_KEYS.NOTIFICATIONS, updated);
+  if (saved && isBrowser()) {
+    try {
+      window.dispatchEvent(new Event('shegger-notification-change'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'notifications' } }));
+    } catch {
+      // Ignore
+    }
+  }
+  return saved;
+}
+
+export function deleteNotification(id: string, userId: string): boolean {
+  const list = getNotifications();
+  const filtered = list.filter((n) => !(n.id === id && n.recipientId === userId));
+  if (filtered.length === list.length) return false;
+  const saved = writeStorage(STORAGE_KEYS.NOTIFICATIONS, filtered);
+  if (saved && isBrowser()) {
+    try {
+      window.dispatchEvent(new Event('shegger-notification-change'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'notifications' } }));
+    } catch {
+      // Ignore
+    }
+  }
+  return saved;
 }
 
 // ==========================================

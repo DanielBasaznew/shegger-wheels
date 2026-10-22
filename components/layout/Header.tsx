@@ -8,6 +8,8 @@ import { getUserById } from '@/lib/storage';
 import { User, DemoSession, UserRole } from '@/lib/types';
 import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
 
+import { NotificationBell } from '@/components/notifications/NotificationBell';
+
 function subscribe(callback: () => void) {
   if (typeof window === 'undefined') return () => {};
   window.addEventListener('storage', callback);
@@ -174,6 +176,9 @@ export function Header() {
             </svg>
             <span className="font-bold text-[#111820]">ETB / TeleBirr</span>
           </div>
+
+          {/* In-App Notifications Bell */}
+          <NotificationBell />
 
           {/* User Capsule or Sign In Button */}
           {session && currentUser ? (

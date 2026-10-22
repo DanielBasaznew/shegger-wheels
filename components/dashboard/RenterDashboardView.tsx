@@ -658,6 +658,16 @@ export function RenterDashboardView() {
 
                 {/* Quick Action Buttons */}
                 <div className="flex flex-col gap-2.5 pt-2">
+                  {(spotlightBooking.status === 'confirmed' || spotlightBooking.status === 'in_progress') && (
+                    <Link
+                      href={`/bookings/${spotlightBooking.id}/track`}
+                      className="w-full py-3 px-4 rounded-2xl bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                    >
+                      <span>📍</span>
+                      <span>Track Trip &amp; Live Telematics</span>
+                    </Link>
+                  )}
+
                   <button
                     type="button"
                     onClick={() => setSelectedBookingForPass(spotlightBooking)}
@@ -912,6 +922,16 @@ export function RenterDashboardView() {
                           {/* Actions */}
                           <td className="py-4 px-6 text-right">
                             <div className="flex items-center justify-end gap-2">
+                              {(b.status === 'confirmed' || b.status === 'in_progress') && (
+                                <Link
+                                  href={`/bookings/${b.id}/track`}
+                                  className="px-3 py-1.5 rounded-full bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] font-bold text-xs transition-colors flex items-center gap-1 shadow-xs"
+                                >
+                                  <span>📍</span>
+                                  <span>Track</span>
+                                </Link>
+                              )}
+
                               <button
                                 type="button"
                                 onClick={() => setSelectedBookingForDetails(b)}

@@ -23,6 +23,16 @@ import {
   getUserById,
   clearCheckoutDraft,
 } from './storage';
+import {
+  notifyBookingRequested,
+  notifyBookingConfirmed,
+  notifyBookingDeclined,
+  notifyBookingCancelled,
+  notifyTripStarted,
+  notifyTripCompleted,
+  notifyDisputeOpened,
+  notifyDisputeResolved,
+} from './notifications';
 
 
 // ==========================================
@@ -365,6 +375,13 @@ export function createBooking(input: CreateBookingInput): CreateBookingResult {
   // 8. Clean up temporary checkout draft
   clearCheckoutDraft();
 
+  // 9. Dispatch notification to owner
+  try {
+    notifyBookingRequested(newBooking, car, user.name);
+  } catch (err) {
+    console.warn('[Shegger Notifications] Non-fatal notification error:', err);
+  }
+
   return {
     success: true,
     booking: newBooking,
@@ -591,6 +608,28 @@ export function transitionBookingStatus(
       success: false,
       error: 'Storage failure: Could not persist updated booking status.',
     };
+  }
+
+  // 8. Trigger domain notifications based on new status
+  try {
+    const car = getCarById(updatedBooking.carId);
+    if (targetStatus === 'confirmed') {
+      notifyBookingConfirmed(updatedBooking, car);
+    } else if (targetStatus === 'declined') {
+      notifyBookingDeclined(updatedBooking, car, options?.reason);
+    } else if (targetStatus === 'cancelled') {
+      notifyBookingCancelled(updatedBooking, car, actor.role, options?.reason);
+    } else if (targetStatus === 'in_progress') {
+      notifyTripStarted(updatedBooking, car);
+    } else if (targetStatus === 'completed') {
+      notifyTripCompleted(updatedBooking, car);
+    } else if (targetStatus === 'disputed') {
+      notifyDisputeOpened(updatedBooking, car, actor.userId, options?.reason);
+    } else if (targetStatus === 'resolved') {
+      notifyDisputeResolved(updatedBooking, car, options?.reason);
+    }
+  } catch (err) {
+    console.warn('[Shegger Notifications] Non-fatal notification error on transition:', err);
   }
 
   return {

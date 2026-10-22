@@ -16,6 +16,7 @@ import {
   getUserById,
 } from './storage';
 import { transitionBookingStatus } from './bookings';
+import { notifyReviewReceived, notifyReviewResponse } from './notifications';
 
 // ==========================================
 // Types & Interfaces
@@ -210,6 +211,13 @@ export function createReview(
     });
   }
 
+  // 11. Dispatch in-app notification to host
+  try {
+    notifyReviewReceived(newReview, undefined, user.name);
+  } catch (err) {
+    console.warn('[Shegger Notifications] Non-fatal notification error on review:', err);
+  }
+
   // Dispatch custom and storage event for live UI reactivity
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('storage'));
@@ -293,6 +301,13 @@ export function respondToReview(
       success: false,
       error: 'Storage failure: Failed to save host response.',
     };
+  }
+
+  // 7. Dispatch in-app notification to reviewer
+  try {
+    notifyReviewResponse(updatedReview);
+  } catch (err) {
+    console.warn('[Shegger Notifications] Non-fatal notification error on host reply:', err);
   }
 
   // Dispatch storage update

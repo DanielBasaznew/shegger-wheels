@@ -283,6 +283,42 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
             </div>
           </div>
 
+          {/* Live Trip Tracking CTA */}
+          {(booking.status === 'confirmed' || booking.status === 'in_progress') && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#111820] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-[#D5F36A] text-[#111820] flex items-center justify-center text-xl shrink-0">
+                  📍
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-extrabold text-sm text-white">
+                      {booking.status === 'in_progress'
+                        ? 'Trip Active — On-Road Telematics'
+                        : 'Reservation Confirmed — Ready for Handover'}
+                    </h3>
+                    {booking.status === 'in_progress' && (
+                      <span className="w-2 h-2 rounded-full bg-[#D5F36A] animate-ping" />
+                    )}
+                  </div>
+                  <p className="text-xs text-white/70 mt-0.5">
+                    {booking.status === 'in_progress'
+                      ? 'Live Addis Ababa corridor telemetry, speed readings, and route waypoints are active.'
+                      : 'Coordinate key handover, check logistics, and start your rental trip.'}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/bookings/${booking.id}/track`}
+                id="view-trip-tracking-btn"
+                className="py-2.5 px-5 rounded-full bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] font-bold text-xs transition-colors shrink-0 shadow-xs flex items-center gap-1.5"
+              >
+                <span>📍</span>
+                <span>Open Live Trip Tracker →</span>
+              </Link>
+            </div>
+          )}
+
           {/* Trip Completed Review CTA */}
           {booking.status === 'completed' && isBookingReviewable(booking, session?.userId || '').canReview && (
             <div className="p-4 sm:p-5 rounded-2xl bg-[#D5F36A]/25 border border-[#B8DC30] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

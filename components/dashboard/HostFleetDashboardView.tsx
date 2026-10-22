@@ -1344,6 +1344,17 @@ export function HostFleetDashboardView() {
                             </>
                           )}
 
+                          {/* Live Trip Tracking link */}
+                          {(b.status === 'confirmed' || b.status === 'in_progress') && (
+                            <Link
+                              href={`/bookings/${b.id}/track`}
+                              className="py-2 px-3 rounded-xl bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] text-xs font-bold transition-all shadow-xs flex items-center gap-1"
+                            >
+                              <span>📍</span>
+                              <span>Live Tracking</span>
+                            </Link>
+                          )}
+
                           {/* 2. If Confirmed: Key Handover / Start Rental */}
                           {b.status === 'confirmed' && (
                             <button

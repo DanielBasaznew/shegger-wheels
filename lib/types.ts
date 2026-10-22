@@ -189,6 +189,36 @@ export interface Announcement {
 }
 
 // ==========================================
+// Notification Types
+// ==========================================
+
+export type NotificationType =
+  | 'booking_requested'
+  | 'booking_confirmed'
+  | 'booking_declined'
+  | 'booking_cancelled'
+  | 'trip_started'
+  | 'trip_completed'
+  | 'dispute_opened'
+  | 'dispute_resolved'
+  | 'review_received'
+  | 'review_response'
+  | 'system';
+
+export interface Notification {
+  id: string; // e.g. "notif_..."
+  recipientId: string; // User ID of recipient
+  type: NotificationType;
+  title: string;
+  message: string;
+  link: string; // Safe internal URL path
+  read: boolean;
+  bookingId?: string;
+  carId?: string;
+  createdAt: string; // ISO date-time string
+}
+
+// ==========================================
 // Storage Schema Container
 // ==========================================
 
@@ -199,4 +229,5 @@ export interface SheggerStorageData {
   reviews: Review[];
   disputes: Dispute[];
   announcements: Announcement[];
+  notifications: Notification[];
 }

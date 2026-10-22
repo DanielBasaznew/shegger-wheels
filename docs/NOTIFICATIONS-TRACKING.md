@@ -1,0 +1,129 @@
+# Shegger Wheels — Notifications & Simulated Trip Tracking Specification
+
+## 1. Overview & Architectural Scope
+
+Shegger Wheels implements an in-app notification engine and a simulated real-time trip tracking experience tailored for peer-to-peer car rentals across Addis Ababa. Consistent with the capstone's frontend-only requirements, all notifications, telemetry waypoints, and tracking states are maintained purely client-side in browser storage (`sw_notifications_v1` and `sw_bookings_v1`), requiring zero external GPS servers, paid mapping APIs, or backend infrastructure.
+
+The architecture fulfills two primary user needs:
+1. **Activity Awareness**: Renters, vehicle hosts, and platform administrators receive immediate typed in-app notices for lifecycle updates (booking requests, confirmations, declines, cancellations, trip start/completion, disputes, and reviews).
+2. **Journey Telematics & Logistics**: Renters and vehicle hosts can open a dedicated tracking page (`/bookings/[id]/track`) showing vehicle condition, handover checkpoints, simulated corridor speed and telemetry, and an Addis Ababa vector route map.
+
+---
+
+## 2. Data Model & Schema
+
+The data structures are declared in [`lib/types.ts`](file:///c:/Users/DELL/Documents/IBT/sq2-daniel-basaznew/module-03-react-nextjs/Projects/shegger-wheels/lib/types.ts):
+
+```typescript
+export type NotificationType =
+  | 'booking_requested'
+  | 'booking_confirmed'
+  | 'booking_declined'
+  | 'booking_cancelled'
+  | 'trip_started'
+  | 'trip_completed'
+  | 'dispute_opened'
+  | 'dispute_resolved'
+  | 'review_received'
+  | 'review_response'
+  | 'system';
+
+export interface Notification {
+  id: string;             // Unique notification ID: 'notif_' + timestamp + '_' + random
+  recipientId: string;    // Foreign key matching the target User.id
+  type: NotificationType; // Typed event classification
+  title: string;          // Human-readable summary heading
+  message: string;        // Contextual explanatory message
+  link: string;           // Safe internal URL route (e.g., /bookings/[id]/track)
+  read: boolean;          // Read / unread boolean flag
+  bookingId?: string;     // Optional associated Booking.id
+  carId?: string;         // Optional associated Car.id
+  createdAt: string;      // ISO 8601 creation timestamp
+}
+```
+
+Storage Key: `sw_notifications_v1` in `localStorage`.
+Seed Records: Pre-seeded notifications exist in [`lib/seeds.ts`](file:///c:/Users/DELL/Documents/IBT/sq2-daniel-basaznew/module-03-react-nextjs/Projects/shegger-wheels/lib/seeds.ts).
+
+---
+
+## 3. Notification Triggers & Recipient Rules
+
+The notification dispatcher in [`lib/notifications.ts`](file:///c:/Users/DELL/Documents/IBT/sq2-daniel-basaznew/module-03-react-nextjs/Projects/shegger-wheels/lib/notifications.ts) automatically creates notifications in response to domain events:
+
+| Event Trigger | Recipient(s) | Title | Safe Link Target |
+| :--- | :--- | :--- | :--- |
+| **New Booking Request** (`createBooking`) | Vehicle Host (`booking.ownerId`) | "New Booking Request" | `/dashboard/host` |
+| **Reservation Confirmed** (`transitionBookingStatus`) | Renter (`booking.renterId`) | "Booking Confirmed!" | `/bookings/[id]/track` |
+| **Reservation Declined** (`transitionBookingStatus`) | Renter (`booking.renterId`) | "Booking Request Declined" | `/bookings/[id]` |
+| **Reservation Cancelled** (`transitionBookingStatus`) | Counterpart (Host if renter cancelled; Renter if host/admin cancelled) | "Booking Cancelled by [Actor]" | `/dashboard/host` or `/bookings/[id]` |
+| **Key Handover / Trip Start** (`transitionBookingStatus`) | Renter &amp; Host | "Trip Started — Telematics Active" | `/bookings/[id]/track` |
+| **Return Finalized / Trip Completed** (`transitionBookingStatus`) | Renter &amp; Host | "Trip Completed — Leave a Review" | `/bookings/[id]` (Renter) &amp; `/dashboard/host` (Host) |
+| **Dispute Lodged** (`transitionBookingStatus`) | Counterpart &amp; Admin (`user_admin_01`) | "Dispute Raised by [Actor]" | `/bookings/[id]` |
+| **Dispute Resolved** (`transitionBookingStatus`) | Renter &amp; Host | "Dispute Resolved by Admin" | `/bookings/[id]` |
+| **New Review Published** (`createReview`) | Vehicle Host (`review.ownerId`) | "New Rating &amp; Review Received" | `/cars/[id]#reviews-section` |
+| **Host Response Posted** (`respondToReview`) | Reviewer (`review.renterId`) | "Host Replied to Your Review" | `/cars/[id]#reviews-section` |
+
+---
+
+## 4. Recipient Isolation & Security Model
+
+To protect user privacy and confidentiality:
+1. **Strict User Filtering**: `getNotificationsForUser(userId)` strictly filters all notifications stored in `sw_notifications_v1` by `recipientId === userId`. Users can never query or view notifications belonging to other accounts.
+2. **Access Barriers**: Individual mutations (`markNotificationAsRead`, `markAllNotificationsAsRead`, `deleteNotification`) require matching `userId` and `recipientId`.
+3. **Safe Navigation URLs**: All navigation links generated by `getSafeNotificationLink()` only reference internal application routes (`/bookings/[id]/track`, `/bookings/[id]`, `/dashboard/host`, `/cars/[id]`). External URLs and unverified redirects are strictly rejected.
+
+---
+
+## 5. Notification Inbox & Header Bell UI
+
+The notification component [`components/notifications/NotificationBell.tsx`](file:///c:/Users/DELL/Documents/IBT/sq2-daniel-basaznew/module-03-react-nextjs/Projects/shegger-wheels/components/notifications/NotificationBell.tsx) is integrated into [`components/layout/Header.tsx`](file:///c:/Users/DELL/Documents/IBT/sq2-daniel-basaznew/module-03-react-nextjs/Projects/shegger-wheels/components/layout/Header.tsx):
+
+- **Real-Time Unread Badge**: Displays the count of unread items with high-contrast electric lime styling (`#D5F36A` on charcoal `#111820`). Automatically updates upon storage mutations.
+- **Dropdown Inbox**: Clicking the bell opens a popover panel with:
+  - Header with unread count and "Mark all read" quick action.
+  - Tab filters: "All" and "Unread".
+  - Scrollable notification cards featuring event-specific iconography, bold titles, relative timestamps (e.g., "Just now", "2h ago"), and message previews.
+  - Click-through navigation: Clicking a notification automatically marks it as read, closes the flyout, and routes to the relevant destination.
+  - Dismiss button (`✕`) for removing notifications from storage.
+  - Clean empty state illustration when all notifications are caught up.
+
+---
+
+## 6. Trip Tracking Hub (`/bookings/[id]/track`)
+
+The tracking page provides an interactive, live dashboard for active and confirmed reservations:
+
+1. **Access Authorization Guardrail**:
+   - Only the verified renter (`booking.renterId === session.userId`), vehicle host (`booking.ownerId === session.userId`), or platform administrator (`session.activeRole === 'admin'`) can view tracking.
+   - Unauthorized users or guests are blocked with a clear privacy warning and safe return link.
+2. **Addis Ababa Simulated Corridor Vector Map**:
+   - Custom SVG map depicting major Addis Ababa urban hubs: Bole Medhanialem Corridor, Meskel Square Interchange, Kazanchis Business District, Piassa & Churchill Avenue, Sarbet & Mexico Square, and CMC Arterial.
+   - In `in_progress` state: An animated vehicle beacon traverses the corridor with pulsating radar waves and elevation/speed HUD.
+   - Simulation controls allow pausing and resuming waypoint advancement.
+3. **Live Telemetry Gauges**:
+   - Digital Speedometer (e.g., 42 km/h on-road, 0 km/h parked).
+   - Fuel Level Gauge (e.g., 84% Full-to-Full compliance).
+   - Odometer distance calculator (tracking distance traveled).
+   - Security &amp; OBD-II diagnostics status indicator.
+4. **Lifecycle Progression Controls**:
+   - When `confirmed`: Host or renter can inspect keys and vehicle condition, then tap *"Confirm Handover & Start Trip"* -> advances booking to `in_progress`.
+   - When `in_progress`: Host or renter can conclude the journey, tap *"Finalize Return & Complete Trip"* -> advances booking to `completed`.
+   - All state transitions strictly enforce finite-state machine (FSM) rules via `transitionBookingStatus()`. Controls never bypass authorization or valid transitions.
+5. **Simulation Transparency**:
+   - The interface features a prominent banner clearly labeling all telematics as a local simulated prototype with no external GPS hardware or tracking fees.
+
+---
+
+## 7. Reactivity & Timer Cleanup
+
+- Reactive state synchronization utilizes `useSyncExternalStore` and custom window event listeners (`shegger-notification-change`, `shegger-storage-change`, `shegger-session-change`).
+- The waypoint simulation loop runs via `setInterval` in `TripTrackingView.tsx` and executes `clearInterval` in the `useEffect` cleanup return to eliminate background memory leaks or duplicate intervals.
+
+---
+
+## 8. Prototype Limitations
+
+1. **Client-Side Simulation**: Vehicle telemetry, odometer increments, and GPS coordinates are deterministic mathematical models running in the user's browser, not live satellite transponders.
+2. **Simulated Route Canvas**: Vector paths reflect key Addis Ababa arterial geometries (Bole, Meskel, Kirkos, Arada) rather than street-level turn-by-turn navigation networks.
+3. **Storage Persistence**: Demo notifications and state transitions persist in `localStorage` across page reloads. Clearing browser storage or clicking "Reset Demo Data" restores the initial baseline seed state.

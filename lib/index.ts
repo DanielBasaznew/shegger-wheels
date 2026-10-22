@@ -10,4 +10,5 @@ export * from './bookings';
 export * from './auth';
 export * from './csv';
 export * from './reviews';
+export * from './notifications';
 

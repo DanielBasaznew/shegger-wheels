@@ -5,7 +5,7 @@
  * Fictional identities and simulated operational data for frontend testing.
  */
 
-import { User, Car, Booking, Review, Dispute, Announcement } from './types';
+import { User, Car, Booking, Review, Dispute, Announcement, Notification } from './types';
 
 // ==========================================
 // Seed Users
@@ -463,5 +463,71 @@ export const SEED_ANNOUNCEMENTS: Announcement[] = [
     category: 'feature',
     createdAt: '2025-02-01T00:00:00Z',
     createdBy: 'user_admin_01',
+  },
+];
+
+// ==========================================
+// Seed Notifications
+// ==========================================
+
+export const SEED_NOTIFICATIONS: Notification[] = [
+  {
+    id: 'notif_01',
+    recipientId: 'user_renter_01', // Sara Hailu
+    type: 'booking_confirmed',
+    title: 'Reservation Confirmed!',
+    message: 'Your booking for the 2022 Hyundai Tucson has been approved by Dawit Tadesse. Digital QR pass is ready.',
+    link: '/bookings/booking_01',
+    read: false,
+    bookingId: 'booking_01',
+    carId: 'car_01',
+    createdAt: '2025-02-18T10:30:00Z',
+  },
+  {
+    id: 'notif_02',
+    recipientId: 'user_renter_01', // Sara Hailu
+    type: 'trip_completed',
+    title: 'Trip Completed — Leave a Review',
+    message: 'Your rental trip for the 2023 Suzuki Dzire is complete. Share your feedback and star rating!',
+    link: '/bookings/booking_02',
+    read: true,
+    bookingId: 'booking_02',
+    carId: 'car_02',
+    createdAt: '2025-02-05T18:05:00Z',
+  },
+  {
+    id: 'notif_03',
+    recipientId: 'user_owner_01', // Dawit Tadesse
+    type: 'booking_requested',
+    title: 'New Booking Request',
+    message: 'New reservation request received for your 2023 Toyota RAV4 from CMC hub.',
+    link: '/dashboard/host',
+    read: false,
+    bookingId: 'booking_03',
+    carId: 'car_03',
+    createdAt: '2025-02-19T09:15:00Z',
+  },
+  {
+    id: 'notif_04',
+    recipientId: 'user_owner_01', // Dawit Tadesse
+    type: 'trip_completed',
+    title: 'TeleBirr Payout Disbursed',
+    message: 'Simulated payout of 22,500 ETB has been credited to your account for completed booking #booking_01.',
+    link: '/dashboard/host',
+    read: true,
+    bookingId: 'booking_01',
+    carId: 'car_01',
+    createdAt: '2025-02-14T19:00:00Z',
+  },
+  {
+    id: 'notif_05',
+    recipientId: 'user_owner_02', // Abebe Kebede
+    type: 'review_received',
+    title: 'New 5★ Review Received',
+    message: 'A guest left an exceptional 5-star review on your 2023 Mercedes-Benz E-Class. Post your host response!',
+    link: '/dashboard/host',
+    read: false,
+    carId: 'car_04',
+    createdAt: '2025-01-30T16:05:00Z',
   },
 ];
