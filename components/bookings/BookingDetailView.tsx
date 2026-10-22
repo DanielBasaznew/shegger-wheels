@@ -18,6 +18,8 @@ import {
 } from '@/lib/bookings';
 import { getSafeReturnUrl } from '@/lib/auth';
 import { SEED_BOOKINGS, SEED_CARS } from '@/lib/seeds';
+import { SubmitReviewModal } from '@/components/reviews/SubmitReviewModal';
+import { isBookingReviewable } from '@/lib/reviews';
 
 function subscribeToStorage(callback: () => void) {
   if (typeof window === 'undefined') return () => {};
@@ -90,6 +92,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
   );
 
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [cancellationReason, setCancellationReason] = useState('');
   const [actionFeedback, setActionFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
@@ -280,6 +283,50 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
             </div>
           </div>
 
+          {/* Trip Completed Review CTA */}
+          {booking.status === 'completed' && isBookingReviewable(booking, session?.userId || '').canReview && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#D5F36A]/25 border border-[#B8DC30] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">⭐</span>
+                <div>
+                  <h3 className="font-extrabold text-sm text-[#111820]">
+                    Your trip has ended! How was your journey?
+                  </h3>
+                  <p className="text-xs text-[#66717D]">
+                    Share your verified experience and star rating to help the community and provide feedback to your host.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsReviewModalOpen(true)}
+                className="py-2.5 px-5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer shrink-0 shadow-xs flex items-center gap-1.5"
+              >
+                <span>★</span>
+                <span>Leave a Review</span>
+              </button>
+            </div>
+          )}
+
+          {booking.status === 'reviewed' && (
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">✓</span>
+                <span className="font-bold">
+                  Trip Completed &amp; Reviewed — Your verified feedback is published on the vehicle page.
+                </span>
+              </div>
+              {car && (
+                <Link
+                  href={`/cars/${car.id}#reviews-section`}
+                  className="font-bold text-emerald-900 underline hover:text-emerald-950 shrink-0"
+                >
+                  View Review →
+                </Link>
+              )}
+            </div>
+          )}
+
           {/* Vehicle & Host Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {car && (
@@ -428,6 +475,17 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
                   View Vehicle Listing
                 </Link>
               )}
+
+              {booking.status === 'completed' && isBookingReviewable(booking, session?.userId || '').canReview && (
+                <button
+                  type="button"
+                  onClick={() => setIsReviewModalOpen(true)}
+                  className="py-2.5 px-4 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
+                >
+                  <span>★</span>
+                  <span>Leave Review</span>
+                </button>
+              )}
             </div>
 
             <Link
@@ -493,6 +551,24 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Review Submission Modal */}
+      {isReviewModalOpen && booking && session && (
+        <SubmitReviewModal
+          isOpen={isReviewModalOpen}
+          booking={booking}
+          car={car}
+          session={session}
+          onClose={() => setIsReviewModalOpen(false)}
+          onSuccess={() => {
+            setIsReviewModalOpen(false);
+            setActionFeedback({
+              type: 'success',
+              message: 'Thank you! Your verified rating and feedback have been published to the vehicle page.',
+            });
+          }}
+        />
       )}
     </div>
   );

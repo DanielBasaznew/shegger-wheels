@@ -14,6 +14,7 @@ import {
   DemoSession,
   Booking,
   BookingStatus,
+  Review,
 } from '@/lib/types';
 import { getUserById } from '@/lib/storage';
 import {
@@ -37,7 +38,8 @@ import {
   getOwnerEarningsAnalytics,
 } from '@/lib/bookings';
 import { switchActiveRole } from '@/lib/auth';
-import { SEED_CARS, SEED_USERS, SEED_BOOKINGS } from '@/lib/seeds';
+import { SEED_CARS, SEED_USERS, SEED_BOOKINGS, SEED_REVIEWS } from '@/lib/seeds';
+import { OwnerResponseModal } from '@/components/reviews/OwnerResponseModal';
 
 // Storage subscription for reactive live updates across same-window actions
 function subscribeToStorage(callback: () => void) {
@@ -113,11 +115,33 @@ function getServerBookingsSnapshot(): Booking[] {
   return SEED_BOOKINGS;
 }
 
+let cachedReviewsRaw = '';
+let cachedReviews: Review[] = SEED_REVIEWS;
+
+function getReviewsSnapshot(): Review[] {
+  if (typeof window === 'undefined') return SEED_REVIEWS;
+  try {
+    const raw = window.localStorage.getItem('sw_reviews_v1') || '';
+    if (raw !== cachedReviewsRaw) {
+      cachedReviewsRaw = raw;
+      const loaded = raw ? JSON.parse(raw) : [];
+      cachedReviews = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_REVIEWS;
+    }
+    return cachedReviews;
+  } catch {
+    return SEED_REVIEWS;
+  }
+}
+
+function getServerReviewsSnapshot(): Review[] {
+  return SEED_REVIEWS;
+}
+
 function getServerSessionSnapshot(): DemoSession | null {
   return null;
 }
 
-export type HostMainTab = 'fleet' | 'reservations' | 'earnings';
+export type HostMainTab = 'fleet' | 'reservations' | 'earnings' | 'reviews';
 
 export function HostFleetDashboardView() {
   // Live reactive data from browser storage
@@ -130,6 +154,11 @@ export function HostFleetDashboardView() {
     subscribeToStorage,
     getBookingsSnapshot,
     getServerBookingsSnapshot
+  );
+  const allReviews = useSyncExternalStore(
+    subscribeToStorage,
+    getReviewsSnapshot,
+    getServerReviewsSnapshot
   );
   const session = useSyncExternalStore(
     subscribeToStorage,
@@ -158,6 +187,15 @@ export function HostFleetDashboardView() {
       .filter((b) => b.ownerId === currentUser.id)
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [allBookings, currentUser]);
+
+  // Reviews strictly for vehicles owned by current user
+  const ownerReviews = useMemo(() => {
+    if (!currentUser) return [];
+    const carIds = new Set(ownerCars.map((c) => c.id));
+    return allReviews
+      .filter((r) => carIds.has(r.carId))
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }, [allReviews, ownerCars, currentUser]);
 
   // Fleet summary metrics
   const fleetMetrics = useMemo(() => {
@@ -210,6 +248,7 @@ export function HostFleetDashboardView() {
   const [bookingToDispute, setBookingToDispute] = useState<Booking | null>(null);
   const [disputeReasonInput, setDisputeReasonInput] = useState('');
   const [selectedBookingDetails, setSelectedBookingDetails] = useState<Booking | null>(null);
+  const [reviewToRespond, setReviewToRespond] = useState<Review | null>(null);
 
   // Action feedback alert
   const [feedback, setFeedback] = useState<{
@@ -583,13 +622,33 @@ export function HostFleetDashboardView() {
             }`}
           >
             <span>💰</span>
-            <span>Earnings &amp; Analytics</span>
+            <span>Earnings</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-specs-tabular ${
                 activeTab === 'earnings' ? 'bg-[#D5F36A] text-[#111820]' : 'bg-[#F5F2EB] text-[#111820]'
               }`}
             >
               {earningsSummary.totalCompletedEarnings.toLocaleString()} ETB
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('reviews')}
+            className={`flex-1 py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activeTab === 'reviews'
+                ? 'bg-[#111820] text-white shadow-xs'
+                : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
+            }`}
+          >
+            <span>⭐</span>
+            <span>Guest Reviews</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] ${
+                activeTab === 'reviews' ? 'bg-white/20 text-white' : 'bg-[#F5F2EB] text-[#111820]'
+              }`}
+            >
+              {ownerReviews.length}
             </span>
           </button>
         </div>
@@ -1637,6 +1696,137 @@ export function HostFleetDashboardView() {
             </div>
           </div>
         )}
+
+        {/* ========================================================= */}
+        {/* TAB 4: GUEST REVIEWS & OWNER RESPONSES                   */}
+        {/* ========================================================= */}
+        {activeTab === 'reviews' && (
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-[#111820] tracking-tight">
+                  Fleet Reviews &amp; Host Responses
+                </h2>
+                <p className="text-xs text-[#66717D] mt-0.5">
+                  Read verified guest experiences and post official public host responses to maintain top-rated status.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1.5 rounded-xl bg-white border border-[#66717D]/15 text-xs font-bold text-[#111820]">
+                  ⭐ {ownerReviews.length > 0 ? (ownerReviews.reduce((sum, r) => sum + r.rating, 0) / ownerReviews.length).toFixed(1) : '—'} Average Rating
+                </span>
+                <span className="px-3 py-1.5 rounded-xl bg-white border border-[#66717D]/15 text-xs text-[#66717D]">
+                  {ownerReviews.length} Total {ownerReviews.length === 1 ? 'Review' : 'Reviews'}
+                </span>
+              </div>
+            </div>
+
+            {ownerReviews.length === 0 ? (
+              <div className="p-12 rounded-3xl bg-white border border-[#66717D]/15 text-center flex flex-col items-center justify-center gap-3 shadow-xs">
+                <span className="text-4xl">⭐</span>
+                <h3 className="text-base font-bold text-[#111820]">No Reviews Yet</h3>
+                <p className="text-xs text-[#66717D] max-w-md">
+                  Once verified renters complete trips on your vehicles, their 1–5 star ratings and feedback will appear here for you to respond.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {ownerReviews.map((rev) => {
+                  const car = allCars.find((c) => c.id === rev.carId);
+                  const reviewer = getUserById(rev.renterId);
+                  const reviewerName = reviewer ? reviewer.name : 'Verified Renter';
+
+                  return (
+                    <div
+                      key={rev.id}
+                      className="p-5 sm:p-6 rounded-3xl bg-white border border-[#66717D]/15 shadow-xs flex flex-col gap-3"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#66717D]/10">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-[#111820] text-white flex items-center justify-center font-bold text-xs">
+                            {reviewerName.slice(0, 2).toUpperCase()}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-[#111820]">
+                              {reviewerName}
+                            </span>
+                            <span className="text-[11px] text-[#66717D]">
+                              {formatDisplayDate(rev.createdAt.split('T')[0])} • Booking #{rev.bookingId.slice(0, 8)}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          {car && (
+                            <Link
+                              href={`/cars/${car.id}`}
+                              className="text-xs font-bold text-[#111820] hover:underline flex items-center gap-1"
+                            >
+                              <span>🚗</span>
+                              <span>{car.year} {car.make} {car.model}</span>
+                            </Link>
+                          )}
+                          <div className="flex items-center text-[#536600] text-sm">
+                            {'★'.repeat(rev.rating)}
+                            <span className="text-[#66717D]/50 text-xs ml-1 font-specs-tabular">
+                              {rev.rating}.0
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-[#111820] leading-relaxed">
+                        &ldquo;{rev.comment}&rdquo;
+                      </p>
+
+                      {/* Host Response Section */}
+                      {rev.ownerReply ? (
+                        <div className="mt-2 p-4 rounded-2xl bg-[#F5F2EB] border border-[#66717D]/12 flex flex-col gap-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-[#111820] flex items-center gap-1.5">
+                              <span>💬</span>
+                              <span>Your Public Host Response:</span>
+                            </span>
+                            {rev.ownerReplyAt && (
+                              <span className="text-[10px] text-[#66717D]">
+                                {formatDisplayDate(rev.ownerReplyAt.split('T')[0])}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-[#44474B] leading-relaxed">
+                            {rev.ownerReply}
+                          </p>
+                          <div className="flex justify-end pt-1">
+                            <button
+                              type="button"
+                              onClick={() => setReviewToRespond(rev)}
+                              className="text-xs font-bold text-[#111820] hover:underline cursor-pointer flex items-center gap-1"
+                            >
+                              <span>✏️</span>
+                              <span>Edit Response</span>
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex justify-end pt-2">
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => setReviewToRespond(rev)}
+                            className="flex items-center gap-1.5"
+                          >
+                            <span>💬</span>
+                            <span>Respond to Review</span>
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
       </Container>
 
       {/* ========================================================= */}
@@ -2092,6 +2282,25 @@ export function HostFleetDashboardView() {
             })()}
           </div>
         </div>
+      )}
+
+      {/* MODAL 10: OWNER RESPONSE MODAL */}
+      {reviewToRespond && session && (
+        <OwnerResponseModal
+          isOpen={Boolean(reviewToRespond)}
+          review={reviewToRespond}
+          session={session}
+          renterName={getUserById(reviewToRespond.renterId)?.name}
+          carName={allCars.find((c) => c.id === reviewToRespond.carId) ? `${allCars.find((c) => c.id === reviewToRespond.carId)?.year} ${allCars.find((c) => c.id === reviewToRespond.carId)?.make} ${allCars.find((c) => c.id === reviewToRespond.carId)?.model}` : undefined}
+          onClose={() => setReviewToRespond(null)}
+          onSuccess={() => {
+            setReviewToRespond(null);
+            setFeedback({
+              type: 'success',
+              message: 'Your official host response has been successfully posted to the vehicle listing!',
+            });
+          }}
+        />
       )}
     </div>
   );

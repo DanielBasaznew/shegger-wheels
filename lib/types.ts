@@ -150,6 +150,7 @@ export interface Review {
   rating: number; // Integer between 1 and 5
   comment: string;
   ownerReply?: string;
+  ownerReplyAt?: string; // ISO date-time string of host response
   createdAt: string; // ISO date-time string
 }
 

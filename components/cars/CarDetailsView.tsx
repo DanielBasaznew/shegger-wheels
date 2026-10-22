@@ -12,12 +12,13 @@ import { Car, User, Review } from '@/lib/types';
 import {
   getCars,
   getUserById,
-  getReviewsForCar,
+  getReviews,
   getCurrentSession,
   setCheckoutDraft,
   STORAGE_KEYS,
 } from '@/lib/storage';
-import { SEED_CARS, SEED_USERS } from '@/lib/seeds';
+import { SEED_CARS, SEED_USERS, SEED_REVIEWS } from '@/lib/seeds';
+import { getCarRatingSummary } from '@/lib/reviews';
 
 // SSR-safe storage synchronizer for cars
 let cachedStorageCars: Car[] = [];
@@ -48,6 +49,31 @@ function getCarsSnapshot(): Car[] {
 
 function getServerCarsSnapshot(): Car[] {
   return SEED_CARS;
+}
+
+// SSR-safe storage synchronizer for reviews
+let cachedStorageReviews: Review[] = [];
+let lastRawReviews = '';
+
+function getReviewsSnapshot(): Review[] {
+  if (typeof window === 'undefined') {
+    return SEED_REVIEWS;
+  }
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEYS.REVIEWS) || '';
+    if (raw !== lastRawReviews || cachedStorageReviews.length === 0) {
+      lastRawReviews = raw;
+      const loaded = getReviews();
+      cachedStorageReviews = loaded.length > 0 ? loaded : SEED_REVIEWS;
+    }
+    return cachedStorageReviews;
+  } catch {
+    return SEED_REVIEWS;
+  }
+}
+
+function getServerReviewsSnapshot(): Review[] {
+  return SEED_REVIEWS;
 }
 
 // Format date helpers
@@ -141,46 +167,20 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
     );
   }, [car]);
 
-  // Reviews lookup
+  // Live reviews from storage
+  const allReviews = useSyncExternalStore(subscribeToStorage, getReviewsSnapshot, getServerReviewsSnapshot);
+
+  // Filter reviews for this car
   const reviews: Review[] = useMemo(() => {
     if (!car) return [];
-    const directReviews = getReviewsForCar(car.id);
-    if (directReviews.length > 0) return directReviews;
+    return allReviews.filter((r) => r.carId === car.id);
+  }, [allReviews, car]);
 
-    // Realistic fallback customer reviews matching Addis Ababa context
-    return [
-      {
-        id: `rev_${car.id}_01`,
-        bookingId: 'bk_demo_01',
-        carId: car.id,
-        renterId: 'user_renter_01',
-        ownerId: host.id,
-        rating: 5,
-        comment: `Rented this ${car.make} ${car.model} for a family trip to Bishoftu resorts. The vehicle was completely immaculate, fuel-efficient, and had spotless AC. ${host.name} was punctual for handoff at ${car.neighbourhood} and explained all dashboard controls. Outstanding experience!`,
-        createdAt: '2025-02-12T10:00:00Z',
-      },
-      {
-        id: `rev_${car.id}_02`,
-        bookingId: 'bk_demo_02',
-        carId: car.id,
-        renterId: 'user_renter_02',
-        ownerId: host.id,
-        rating: 5,
-        comment: `As someone visiting Addis Ababa from the diaspora, renting through Shegger Wheels was effortless. Smooth handling over Addis cobblestones, and the TeleBirr escrow hold provided total peace of mind. Highly recommended!`,
-        createdAt: '2025-01-28T14:30:00Z',
-      },
-      {
-        id: `rev_${car.id}_03`,
-        bookingId: 'bk_demo_03',
-        carId: car.id,
-        renterId: 'user_renter_03',
-        ownerId: host.id,
-        rating: 5,
-        comment: `Used for corporate transit between UNECA Kazanchis and Skylight Hotel. Impeccable presentation and comfortable leather seats. ${host.name} is a courteous, top-tier host.`,
-        createdAt: '2025-01-14T09:15:00Z',
-      },
-    ];
-  }, [car, host]);
+  // Dynamic Rating Analytics Summary
+  const ratingSummary = useMemo(() => {
+    if (!car) return { averageRating: 0, totalReviews: 0, starCounts: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } };
+    return getCarRatingSummary(car.id, reviews);
+  }, [car, reviews]);
 
   // Related vehicles in same or nearby neighbourhoods
   const relatedCars = useMemo(() => {
@@ -421,9 +421,11 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               {/* Stats Bar */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#66717D]">
                 <div className="flex items-center gap-1">
-                  <span className="text-[#536600] font-bold">★ 4.96</span>
+                  <span className="text-[#536600] font-bold">
+                    {ratingSummary.totalReviews > 0 ? `★ ${ratingSummary.averageRating.toFixed(1)}` : '★ New'}
+                  </span>
                   <a href="#reviews-section" className="underline hover:text-[#111820]">
-                    ({reviews.length} verified reviews)
+                    ({reviews.length} {reviews.length === 1 ? 'verified review' : 'verified reviews'})
                   </a>
                 </div>
                 <span className="text-[#66717D]/30">•</span>
@@ -811,52 +813,93 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   <div className="flex items-center gap-2">
                     <h2 className="text-lg font-bold text-[#111820]">Renter Experiences</h2>
                     <span className="px-2.5 py-0.5 rounded-full bg-[#111820] text-white font-specs-tabular text-xs font-bold">
-                      ★ 4.96
+                      {ratingSummary.totalReviews > 0 ? `★ ${ratingSummary.averageRating.toFixed(1)}` : 'New'}
                     </span>
                   </div>
                   <span className="text-xs text-[#66717D]">
-                    {reviews.length} Verified Trips
+                    {reviews.length} {reviews.length === 1 ? 'Verified Trip' : 'Verified Trips'}
                   </span>
                 </div>
 
-                <div className="flex flex-col gap-3">
-                  {reviews.map((rev) => (
-                    <div
-                      key={rev.id}
-                      className="p-4 rounded-2xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col gap-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-[#EBE8E1] text-[#111820] flex items-center justify-center font-bold text-sm">
-                            {rev.renterId.slice(-2).toUpperCase()}
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-bold text-[#111820]">
-                              Verified Shegger Traveler
-                            </span>
-                            <span className="text-[11px] text-[#66717D]">
-                              {formatDisplayDate(rev.createdAt.split('T')[0])}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center text-[#536600] text-xs">
-                          {'★'.repeat(rev.rating)}
-                        </div>
-                      </div>
-                      <p className="text-xs sm:text-sm text-[#111820] leading-relaxed mt-1">
-                        &ldquo;{rev.comment}&rdquo;
-                      </p>
-                      {rev.ownerReply && (
-                        <div className="mt-2 pl-3 border-l-2 border-[#D5F36A] text-xs text-[#66717D] italic">
-                          <span className="font-bold text-[#111820] not-italic">
-                            Host Response:
-                          </span>{' '}
-                          {rev.ownerReply}
-                        </div>
-                      )}
+                {reviews.length === 0 ? (
+                  <div className="p-8 rounded-2xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[#F5F2EB] flex items-center justify-center text-xl text-[#66717D]">
+                      ⭐
                     </div>
-                  ))}
-                </div>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="font-bold text-sm text-[#111820]">No Reviews Yet</h3>
+                      <p className="text-xs text-[#66717D] max-w-sm">
+                        This vehicle hasn&apos;t received reviews yet. Complete a trip to be the first verified traveler to leave feedback!
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    {reviews.map((rev) => {
+                      const reviewer = getUserById(rev.renterId);
+                      const reviewerName = reviewer ? reviewer.name : 'Verified Shegger Traveler';
+                      return (
+                        <div
+                          key={rev.id}
+                          className="p-4 rounded-2xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col gap-2"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              {reviewer?.avatarUrl ? (
+                                <Image
+                                  src={reviewer.avatarUrl}
+                                  alt={reviewerName}
+                                  width={40}
+                                  height={40}
+                                  className="w-10 h-10 rounded-full object-cover border border-[#66717D]/15"
+                                />
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-[#EBE8E1] text-[#111820] flex items-center justify-center font-bold text-sm">
+                                  {reviewerName.slice(0, 2).toUpperCase()}
+                                </div>
+                              )}
+                              <div className="flex flex-col">
+                                <span className="text-sm font-bold text-[#111820]">
+                                  {reviewerName}
+                                </span>
+                                <span className="text-[11px] text-[#66717D]">
+                                  {formatDisplayDate(rev.createdAt.split('T')[0])}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center text-[#536600] text-xs">
+                              {'★'.repeat(rev.rating)}
+                              <span className="text-[#66717D]/40 ml-1 text-[11px] font-specs-tabular">
+                                {rev.rating}.0
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-xs sm:text-sm text-[#111820] leading-relaxed mt-1">
+                            &ldquo;{rev.comment}&rdquo;
+                          </p>
+                          {rev.ownerReply && (
+                            <div className="mt-2.5 p-3 rounded-xl bg-[#F5F2EB] border border-[#66717D]/10 flex flex-col gap-1">
+                              <div className="flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1.5 font-bold text-[#111820]">
+                                  <span className="text-[#536600]">💬</span>
+                                  <span>Response from Host ({host.name})</span>
+                                </div>
+                                {rev.ownerReplyAt && (
+                                  <span className="text-[10px] text-[#66717D]">
+                                    {formatDisplayDate(rev.ownerReplyAt.split('T')[0])}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-[#44474B] leading-relaxed">
+                                {rev.ownerReply}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </section>
             </div>
 

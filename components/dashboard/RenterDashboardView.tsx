@@ -18,6 +18,8 @@ import {
 import { downloadRenterBookingsCSV } from '@/lib/csv';
 import { switchActiveRole } from '@/lib/auth';
 import { SEED_BOOKINGS, SEED_CARS, SEED_USERS } from '@/lib/seeds';
+import { SubmitReviewModal } from '@/components/reviews/SubmitReviewModal';
+import { isBookingReviewable } from '@/lib/reviews';
 
 // Storage subscription for reactive live updates in same browser session
 function subscribeToStorage(callback: () => void) {
@@ -107,6 +109,7 @@ export function RenterDashboardView() {
   const [selectedBookingForPass, setSelectedBookingForPass] = useState<Booking | null>(null);
   const [selectedBookingForDetails, setSelectedBookingForDetails] = useState<Booking | null>(null);
   const [bookingToCancel, setBookingToCancel] = useState<Booking | null>(null);
+  const [bookingToReview, setBookingToReview] = useState<Booking | null>(null);
   const [cancellationReason, setCancellationReason] = useState('');
   const [actionFeedback, setActionFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
@@ -931,10 +934,29 @@ export function RenterDashboardView() {
                               {car && (b.status === 'completed' || b.status === 'reviewed') && (
                                 <Link
                                   href={`/cars/${car.id}`}
-                                  className="px-3 py-1.5 rounded-full bg-[#D5F36A] hover:bg-[#C5E852] text-[#111820] font-bold text-xs transition-colors"
+                                  className="px-3 py-1.5 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] font-bold text-xs transition-colors"
                                 >
                                   Re-book
                                 </Link>
+                              )}
+
+                              {b.status === 'completed' &&
+                                isBookingReviewable(b, currentUser?.id || '').canReview && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setBookingToReview(b)}
+                                    className="px-3 py-1.5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                                  >
+                                    <span>★</span>
+                                    <span>Leave Review</span>
+                                  </button>
+                                )}
+
+                              {b.status === 'reviewed' && (
+                                <span className="px-2.5 py-1 rounded-full bg-[#D5F36A]/30 text-[#2C3800] text-[11px] font-bold inline-flex items-center gap-1">
+                                  <span>✓</span>
+                                  <span>Reviewed</span>
+                                </span>
                               )}
                             </div>
                           </td>
@@ -1217,6 +1239,22 @@ export function RenterDashboardView() {
                       </button>
                     )}
 
+                    {selectedBookingForDetails.status === 'completed' &&
+                      isBookingReviewable(selectedBookingForDetails, currentUser?.id || '').canReview && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const b = selectedBookingForDetails;
+                            setSelectedBookingForDetails(null);
+                            setBookingToReview(b);
+                          }}
+                          className="py-2.5 px-4 rounded-xl bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                        >
+                          <span>★</span>
+                          <span>Leave Review &amp; Rating</span>
+                        </button>
+                      )}
+
                     <button
                       type="button"
                       onClick={() => setSelectedBookingForDetails(null)}
@@ -1293,6 +1331,24 @@ export function RenterDashboardView() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* MODAL 4: Review Submission Modal */}
+      {bookingToReview && session && (
+        <SubmitReviewModal
+          isOpen={Boolean(bookingToReview)}
+          booking={bookingToReview}
+          car={allCars.find((c) => c.id === bookingToReview.carId)}
+          session={session}
+          onClose={() => setBookingToReview(null)}
+          onSuccess={() => {
+            setBookingToReview(null);
+            setActionFeedback({
+              type: 'success',
+              message: 'Thank you! Your verified rating and feedback have been published to the vehicle page.',
+            });
+          }}
+        />
       )}
     </div>
   );

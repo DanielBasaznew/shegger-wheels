@@ -9,4 +9,5 @@ export * from './fleet';
 export * from './bookings';
 export * from './auth';
 export * from './csv';
+export * from './reviews';
 
