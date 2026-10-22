@@ -9,6 +9,7 @@
 import {
   Booking,
   BookingStatus,
+  Car,
   PaymentStatus,
   UserRole,
 } from './types';
@@ -16,11 +17,13 @@ import {
   getBookings,
   getBookingById,
   saveBooking,
+  getCars,
   getCarById,
   getCurrentSession,
   getUserById,
   clearCheckoutDraft,
 } from './storage';
+
 
 // ==========================================
 // Date & Duration Utilities
@@ -95,7 +98,8 @@ export function checkBookingConflicts(
   carId: string,
   startDate: string,
   endDate: string,
-  excludeBookingId?: string
+  excludeBookingId?: string,
+  statusesToCheck: BookingStatus[] = ACTIVE_RESERVATION_STATUSES
 ): ConflictCheckResult {
   const car = getCarById(carId);
   if (!car) {
@@ -135,7 +139,7 @@ export function checkBookingConflicts(
   const conflictingBooking = allBookings.find((b) => {
     if (b.carId !== carId) return false;
     if (excludeBookingId && b.id === excludeBookingId) return false;
-    if (!ACTIVE_RESERVATION_STATUSES.includes(b.status)) return false;
+    if (!statusesToCheck.includes(b.status)) return false;
 
     return areDatesOverlapping(startDate, endDate, b.startDate, b.endDate);
   });
@@ -522,26 +526,65 @@ export function transitionBookingStatus(
     };
   }
 
-  // 3. Build updated booking
+  // Session & suspension verification if session exists
+  const session = getCurrentSession();
+  if (session) {
+    if (session.userId !== actor.userId && !isAdmin) {
+      return {
+        success: false,
+        error: `Session mismatch: Signed in as "${session.userId}", not "${actor.userId}".`,
+      };
+    }
+    const user = getUserById(session.userId);
+    if (user && user.status === 'suspended') {
+      return {
+        success: false,
+        error: 'Your account is suspended. Actions on bookings are restricted.',
+      };
+    }
+  }
+
+  // 3. Stale & Availability Conflict Check: Prevent confirming if car is unavailable or conflicting
+  if (targetStatus === 'confirmed') {
+    const conflict = checkBookingConflicts(
+      booking.carId,
+      booking.startDate,
+      booking.endDate,
+      booking.id, // exclude self
+      ['confirmed', 'in_progress'] // Only confirmed or active in-progress rentals block confirmation
+    );
+    if (conflict.hasConflict) {
+      return {
+        success: false,
+        error:
+          conflict.conflictReason ||
+          'Cannot confirm reservation: The vehicle is no longer available for these dates due to a blackout date or overlapping booking.',
+      };
+    }
+  }
+
+  // 4. Build updated booking
   const updatedBooking: Booking = {
     ...booking,
     status: targetStatus,
     updatedAt: new Date().toISOString(),
   };
 
-  // 4. Apply payment side effects
+  // 5. Apply payment side effects
   if (rule.paymentEffect) {
     updatedBooking.paymentStatus = rule.paymentEffect;
   }
 
-  // 5. Apply reason options
+  // 6. Apply reason options
   if (targetStatus === 'declined' && options?.reason) {
     updatedBooking.declineReason = options.reason;
   } else if (targetStatus === 'cancelled' && options?.reason) {
     updatedBooking.cancellationReason = options.reason;
+  } else if (targetStatus === 'disputed' && options?.reason) {
+    updatedBooking.disputeReason = options.reason;
   }
 
-  // 6. Save update
+  // 7. Save update
   const saved = saveBooking(updatedBooking);
   if (!saved) {
     return {
@@ -557,6 +600,339 @@ export function transitionBookingStatus(
 }
 
 // ==========================================
+// Owner-Specific Booking Operations
+// ==========================================
+
+export interface OwnerOperationResult {
+  success: boolean;
+  booking?: Booking;
+  error?: string;
+}
+
+/**
+ * Validates that an active owner session exists, account is not suspended,
+ * and caller is the legitimate owner of the vehicle in the booking.
+ */
+function validateOwnerAction(
+  bookingId: string,
+  actor: { userId: string; role: UserRole }
+): { valid: boolean; booking?: Booking; error?: string } {
+  const session = getCurrentSession();
+  if (!session || session.userId !== actor.userId) {
+    return {
+      valid: false,
+      error: 'Authentication required. Please sign in as the vehicle owner.',
+    };
+  }
+
+  const user = getUserById(actor.userId);
+  if (!user) {
+    return { valid: false, error: 'User record not found.' };
+  }
+
+  if (user.status === 'suspended') {
+    return {
+      valid: false,
+      error: 'Your account is suspended. Host operations are restricted.',
+    };
+  }
+
+  if (!user.roles.includes('owner') && !user.roles.includes('admin')) {
+    return {
+      valid: false,
+      error: 'Your account does not possess vehicle owner permissions.',
+    };
+  }
+
+  const booking = getBookingById(bookingId);
+  if (!booking) {
+    return { valid: false, error: 'Reservation record not found.' };
+  }
+
+  if (booking.ownerId !== actor.userId && actor.role !== 'admin') {
+    return {
+      valid: false,
+      error: 'Unauthorized: You do not own the vehicle for this reservation.',
+    };
+  }
+
+  return { valid: true, booking };
+}
+
+/**
+ * Vehicle owner confirms an incoming booking request.
+ * Verifies no stale calendar conflicts exist.
+ */
+export function confirmBookingByOwner(
+  bookingId: string,
+  actor: { userId: string; role: UserRole }
+): OwnerOperationResult {
+  const check = validateOwnerAction(bookingId, actor);
+  if (!check.valid || !check.booking) {
+    return { success: false, error: check.error };
+  }
+
+  if (check.booking.status !== 'requested') {
+    return {
+      success: false,
+      error: `Only "requested" bookings can be confirmed. Current status: "${check.booking.status}".`,
+    };
+  }
+
+  return transitionBookingStatus(bookingId, 'confirmed', {
+    userId: actor.userId,
+    role: actor.role === 'admin' ? 'admin' : 'owner',
+  });
+}
+
+/**
+ * Vehicle owner declines an incoming booking request.
+ * Triggers simulated TeleBirr escrow refund to renter.
+ */
+export function declineBookingByOwner(
+  bookingId: string,
+  actor: { userId: string; role: UserRole },
+  reason?: string
+): OwnerOperationResult {
+  const check = validateOwnerAction(bookingId, actor);
+  if (!check.valid || !check.booking) {
+    return { success: false, error: check.error };
+  }
+
+  if (check.booking.status !== 'requested') {
+    return {
+      success: false,
+      error: `Only "requested" bookings can be declined. Current status: "${check.booking.status}".`,
+    };
+  }
+
+  return transitionBookingStatus(
+    bookingId,
+    'declined',
+    {
+      userId: actor.userId,
+      role: actor.role === 'admin' ? 'admin' : 'owner',
+    },
+    { reason: reason || 'Host unavailable for requested dates' }
+  );
+}
+
+/**
+ * Vehicle owner marks a confirmed trip as in-progress upon key handover.
+ */
+export function startTripByOwner(
+  bookingId: string,
+  actor: { userId: string; role: UserRole }
+): OwnerOperationResult {
+  const check = validateOwnerAction(bookingId, actor);
+  if (!check.valid || !check.booking) {
+    return { success: false, error: check.error };
+  }
+
+  if (check.booking.status !== 'confirmed') {
+    return {
+      success: false,
+      error: `Only "confirmed" bookings can be started. Current status: "${check.booking.status}".`,
+    };
+  }
+
+  return transitionBookingStatus(bookingId, 'in_progress', {
+    userId: actor.userId,
+    role: actor.role === 'admin' ? 'admin' : 'owner',
+  });
+}
+
+/**
+ * Vehicle owner marks an active trip as completed upon return & inspection.
+ * Disburses mock escrow funds to host's wallet.
+ */
+export function completeTripByOwner(
+  bookingId: string,
+  actor: { userId: string; role: UserRole }
+): OwnerOperationResult {
+  const check = validateOwnerAction(bookingId, actor);
+  if (!check.valid || !check.booking) {
+    return { success: false, error: check.error };
+  }
+
+  if (check.booking.status !== 'in_progress') {
+    return {
+      success: false,
+      error: `Only "in_progress" rentals can be completed. Current status: "${check.booking.status}".`,
+    };
+  }
+
+  return transitionBookingStatus(bookingId, 'completed', {
+    userId: actor.userId,
+    role: actor.role === 'admin' ? 'admin' : 'owner',
+  });
+}
+
+/**
+ * Vehicle owner reports a damage, delay, or condition dispute.
+ * Freezes escrow in-transit pending platform review.
+ */
+export function disputeBookingByOwner(
+  bookingId: string,
+  actor: { userId: string; role: UserRole },
+  reason: string
+): OwnerOperationResult {
+  const check = validateOwnerAction(bookingId, actor);
+  if (!check.valid || !check.booking) {
+    return { success: false, error: check.error };
+  }
+
+  if (check.booking.status !== 'in_progress' && check.booking.status !== 'completed') {
+    return {
+      success: false,
+      error: `Disputes can only be raised for "in_progress" or "completed" bookings. Current status: "${check.booking.status}".`,
+    };
+  }
+
+  if (!reason || reason.trim().length < 5) {
+    return {
+      success: false,
+      error: 'Please provide a clear description of the dispute reason (min 5 characters).',
+    };
+  }
+
+  return transitionBookingStatus(
+    bookingId,
+    'disputed',
+    {
+      userId: actor.userId,
+      role: actor.role === 'admin' ? 'admin' : 'owner',
+    },
+    { reason: reason.trim() }
+  );
+}
+
+// ==========================================
+// Owner Earnings & Utilization Analytics
+// ==========================================
+
+export interface VehicleUtilizationMetric {
+  carId: string;
+  make: string;
+  model: string;
+  year: number;
+  neighbourhood: string;
+  featuredImage: string;
+  pricePerDay: number;
+  totalBookings: number;
+  completedBookings: number;
+  daysRented: number;
+  completedEarnings: number;
+  pendingEscrow: number;
+  activeBooking?: Booking;
+}
+
+export interface OwnerEarningsSummary {
+  ownerId: string;
+  totalCompletedEarnings: number; // Disbursed payouts
+  heldEscrowAmount: number; // Pending / held escrow in transit
+  totalRefundedAmount: number; // Cancelled / refunded
+  bookingsCount: {
+    total: number;
+    requested: number;
+    confirmed: number;
+    inProgress: number;
+    completed: number;
+    disputed: number;
+    cancelled: number;
+  };
+  vehicleBreakdown: VehicleUtilizationMetric[];
+}
+
+/**
+ * Computes transparent host earnings and per-vehicle utilization statistics.
+ * Strictly separates completed payouts from held-in-escrow funds.
+ */
+export function getOwnerEarningsAnalytics(
+  ownerId: string,
+  allBookingsInput?: Booking[],
+  allCarsInput?: Car[]
+): OwnerEarningsSummary {
+  const bookings = (allBookingsInput || getBookings()).filter((b) => b.ownerId === ownerId);
+  const cars = (allCarsInput || getCars()).filter((c) => c.ownerId === ownerId);
+
+  // 1. Completed Earnings: strictly completed or reviewed bookings with paid status
+  const completedBookings = bookings.filter(
+    (b) => (b.status === 'completed' || b.status === 'reviewed') && b.paymentStatus === 'paid'
+  );
+  const totalCompletedEarnings = completedBookings.reduce((sum, b) => sum + b.subtotal, 0);
+
+  // 2. Held Escrow: in transit for ongoing, upcoming, or requested rentals
+  const heldEscrowBookings = bookings.filter(
+    (b) =>
+      b.paymentStatus === 'held_in_escrow' &&
+      b.status !== 'cancelled' &&
+      b.status !== 'declined'
+  );
+  const heldEscrowAmount = heldEscrowBookings.reduce((sum, b) => sum + b.subtotal, 0);
+
+  // 3. Refunded: cancelled or declined
+  const refundedBookings = bookings.filter(
+    (b) => b.paymentStatus === 'refunded' || b.status === 'cancelled' || b.status === 'declined'
+  );
+  const totalRefundedAmount = refundedBookings.reduce((sum, b) => sum + b.subtotal, 0);
+
+  // 4. Counts by Status
+  const counts = {
+    total: bookings.length,
+    requested: bookings.filter((b) => b.status === 'requested').length,
+    confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+    inProgress: bookings.filter((b) => b.status === 'in_progress').length,
+    completed: completedBookings.length,
+    disputed: bookings.filter((b) => b.status === 'disputed').length,
+    cancelled: bookings.filter((b) => b.status === 'cancelled' || b.status === 'declined').length,
+  };
+
+  // 5. Per-Vehicle Breakdown
+  const vehicleBreakdown: VehicleUtilizationMetric[] = cars.map((car) => {
+    const carBookings = bookings.filter((b) => b.carId === car.id);
+    const carCompleted = carBookings.filter(
+      (b) => (b.status === 'completed' || b.status === 'reviewed') && b.paymentStatus === 'paid'
+    );
+    const carHeld = carBookings.filter(
+      (b) =>
+        b.paymentStatus === 'held_in_escrow' &&
+        b.status !== 'cancelled' &&
+        b.status !== 'declined'
+    );
+
+    const activeBooking = carBookings.find(
+      (b) => b.status === 'in_progress' || b.status === 'confirmed' || b.status === 'requested'
+    );
+
+    return {
+      carId: car.id,
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      neighbourhood: car.neighbourhood,
+      featuredImage: car.featuredImage || car.photos?.[0] || '',
+      pricePerDay: car.pricePerDay,
+      totalBookings: carBookings.length,
+      completedBookings: carCompleted.length,
+      daysRented: carCompleted.reduce((sum, b) => sum + b.days, 0),
+      completedEarnings: carCompleted.reduce((sum, b) => sum + b.subtotal, 0),
+      pendingEscrow: carHeld.reduce((sum, b) => sum + b.subtotal, 0),
+      activeBooking,
+    };
+  });
+
+  return {
+    ownerId,
+    totalCompletedEarnings,
+    heldEscrowAmount,
+    totalRefundedAmount,
+    bookingsCount: counts,
+    vehicleBreakdown,
+  };
+}
+
+// ==========================================
 // Booking Query Helpers
 // ==========================================
 
@@ -567,3 +943,4 @@ export function getBookingsForRenter(renterId: string): Booking[] {
 export function getBookingsForOwner(ownerId: string): Booking[] {
   return getBookings().filter((b) => b.ownerId === ownerId);
 }
+

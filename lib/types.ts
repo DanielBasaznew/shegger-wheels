@@ -110,9 +110,11 @@ export interface Booking {
   status: BookingStatus;
   declineReason?: string;
   cancellationReason?: string;
+  disputeReason?: string;
   createdAt: string; // ISO date-time string
   updatedAt: string; // ISO date-time string
 }
+
 
 // ==========================================
 // Checkout Draft (sessionStorage)
