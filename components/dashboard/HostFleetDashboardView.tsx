@@ -256,6 +256,51 @@ export function HostFleetDashboardView() {
     message: string;
   } | null>(null);
 
+  // Escape key dismiss listener for open modals
+  React.useEffect(() => {
+    const hasOpenModal =
+      isAddModalOpen ||
+      editingCar !== null ||
+      blackoutCar !== null ||
+      bookingToConfirm !== null ||
+      bookingToDecline !== null ||
+      bookingToStart !== null ||
+      bookingToComplete !== null ||
+      bookingToDispute !== null ||
+      selectedBookingDetails !== null ||
+      reviewToRespond !== null;
+
+    if (!hasOpenModal) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsAddModalOpen(false);
+        setEditingCar(null);
+        setBlackoutCar(null);
+        setBookingToConfirm(null);
+        setBookingToDecline(null);
+        setBookingToStart(null);
+        setBookingToComplete(null);
+        setBookingToDispute(null);
+        setSelectedBookingDetails(null);
+        setReviewToRespond(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    isAddModalOpen,
+    editingCar,
+    blackoutCar,
+    bookingToConfirm,
+    bookingToDecline,
+    bookingToStart,
+    bookingToComplete,
+    bookingToDispute,
+    selectedBookingDetails,
+    reviewToRespond,
+  ]);
+
   // Filtered cars based on tab & search
   const filteredCars = useMemo(() => {
     return ownerCars.filter((car) => {
@@ -540,6 +585,8 @@ export function HostFleetDashboardView() {
         {/* FEEDBACK BANNER */}
         {feedback && (
           <div
+            role={feedback.type === 'error' ? 'alert' : 'status'}
+            aria-live="polite"
             className={`p-4 rounded-2xl border flex items-center justify-between gap-4 text-sm font-medium ${
               feedback.type === 'success'
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
@@ -549,12 +596,13 @@ export function HostFleetDashboardView() {
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <span>{feedback.type === 'success' ? '✅' : feedback.type === 'error' ? '⚠️' : 'ℹ️'}</span>
+              <span aria-hidden="true">{feedback.type === 'success' ? '✅' : feedback.type === 'error' ? '⚠️' : 'ℹ️'}</span>
               <span>{feedback.message}</span>
             </div>
             <button
               type="button"
               onClick={() => setFeedback(null)}
+              aria-label="Dismiss feedback message"
               className="text-xs font-bold opacity-60 hover:opacity-100 cursor-pointer"
             >
               ✕
@@ -565,9 +613,11 @@ export function HostFleetDashboardView() {
         {/* ========================================================= */}
         {/* MAIN NAVIGATION TABS (Fleet | Reservations | Earnings)    */}
         {/* ========================================================= */}
-        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-[#66717D]/15 text-xs font-bold shadow-xs">
+        <div role="tablist" aria-label="Host management navigation" className="flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-[#66717D]/15 text-xs font-bold shadow-xs">
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === 'fleet'}
             onClick={() => setActiveTab('fleet')}
             className={`flex-1 py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTab === 'fleet'
@@ -575,7 +625,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>🚗</span>
+            <span aria-hidden="true">🚗</span>
             <span>My Fleet</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] ${
@@ -588,6 +638,8 @@ export function HostFleetDashboardView() {
 
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === 'reservations'}
             onClick={() => setActiveTab('reservations')}
             className={`flex-1 py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer relative ${
               activeTab === 'reservations'
@@ -595,7 +647,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>📋</span>
+            <span aria-hidden="true">📋</span>
             <span>Reservations</span>
             {pendingRequestsCount > 0 ? (
               <span className="px-2 py-0.5 rounded-full bg-amber-400 text-amber-950 font-extrabold text-[10px] animate-pulse">
@@ -614,6 +666,8 @@ export function HostFleetDashboardView() {
 
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === 'earnings'}
             onClick={() => setActiveTab('earnings')}
             className={`flex-1 py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTab === 'earnings'
@@ -621,7 +675,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>💰</span>
+            <span aria-hidden="true">💰</span>
             <span>Earnings</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-specs-tabular ${
@@ -634,6 +688,8 @@ export function HostFleetDashboardView() {
 
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === 'reviews'}
             onClick={() => setActiveTab('reviews')}
             className={`flex-1 py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTab === 'reviews'
@@ -641,7 +697,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>⭐</span>
+            <span aria-hidden="true">⭐</span>
             <span>Guest Reviews</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] ${
@@ -1574,7 +1630,12 @@ export function HostFleetDashboardView() {
                 </span>
               </div>
 
-              <div className="overflow-x-auto">
+              <div
+                tabIndex={0}
+                role="region"
+                aria-label="Vehicle Utilization Breakdown table"
+                className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-[#111820]"
+              >
                 <table className="w-full text-left text-xs">
                   <thead>
                     <tr className="border-b border-[#66717D]/15 text-[#66717D] uppercase font-bold text-[10px]">
@@ -1901,11 +1962,11 @@ export function HostFleetDashboardView() {
       {/* ========================================================= */}
       {bookingToConfirm && (
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
+          <div role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-[#D5F36A] text-2xl">✓</span>
+              <span className="p-2 rounded-2xl bg-[#D5F36A] text-2xl" aria-hidden="true">✓</span>
               <div>
-                <h3 className="text-lg font-extrabold text-[#111820]">Confirm Reservation</h3>
+                <h3 id="confirm-modal-title" className="text-lg font-extrabold text-[#111820]">Confirm Reservation</h3>
                 <span className="text-xs text-[#66717D]">
                   Booking #{bookingToConfirm.id.toUpperCase()}
                 </span>
@@ -1949,11 +2010,11 @@ export function HostFleetDashboardView() {
       {/* ========================================================= */}
       {bookingToDecline && (
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
+          <div role="dialog" aria-modal="true" aria-labelledby="decline-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-red-100 text-2xl text-red-700">✕</span>
+              <span className="p-2 rounded-2xl bg-red-100 text-2xl text-red-700" aria-hidden="true">✕</span>
               <div>
-                <h3 className="text-lg font-extrabold text-[#111820]">Decline Reservation</h3>
+                <h3 id="decline-modal-title" className="text-lg font-extrabold text-[#111820]">Decline Reservation</h3>
                 <span className="text-xs text-[#66717D]">
                   Booking #{bookingToDecline.id.toUpperCase()}
                 </span>
@@ -2005,11 +2066,11 @@ export function HostFleetDashboardView() {
       {/* ========================================================= */}
       {bookingToStart && (
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
+          <div role="dialog" aria-modal="true" aria-labelledby="handover-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-[#111820] text-[#D5F36A] text-2xl font-bold">🔑</span>
+              <span className="p-2 rounded-2xl bg-[#111820] text-[#D5F36A] text-2xl font-bold" aria-hidden="true">🔑</span>
               <div>
-                <h3 className="text-lg font-extrabold text-[#111820]">Confirm Key Handover</h3>
+                <h3 id="handover-modal-title" className="text-lg font-extrabold text-[#111820]">Confirm Key Handover</h3>
                 <span className="text-xs text-[#66717D]">
                   Booking #{bookingToStart.id.toUpperCase()}
                 </span>
@@ -2062,11 +2123,11 @@ export function HostFleetDashboardView() {
       {/* ========================================================= */}
       {bookingToComplete && (
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
+          <div role="dialog" aria-modal="true" aria-labelledby="complete-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-emerald-100 text-2xl text-emerald-800">🏁</span>
+              <span className="p-2 rounded-2xl bg-emerald-100 text-2xl text-emerald-800" aria-hidden="true">🏁</span>
               <div>
-                <h3 className="text-lg font-extrabold text-[#111820]">Complete Rental Return</h3>
+                <h3 id="complete-modal-title" className="text-lg font-extrabold text-[#111820]">Complete Rental Return</h3>
                 <span className="text-xs text-[#66717D]">
                   Booking #{bookingToComplete.id.toUpperCase()}
                 </span>
@@ -2124,11 +2185,11 @@ export function HostFleetDashboardView() {
       {/* ========================================================= */}
       {bookingToDispute && (
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
+          <div role="dialog" aria-modal="true" aria-labelledby="dispute-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-amber-100 text-2xl text-amber-900">⚠️</span>
+              <span className="p-2 rounded-2xl bg-amber-100 text-2xl text-amber-900" aria-hidden="true">⚠️</span>
               <div>
-                <h3 className="text-lg font-extrabold text-[#111820]">Report Issue / Dispute</h3>
+                <h3 id="dispute-modal-title" className="text-lg font-extrabold text-[#111820]">Report Issue / Dispute</h3>
                 <span className="text-xs text-[#66717D]">
                   Booking #{bookingToDispute.id.toUpperCase()}
                 </span>
@@ -2177,19 +2238,20 @@ export function HostFleetDashboardView() {
       {/* ========================================================= */}
       {selectedBookingDetails && (
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18 max-h-[90vh] overflow-y-auto">
+          <div role="dialog" aria-modal="true" aria-labelledby="receipt-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-[#66717D]/15">
               <div>
                 <span className="text-[10px] uppercase font-bold text-[#66717D]">
                   Reservation Record
                 </span>
-                <h3 className="text-lg font-bold text-[#111820]">
+                <h3 id="receipt-modal-title" className="text-lg font-bold text-[#111820]">
                   #{selectedBookingDetails.id.toUpperCase()}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedBookingDetails(null)}
+                aria-label="Close reservation record"
                 className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2461,13 +2523,13 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
 
   return (
     <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full my-8 p-6 sm:p-8 flex flex-col gap-6 border border-[#66717D]/18 max-h-[90vh] overflow-y-auto">
+      <div role="dialog" aria-modal="true" aria-labelledby="vehicle-form-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full my-8 p-6 sm:p-8 flex flex-col gap-6 border border-[#66717D]/18 max-h-[90vh] overflow-y-auto">
         <div className="flex items-start justify-between pb-4 border-b border-[#66717D]/15">
           <div>
             <Badge variant="obsidian" className="mb-1">
               {mode === 'create' ? 'New Fleet Entry' : 'Update Listing'}
             </Badge>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-[#111820]">
+            <h2 id="vehicle-form-modal-title" className="text-xl sm:text-2xl font-extrabold text-[#111820]">
               {mode === 'create' ? 'List a Vehicle on Shegger Wheels' : `Edit ${car?.make} ${car?.model}`}
             </h2>
             <p className="text-xs text-[#66717D] mt-0.5">
@@ -2479,6 +2541,7 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close vehicle form"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
           >
             ✕
@@ -2861,13 +2924,13 @@ function BlackoutDatesModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 flex flex-col gap-6 border border-[#66717D]/18 max-h-[90vh] overflow-y-auto">
+      <div role="dialog" aria-modal="true" aria-labelledby="blackout-dates-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 flex flex-col gap-6 border border-[#66717D]/18 max-h-[90vh] overflow-y-auto">
         <div className="flex items-start justify-between pb-3 border-b border-[#66717D]/15">
           <div>
             <Badge variant="obsidian" className="mb-1">
               Availability Manager
             </Badge>
-            <h2 className="text-xl font-extrabold text-[#111820]">
+            <h2 id="blackout-dates-modal-title" className="text-xl font-extrabold text-[#111820]">
               Manage Blackout Dates
             </h2>
             <p className="text-xs text-[#66717D] mt-0.5">
@@ -2877,6 +2940,7 @@ function BlackoutDatesModal({
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close blackout dates dialog"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
           >
             ✕

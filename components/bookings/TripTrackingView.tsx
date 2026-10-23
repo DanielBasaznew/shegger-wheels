@@ -28,28 +28,57 @@ function subscribeToStorage(callback: () => void) {
   };
 }
 
+let cachedBookingsRaw = '';
+let cachedBookings: Booking[] = SEED_BOOKINGS;
+
 function getBookingsSnapshot(): Booking[] {
   if (typeof window === 'undefined') return SEED_BOOKINGS;
   try {
-    const loaded = getBookings();
-    return loaded.length > 0 ? loaded : SEED_BOOKINGS;
+    const raw = window.localStorage.getItem('sw_bookings_v1') || '';
+    if (raw !== cachedBookingsRaw) {
+      cachedBookingsRaw = raw;
+      const loaded = raw ? JSON.parse(raw) : [];
+      cachedBookings = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_BOOKINGS;
+    }
+    return cachedBookings;
   } catch {
     return SEED_BOOKINGS;
   }
 }
 
+let cachedCarsRaw = '';
+let cachedCars: Car[] = SEED_CARS;
+
 function getCarsSnapshot(): Car[] {
   if (typeof window === 'undefined') return SEED_CARS;
   try {
-    const loaded = getCars();
-    return loaded.length > 0 ? loaded : SEED_CARS;
+    const raw = window.localStorage.getItem('sw_cars_v1') || '';
+    if (raw !== cachedCarsRaw) {
+      cachedCarsRaw = raw;
+      const loaded = raw ? JSON.parse(raw) : [];
+      cachedCars = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_CARS;
+    }
+    return cachedCars;
   } catch {
     return SEED_CARS;
   }
 }
 
+let cachedSessionRaw = '';
+let cachedSession: DemoSession | null = null;
+
 function getSessionSnapshot(): DemoSession | null {
-  return getCurrentSession();
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
+    if (raw !== cachedSessionRaw) {
+      cachedSessionRaw = raw;
+      cachedSession = raw ? JSON.parse(raw) : null;
+    }
+    return cachedSession;
+  } catch {
+    return null;
+  }
 }
 
 function getServerBookingsSnapshot(): Booking[] {
@@ -196,9 +225,23 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
   const isCurrentOwner = session?.userId === booking?.ownerId;
   const isPlatformAdmin = session?.activeRole === 'admin';
 
+  // Listen to prefers-reduced-motion changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handler = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        setIsSimulating(false);
+      }
+    };
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
   // Waypoint simulation loop when booking is in_progress
   useEffect(() => {
-    if (!booking || booking.status !== 'in_progress' || !isSimulating) {
+    const prefersReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!booking || booking.status !== 'in_progress' || !isSimulating || prefersReduced) {
       return;
     }
 
@@ -372,6 +415,8 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
         {/* Feedback Alert Toast */}
         {actionFeedback && (
           <div
+            role={actionFeedback.type === 'error' ? 'alert' : 'status'}
+            aria-live="polite"
             className={`p-4 rounded-2xl border text-xs font-semibold flex items-center justify-between ${
               actionFeedback.type === 'success'
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
@@ -382,6 +427,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
             <button
               type="button"
               onClick={() => setActionFeedback(null)}
+              aria-label="Dismiss feedback message"
               className="text-xs opacity-60 hover:opacity-100 cursor-pointer ml-3"
             >
               ✕
@@ -455,6 +501,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
                 return (
                   <div
                     key={s.step}
+                    aria-current={isCurrent ? 'step' : undefined}
                     className={`p-3 rounded-2xl border transition-all ${
                       isCurrent
                         ? 'bg-[#111820] border-[#111820] text-white shadow-xs'
@@ -550,7 +597,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
           <div className="lg:col-span-8 bg-white rounded-3xl p-6 border border-[#66717D]/12 shadow-sm flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-base">🗺️</span>
+                <span className="text-base" aria-hidden="true">🗺️</span>
                 <h2 className="text-base font-bold text-[#111820]">
                   Addis Ababa Simulated Corridor Map
                 </h2>
@@ -570,7 +617,11 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
             </div>
 
             {/* Custom SVG Vector Map Canvas */}
-            <div className="relative w-full aspect-[16/10] bg-[#111820] rounded-2xl overflow-hidden border border-[#66717D]/20 shadow-inner">
+            <div
+              role="region"
+              aria-label={`Simulated trip corridor map of Addis Ababa. Vehicle current position: ${currentWp.name}, speed ${currentWp.speedKmH} km/h.`}
+              className="relative w-full aspect-[16/10] bg-[#111820] rounded-2xl overflow-hidden border border-[#66717D]/20 shadow-inner"
+            >
               {/* Grid Background Pattern */}
               <svg className="absolute inset-0 w-full h-full opacity-15" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -775,12 +826,16 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
             </div>
 
             {/* Simulated Live Event Stream */}
-            <div className="bg-white rounded-3xl p-6 border border-[#66717D]/12 shadow-sm flex flex-col gap-3 flex-1">
+            <div
+              role="log"
+              aria-label="Simulated Telematics Event Stream"
+              className="bg-white rounded-3xl p-6 border border-[#66717D]/12 shadow-sm flex flex-col gap-3 flex-1"
+            >
               <div className="flex items-center justify-between pb-2 border-b border-[#66717D]/10">
                 <span className="text-[11px] font-label-caps uppercase text-[#66717D] font-bold">
                   Telemetry Event Stream
                 </span>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
               </div>
 
               <div className="max-h-[260px] overflow-y-auto space-y-2.5 pr-1">

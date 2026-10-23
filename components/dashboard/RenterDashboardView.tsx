@@ -113,6 +113,20 @@ export function RenterDashboardView() {
   const [cancellationReason, setCancellationReason] = useState('');
   const [actionFeedback, setActionFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
+  // Escape key dismiss listener for open modals
+  React.useEffect(() => {
+    if (!selectedBookingForPass && !selectedBookingForDetails && !bookingToCancel) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedBookingForPass(null);
+        setSelectedBookingForDetails(null);
+        setBookingToCancel(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedBookingForPass, selectedBookingForDetails, bookingToCancel]);
+
   // Filtered list
   const filteredBookings = useMemo(() => {
     switch (filterTab) {
@@ -740,9 +754,11 @@ export function RenterDashboardView() {
             </div>
 
             {/* Filter Segmented Tabs */}
-            <div className="inline-flex p-1 rounded-2xl bg-white border border-[#66717D]/15 self-start sm:self-auto shadow-xs">
+            <div role="tablist" aria-label="Filter bookings by status" className="inline-flex p-1 rounded-2xl bg-white border border-[#66717D]/15 self-start sm:self-auto shadow-xs">
               <button
                 type="button"
+                role="tab"
+                aria-selected={filterTab === 'all'}
                 onClick={() => setFilterTab('all')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   filterTab === 'all'
@@ -754,6 +770,8 @@ export function RenterDashboardView() {
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={filterTab === 'upcoming'}
                 onClick={() => setFilterTab('upcoming')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   filterTab === 'upcoming'
@@ -771,6 +789,8 @@ export function RenterDashboardView() {
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={filterTab === 'active'}
                 onClick={() => setFilterTab('active')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   filterTab === 'active'
@@ -783,6 +803,8 @@ export function RenterDashboardView() {
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={filterTab === 'completed'}
                 onClick={() => setFilterTab('completed')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   filterTab === 'completed'
@@ -800,6 +822,8 @@ export function RenterDashboardView() {
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={filterTab === 'cancelled'}
                 onClick={() => setFilterTab('cancelled')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   filterTab === 'cancelled'
@@ -820,7 +844,12 @@ export function RenterDashboardView() {
 
           {/* Table Container */}
           <div className="bg-white rounded-3xl border border-[#66717D]/12 shadow-xs overflow-hidden">
-            <div className="overflow-x-auto">
+            <div
+              tabIndex={0}
+              role="region"
+              aria-label="Renter Bookings and Escrow Records table"
+              className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-[#111820]"
+            >
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#F5F2EB] text-[#66717D] text-[11px] font-label-caps uppercase tracking-wider border-b border-[#66717D]/10">
@@ -1070,18 +1099,24 @@ export function RenterDashboardView() {
 
       {/* MODAL 1: Digital QR Handover Pass */}
       {selectedBookingForPass && (
-        <div className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="qr-pass-modal-title"
+          className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 flex flex-col gap-5 items-center text-center border border-[#66717D]/15">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-2">
-                <span className="text-lg">📱</span>
-                <span className="text-sm font-bold text-[#111820]">
+                <span className="text-lg" aria-hidden="true">📱</span>
+                <span id="qr-pass-modal-title" className="text-sm font-bold text-[#111820]">
                   Digital Handover Pass
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedBookingForPass(null)}
+                aria-label="Close dialog"
                 className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -1127,7 +1162,7 @@ export function RenterDashboardView() {
             </div>
 
             <div className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#F5F2EB] text-[#536600] text-xs font-bold uppercase">
-              <span className="w-2 h-2 rounded-full bg-[#536600]" />
+              <span className="w-2 h-2 rounded-full bg-[#536600]" aria-hidden="true" />
               <span>Escrow Verified • TeleBirr Locked</span>
             </div>
           </div>
@@ -1136,20 +1171,26 @@ export function RenterDashboardView() {
 
       {/* MODAL 2: Full Booking Details View */}
       {selectedBookingForDetails && (
-        <div className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="booking-receipt-modal-title"
+          className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-3xl shadow-xl max-w-lg w-full p-6 sm:p-8 flex flex-col gap-6 border border-[#66717D]/15 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-[#66717D]/12">
               <div className="flex flex-col">
                 <span className="text-[10px] font-label-caps uppercase text-[#66717D] font-bold">
                   Reservation Receipt
                 </span>
-                <h3 className="text-lg font-bold text-[#111820]">
+                <h3 id="booking-receipt-modal-title" className="text-lg font-bold text-[#111820]">
                   #{selectedBookingForDetails.id.toUpperCase()}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedBookingForDetails(null)}
+                aria-label="Close dialog"
                 className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -1232,7 +1273,7 @@ export function RenterDashboardView() {
                   {/* TeleBirr Info */}
                   <div className="p-3.5 rounded-xl bg-[#111820] text-white flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span>📱</span>
+                      <span aria-hidden="true">📱</span>
                       <span className="text-white/80">TeleBirr Ref:</span>
                       <span className="font-mono font-bold text-[#D5F36A]">
                         {selectedBookingForDetails.paymentReference || 'TB-MOCK-PENDING'}
@@ -1269,7 +1310,7 @@ export function RenterDashboardView() {
                           }}
                           className="py-2.5 px-4 rounded-xl bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer flex items-center gap-1.5"
                         >
-                          <span>★</span>
+                          <span aria-hidden="true">★</span>
                           <span>Leave Review &amp; Rating</span>
                         </button>
                       )}
@@ -1291,12 +1332,19 @@ export function RenterDashboardView() {
 
       {/* MODAL 3: Cancellation Confirmation Modal */}
       {bookingToCancel && (
-        <div className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cancel-booking-modal-title"
+          className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-4 border border-[#66717D]/15">
             <div className="flex items-center gap-3 text-red-600">
-              <span className="text-3xl">⚠️</span>
+              <span className="text-3xl" aria-hidden="true">⚠️</span>
               <div>
-                <h3 className="text-lg font-bold text-[#111820]">Confirm Cancellation</h3>
+                <h3 id="cancel-booking-modal-title" className="text-lg font-bold text-[#111820]">
+                  Confirm Cancellation
+                </h3>
                 <span className="text-xs text-[#66717D]">
                   Booking #{bookingToCancel.id.toUpperCase()}
                 </span>

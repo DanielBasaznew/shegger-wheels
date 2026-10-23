@@ -32,11 +32,19 @@ function subscribeToStorage(callback: () => void) {
   return () => window.removeEventListener('storage', callback);
 }
 
+let cachedCarsRaw = '';
+let cachedCars: Car[] = SEED_CARS;
+
 function getCarsSnapshot(): Car[] {
   if (typeof window === 'undefined') return SEED_CARS;
   try {
-    const loaded = getCars();
-    return loaded.length > 0 ? loaded : SEED_CARS;
+    const raw = window.localStorage.getItem('sw_cars_v1') || '';
+    if (raw !== cachedCarsRaw) {
+      cachedCarsRaw = raw;
+      const loaded = raw ? JSON.parse(raw) : [];
+      cachedCars = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_CARS;
+    }
+    return cachedCars;
   } catch {
     return SEED_CARS;
   }
@@ -57,8 +65,21 @@ function subscribeToSession(callback: () => void) {
   };
 }
 
+let cachedSessionRaw = '';
+let cachedSession: DemoSession | null = null;
+
 function getSessionSnapshot(): DemoSession | null {
-  return getCurrentSession();
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
+    if (raw !== cachedSessionRaw) {
+      cachedSessionRaw = raw;
+      cachedSession = raw ? JSON.parse(raw) : null;
+    }
+    return cachedSession;
+  } catch {
+    return null;
+  }
 }
 
 function getServerSessionSnapshot(): DemoSession | null {
@@ -429,8 +450,12 @@ export function CheckoutView() {
           <div className="lg:col-span-7 flex flex-col gap-6">
             {/* Submission Error Banner */}
             {submissionError && (
-              <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-3">
-                <span className="text-lg">⚠️</span>
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-3"
+              >
+                <span className="text-lg" aria-hidden="true">⚠️</span>
                 <div className="text-xs leading-relaxed">
                   <p className="font-bold mb-0.5">Booking Submission Error</p>
                   <p>{submissionError}</p>
@@ -440,8 +465,13 @@ export function CheckoutView() {
 
             {/* Date Conflict or Validation Banner */}
             {conflictResult?.hasConflict && (
-              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-3">
-                <span className="text-lg">📅</span>
+              <div
+                id="checkout-date-conflict-msg"
+                role="alert"
+                aria-live="assertive"
+                className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-3"
+              >
+                <span className="text-lg" aria-hidden="true">📅</span>
                 <div className="text-xs leading-relaxed">
                   <p className="font-bold mb-0.5">Rental Dates Unavailable</p>
                   <p>{conflictResult.conflictReason}</p>
@@ -545,6 +575,8 @@ export function CheckoutView() {
                       type="date"
                       min={todayStr}
                       value={startDate}
+                      aria-invalid={Boolean(conflictResult?.hasConflict)}
+                      aria-describedby={conflictResult?.hasConflict ? 'checkout-date-conflict-msg' : undefined}
                       onChange={(e) => setStartDate(e.target.value)}
                       className="w-full px-3 py-2 rounded-xl bg-white border border-[#66717D]/25 text-xs font-semibold text-[#111820] focus:outline-hidden focus:ring-2 focus:ring-[#111820]"
                     />
@@ -561,6 +593,8 @@ export function CheckoutView() {
                       type="date"
                       min={startDate || todayStr}
                       value={endDate}
+                      aria-invalid={Boolean(conflictResult?.hasConflict)}
+                      aria-describedby={conflictResult?.hasConflict ? 'checkout-date-conflict-msg' : undefined}
                       onChange={(e) => setEndDate(e.target.value)}
                       className="w-full px-3 py-2 rounded-xl bg-white border border-[#66717D]/25 text-xs font-semibold text-[#111820] focus:outline-hidden focus:ring-2 focus:ring-[#111820]"
                     />
@@ -576,7 +610,7 @@ export function CheckoutView() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Option 1: Pickup */}
                   <label
-                    className={`cursor-pointer relative p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                    className={`cursor-pointer relative p-4 rounded-2xl border transition-all flex flex-col justify-between focus-within:ring-2 focus-within:ring-[#111820] focus-within:ring-offset-2 ${
                       handoverOption === 'pickup'
                         ? 'bg-white border-[#111820] shadow-sm ring-2 ring-[#111820]/15'
                         : 'bg-[#F5F2EB] border-transparent hover:bg-[#EBE8E1]'
@@ -592,12 +626,13 @@ export function CheckoutView() {
                     />
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg">📍</span>
+                        <span className="text-lg" aria-hidden="true">📍</span>
                         <span className="text-sm font-bold text-[#111820]">
                           Host Self-Pickup
                         </span>
                       </div>
                       <div
+                        aria-hidden="true"
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
                           handoverOption === 'pickup'
                             ? 'bg-[#111820] text-[#D5F36A]'
@@ -623,7 +658,7 @@ export function CheckoutView() {
 
                   {/* Option 2: Airport Concierge */}
                   <label
-                    className={`cursor-pointer relative p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                    className={`cursor-pointer relative p-4 rounded-2xl border transition-all flex flex-col justify-between focus-within:ring-2 focus-within:ring-[#111820] focus-within:ring-offset-2 ${
                       handoverOption === 'delivery'
                         ? 'bg-white border-[#111820] shadow-sm ring-2 ring-[#111820]/15'
                         : 'bg-[#F5F2EB] border-transparent hover:bg-[#EBE8E1]'
@@ -639,12 +674,13 @@ export function CheckoutView() {
                     />
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg">✈️</span>
+                        <span className="text-lg" aria-hidden="true">✈️</span>
                         <span className="text-sm font-bold text-[#111820]">
                           Airport Concierge
                         </span>
                       </div>
                       <div
+                        aria-hidden="true"
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
                           handoverOption === 'delivery'
                             ? 'bg-[#111820] text-[#D5F36A]'

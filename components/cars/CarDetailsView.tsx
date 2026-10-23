@@ -257,6 +257,27 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
     }
   };
 
+  // Keyboard accessibility for modals (Escape to dismiss, Arrow keys for gallery)
+  useEffect(() => {
+    if (!isContactModalOpen && !isGalleryModalOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isContactModalOpen) setIsContactModalOpen(false);
+        if (isGalleryModalOpen) setIsGalleryModalOpen(false);
+      } else if (isGalleryModalOpen) {
+        if (e.key === 'ArrowLeft') {
+          setActivePhotoIdx((prev) => (prev - 1 + photosList.length) % photosList.length);
+        } else if (e.key === 'ArrowRight') {
+          setActivePhotoIdx((prev) => (prev + 1) % photosList.length);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isContactModalOpen, isGalleryModalOpen, photosList.length]);
+
   // Handle booking CTA click
   const handleProceedToBooking = () => {
     if (!car || hasDateError) return;
@@ -904,7 +925,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
             </div>
 
             {/* RIGHT COLUMN: Sticky Booking & Transparent Escrow Calculator (5 cols) */}
-            <aside className="lg:col-span-5 sticky top-24">
+            <aside id="booking-card" className="lg:col-span-5 sticky top-24">
               <div className="rounded-3xl bg-white border border-[#66717D]/18 shadow-md p-6 flex flex-col gap-5">
                 {/* Rate & Security Header */}
                 <div className="flex items-end justify-between pb-4 border-b border-[#66717D]/12">
@@ -1208,9 +1229,36 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
         </Container>
       </div>
 
+      {/* Mobile Sticky Booking Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#66717D]/18 p-3 px-4 flex items-center justify-between shadow-lg">
+        <div className="flex flex-col">
+          <span className="font-specs-tabular text-base font-extrabold text-[#111820]">
+            {car.pricePerDay.toLocaleString()} ETB <span className="text-xs font-normal text-[#66717D]">/ day</span>
+          </span>
+          <span className="text-[10px] text-[#536600] font-semibold">Zero deposit with verified ID</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const card = document.getElementById('booking-card');
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          className="px-5 py-2.5 rounded-full bg-[#D5F36A] hover:bg-[#C8E85B] text-[#111820] font-bold text-xs shadow-xs"
+        >
+          Reserve Vehicle
+        </button>
+      </div>
+
       {/* MODAL 1: Contact Host Modal */}
       {isContactModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="contact-host-dialog-title"
+          className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl flex flex-col gap-4 animate-scale-in">
             <div className="flex items-center justify-between pb-3 border-b border-[#66717D]/15">
               <div className="flex items-center gap-3">
@@ -1226,13 +1274,16 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm font-bold text-[#111820]">Contact {host.name}</span>
+                  <span id="contact-host-dialog-title" className="text-sm font-bold text-[#111820]">
+                    Contact {host.name}
+                  </span>
                   <span className="text-[11px] text-[#66717D]">Verified Shegger Host</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsContactModalOpen(false)}
+                aria-label="Close dialog"
                 className="w-8 h-8 rounded-full bg-[#F1EEE7] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -1251,8 +1302,11 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="font-bold text-[#111820]">Direct Message to Host</label>
+                <label htmlFor="contact-host-textarea" className="font-bold text-[#111820]">
+                  Direct Message to Host
+                </label>
                 <textarea
+                  id="contact-host-textarea"
                   rows={3}
                   defaultValue={`Hello ${host.name}, I am interested in renting your ${car.year} ${car.make} ${car.model} from ${formatDisplayDate(startDate)} to ${formatDisplayDate(endDate)}. Is the vehicle ready for key handoff?`}
                   className="w-full p-3 rounded-2xl border border-[#66717D]/25 text-xs text-[#111820] outline-none focus:border-[#111820]"
@@ -1285,7 +1339,12 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
       {/* MODAL 2: Photo Lightbox Gallery Modal */}
       {isGalleryModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#111820]/90 backdrop-blur-md flex flex-col p-4 sm:p-8">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Vehicle photo gallery lightbox"
+          className="fixed inset-0 z-50 bg-[#111820]/90 backdrop-blur-md flex flex-col p-4 sm:p-8"
+        >
           <div className="flex items-center justify-between pb-4 text-white">
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm">
@@ -1298,6 +1357,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
             <button
               type="button"
               onClick={() => setIsGalleryModalOpen(false)}
+              aria-label="Close photo gallery"
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer"
             >
               ✕ Close
@@ -1344,6 +1404,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               <button
                 key={idx}
                 type="button"
+                aria-label={`View photo ${idx + 1}`}
+                aria-current={activePhotoIdx === idx ? 'true' : undefined}
                 onClick={() => setActivePhotoIdx(idx)}
                 className={`relative w-16 h-12 rounded-lg overflow-hidden border-2 cursor-pointer transition-all shrink-0 ${
                   activePhotoIdx === idx ? 'border-[#D5F36A] scale-105' : 'border-transparent opacity-60'

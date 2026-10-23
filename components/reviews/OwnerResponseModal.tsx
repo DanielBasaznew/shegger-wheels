@@ -41,6 +41,18 @@ export function OwnerResponseModal({
     setError('');
   }
 
+  // Escape key dismiss listener
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,15 +83,20 @@ export function OwnerResponseModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="owner-response-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto"
+    >
       <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
         
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-[#66717D]/12 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl">💬</span>
-              <h3 className="text-xl font-black text-[#111820]">
+              <span className="text-xl" aria-hidden="true">💬</span>
+              <h3 id="owner-response-modal-title" className="text-xl font-black text-[#111820]">
                 {review.ownerReply ? 'Edit Host Response' : 'Respond to Review'}
               </h3>
             </div>
@@ -88,7 +105,9 @@ export function OwnerResponseModal({
             </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close dialog"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition cursor-pointer"
           >
             ✕
@@ -135,15 +154,18 @@ export function OwnerResponseModal({
 
           {/* Response Textarea */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#111820] flex justify-between">
+            <label htmlFor="owner-response-textarea" className="text-xs font-bold text-[#111820] flex justify-between">
               <span>Your Public Host Reply <span className="text-rose-600">*</span></span>
               <span className="text-[#66717D] font-normal text-[11px]">
                 {replyText.length} chars
               </span>
             </label>
             <textarea
+              id="owner-response-textarea"
               rows={3}
               value={replyText}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'owner-response-error' : undefined}
               onChange={(e) => {
                 setReplyText(e.target.value);
                 if (error) setError('');
@@ -155,8 +177,13 @@ export function OwnerResponseModal({
 
           {/* Error Banner */}
           {error && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2">
-              <span>⚠️</span>
+            <div
+              id="owner-response-error"
+              role="alert"
+              aria-live="assertive"
+              className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2"
+            >
+              <span aria-hidden="true">⚠️</span>
               <span>{error}</span>
             </div>
           )}

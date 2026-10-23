@@ -159,16 +159,30 @@ export function NotificationBell() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, notificationsRaw]);
 
-  // Close when clicking outside
+  const bellButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Close when clicking outside or pressing Escape
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+        bellButtonRef.current?.focus();
+      }
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
 
   if (!userId) {
     return null;
@@ -204,13 +218,20 @@ export function NotificationBell() {
 
   return (
     <div className="relative" ref={panelRef}>
+      {/* Live Region for Screen Reader Announcements */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'No unread notifications'}
+      </div>
+
       {/* Bell Button */}
       <button
+        ref={bellButtonRef}
         type="button"
         id="notification-bell-btn"
         onClick={() => setIsOpen(!isOpen)}
         aria-label={`In-App Notifications (${unreadCount} unread)`}
         aria-expanded={isOpen}
+        aria-haspopup="dialog"
         className="relative w-10 h-10 rounded-full bg-white border border-[#66717D]/25 flex items-center justify-center text-[#111820] hover:border-[#111820] hover:bg-[#F5F2EB] transition-all cursor-pointer shadow-xs"
       >
         <svg
@@ -220,6 +241,7 @@ export function NotificationBell() {
           viewBox="0 0 24 24"
           stroke="currentColor"
           strokeWidth="2"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -242,7 +264,9 @@ export function NotificationBell() {
       {isOpen && (
         <div
           id="notification-inbox-panel"
-          className="absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl bg-white border border-[#66717D]/20 shadow-2xl p-0 flex flex-col z-50 overflow-hidden animate-scale-in"
+          role="dialog"
+          aria-label="In-App Notifications Inbox"
+          className="absolute right-0 mt-3 w-[calc(100vw-2rem)] sm:w-96 max-w-sm rounded-2xl bg-white border border-[#66717D]/20 shadow-2xl p-0 flex flex-col z-50 overflow-hidden animate-scale-in"
         >
           {/* Header */}
           <div className="p-4 bg-[#F5F2EB] border-b border-[#66717D]/15 flex items-center justify-between">
@@ -315,16 +339,25 @@ export function NotificationBell() {
               displayedNotifications.map((notif) => (
                 <div
                   key={notif.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => handleItemClick(notif)}
-                  className={`p-3.5 flex gap-3 items-start transition-colors cursor-pointer group ${
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleItemClick(notif);
+                    }
+                  }}
+                  className={`p-3.5 flex gap-3 items-start transition-colors cursor-pointer group focus:outline-hidden focus:bg-[#EBE8E1] ${
                     notif.read ? 'bg-white hover:bg-[#F9F7F2]' : 'bg-[#F5F2EB]/60 hover:bg-[#F5F2EB]'
                   }`}
+                  aria-label={`${notif.title}. ${notif.message}. ${formatRelativeTime(notif.createdAt)}.`}
                 >
                   {getNotificationIcon(notif.type)}
 
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 text-left">
                     <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className={`text-xs font-bold truncate ${notif.read ? 'text-[#111820]' : 'text-[#111820]'}`}>
+                      <span className="text-xs font-bold text-[#111820] truncate">
                         {notif.title}
                       </span>
                       <span className="text-[10px] font-specs-tabular text-[#66717D] shrink-0">
@@ -339,7 +372,7 @@ export function NotificationBell() {
                     <div className="flex items-center justify-between mt-2 pt-1">
                       <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#536600] group-hover:underline">
                         View details
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
                         </svg>
                       </span>
@@ -349,13 +382,14 @@ export function NotificationBell() {
                           <span
                             className="w-2 h-2 rounded-full bg-[#536600]"
                             title="Unread"
+                            aria-label="Unread notification"
                           />
                         )}
                         <button
                           type="button"
                           onClick={(e) => handleDismiss(e, notif.id)}
-                          title="Dismiss notification"
-                          className="opacity-0 group-hover:opacity-100 text-[#66717D] hover:text-[#111820] text-xs transition-opacity p-0.5 rounded cursor-pointer"
+                          aria-label={`Dismiss notification: ${notif.title}`}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#66717D] hover:text-[#111820] text-xs transition-opacity p-1 rounded-sm cursor-pointer"
                         >
                           ✕
                         </button>

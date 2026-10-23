@@ -3,7 +3,7 @@
 import React, { useSyncExternalStore } from 'react';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { RenterDashboardView } from '@/components/dashboard/RenterDashboardView';
-import { getCurrentSession, getUserById } from '@/lib/storage';
+import { getUserById } from '@/lib/storage';
 import { DemoSession, User } from '@/lib/types';
 import { switchActiveRole } from '@/lib/auth';
 import { Container } from '@/components/ui/Container';
@@ -21,8 +21,21 @@ function subscribe(callback: () => void) {
   };
 }
 
+let cachedSessionRaw = '';
+let cachedSession: DemoSession | null = null;
+
 function getSessionSnapshot(): DemoSession | null {
-  return getCurrentSession();
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
+    if (raw !== cachedSessionRaw) {
+      cachedSessionRaw = raw;
+      cachedSession = raw ? JSON.parse(raw) : null;
+    }
+    return cachedSession;
+  } catch {
+    return null;
+  }
 }
 
 function getServerSnapshot(): DemoSession | null {

@@ -25,10 +25,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F5F2EB] text-[#111820] font-sans selection:bg-[#D5F36A] selection:text-[#111820]">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-[#111820] focus:text-[#D5F36A] focus:font-bold focus:shadow-xl focus:ring-2 focus:ring-[#D5F36A] transition-all"
+        >
+          Skip to main content
+        </a>
         <Header />
-        <div className="flex-1 pt-20">
+        <main id="main-content" tabIndex={-1} className="flex-1 pt-20 focus:outline-hidden">
           {children}
-        </div>
+        </main>
         <Footer />
       </body>
     </html>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useSyncExternalStore } from 'react';
+import React, { useState, useMemo, useSyncExternalStore, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -228,6 +228,20 @@ export function AdminModerationDashboardView() {
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [disputes, disputeFilter, disputeSearch, bookings, cars]);
 
+  // Global Escape key listener for open modals
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (carToApprove) setCarToApprove(null);
+        else if (carToReject) setCarToReject(null);
+        else if (selectedDispute) setSelectedDispute(null);
+        else if (inspectingCar) setInspectingCar(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [carToApprove, carToReject, selectedDispute, inspectingCar]);
+
   // Current admin user info
   const currentAdminUser = useMemo(() => {
     if (!session) return null;
@@ -454,6 +468,8 @@ export function AdminModerationDashboardView() {
         {/* ========================================================= */}
         {alertNotice && (
           <div
+            role={alertNotice.type === 'error' ? 'alert' : 'status'}
+            aria-live="polite"
             className={`p-4 rounded-2xl border flex items-start justify-between gap-3 animate-in fade-in slide-in-from-top duration-200 ${
               alertNotice.type === 'success'
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
@@ -461,14 +477,15 @@ export function AdminModerationDashboardView() {
             }`}
           >
             <div className="flex items-start gap-2.5">
-              <span className="text-lg">
+              <span className="text-lg" aria-hidden="true">
                 {alertNotice.type === 'success' ? '✓' : '⚠️'}
               </span>
               <p className="text-sm font-medium">{alertNotice.message}</p>
             </div>
             <button
               onClick={() => setAlertNotice(null)}
-              className="text-xs font-bold hover:underline opacity-70 hover:opacity-100"
+              aria-label="Dismiss notice"
+              className="text-xs font-bold hover:underline opacity-70 hover:opacity-100 cursor-pointer"
             >
               Dismiss
             </button>
@@ -478,9 +495,11 @@ export function AdminModerationDashboardView() {
         {/* ========================================================= */}
         {/* Primary Governance Switcher: Fleet vs Disputes */}
         {/* ========================================================= */}
-        <div className="flex items-center gap-3 border-b border-[#66717D]/18 pb-4">
+        <div role="tablist" aria-label="Governance Sections" className="flex items-center gap-3 border-b border-[#66717D]/18 pb-4">
           <button
             type="button"
+            role="tab"
+            aria-selected={activeSection === 'vehicles'}
             onClick={() => setActiveSection('vehicles')}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeSection === 'vehicles'
@@ -498,6 +517,8 @@ export function AdminModerationDashboardView() {
 
           <button
             type="button"
+            role="tab"
+            aria-selected={activeSection === 'disputes'}
             onClick={() => setActiveSection('disputes')}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeSection === 'disputes'
@@ -505,7 +526,7 @@ export function AdminModerationDashboardView() {
                 : 'bg-white text-[#44474B] border border-[#66717D]/18 hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>⚖️ Disputes & Incidents Ledger</span>
+            <span>⚖️ Disputes &amp; Incidents Ledger</span>
             {disputeMetrics.open > 0 && (
               <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-[#B9674B] text-white">
                 {disputeMetrics.open} open
@@ -637,8 +658,11 @@ export function AdminModerationDashboardView() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             
             {/* Status Filter Tabs */}
-            <div className="flex items-center gap-1.5 p-1 bg-[#F5F2EB] rounded-2xl overflow-x-auto">
+            <div role="tablist" aria-label="Vehicle Status Filter" className="flex items-center gap-1.5 p-1 bg-[#F5F2EB] rounded-2xl overflow-x-auto">
               <button
+                type="button"
+                role="tab"
+                aria-selected={statusFilter === 'pending'}
                 onClick={() => setStatusFilter('pending')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
                   statusFilter === 'pending'
@@ -655,6 +679,9 @@ export function AdminModerationDashboardView() {
               </button>
 
               <button
+                type="button"
+                role="tab"
+                aria-selected={statusFilter === 'approved'}
                 onClick={() => setStatusFilter('approved')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
                   statusFilter === 'approved'
@@ -667,6 +694,9 @@ export function AdminModerationDashboardView() {
               </button>
 
               <button
+                type="button"
+                role="tab"
+                aria-selected={statusFilter === 'rejected'}
                 onClick={() => setStatusFilter('rejected')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
                   statusFilter === 'rejected'
@@ -1158,10 +1188,13 @@ export function AdminModerationDashboardView() {
 
           {/* Search & Filter Header for Disputes */}
           <div className="p-4 sm:p-5 bg-white rounded-2xl border border-[#66717D]/18 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-1.5 flex-wrap w-full sm:w-auto">
+            <div role="tablist" aria-label="Dispute Status Filter" className="flex items-center gap-1.5 flex-wrap w-full sm:w-auto">
               {(['all', 'open', 'investigating', 'resolved'] as const).map((filter) => (
                 <button
                   key={filter}
+                  type="button"
+                  role="tab"
+                  aria-selected={disputeFilter === filter}
                   onClick={() => setDisputeFilter(filter)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${
                     disputeFilter === filter
@@ -1332,13 +1365,13 @@ export function AdminModerationDashboardView() {
       {/* ========================================================= */}
       {inspectingCar && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-3xl w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-6 animate-in zoom-in-95 duration-200">
+          <div role="dialog" aria-modal="true" aria-labelledby="inspection-modal-title" className="bg-white rounded-3xl border border-[#66717D]/20 max-w-3xl w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-6 animate-in zoom-in-95 duration-200">
             
             {/* Modal Header */}
             <div className="flex items-start justify-between gap-4 border-b border-[#66717D]/15 pb-4">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-xl sm:text-2xl font-black text-[#111820]">
+                  <h2 id="inspection-modal-title" className="text-xl sm:text-2xl font-black text-[#111820]">
                     {inspectingCar.make} {inspectingCar.model}
                   </h2>
                   <span className="text-sm text-[#66717D]">({inspectingCar.year})</span>
@@ -1369,8 +1402,10 @@ export function AdminModerationDashboardView() {
               </div>
 
               <button
+                type="button"
                 onClick={() => setInspectingCar(null)}
-                className="w-9 h-9 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition"
+                aria-label="Close vehicle inspection modal"
+                className="w-9 h-9 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition cursor-pointer"
               >
                 ✕
               </button>
@@ -1578,12 +1613,12 @@ export function AdminModerationDashboardView() {
       {/* ========================================================= */}
       {carToApprove && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-md w-full p-6 sm:p-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl">
+          <div role="dialog" aria-modal="true" aria-labelledby="approve-modal-title" className="bg-white rounded-3xl border border-[#66717D]/20 max-w-md w-full p-6 sm:p-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl" aria-hidden="true">
               ✓
             </div>
             <div>
-              <h3 className="text-xl font-black text-[#111820]">
+              <h3 id="approve-modal-title" className="text-xl font-black text-[#111820]">
                 Approve Vehicle Listing?
               </h3>
               <p className="text-sm text-[#66717D] mt-1.5 leading-relaxed">
@@ -1620,12 +1655,12 @@ export function AdminModerationDashboardView() {
       {/* ========================================================= */}
       {carToReject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-800 flex items-center justify-center text-2xl">
+          <div role="dialog" aria-modal="true" aria-labelledby="reject-modal-title" className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-800 flex items-center justify-center text-2xl" aria-hidden="true">
               ✕
             </div>
             <div>
-              <h3 className="text-xl font-black text-[#111820]">
+              <h3 id="reject-modal-title" className="text-xl font-black text-[#111820]">
                 Reject Vehicle Listing
               </h3>
               <p className="text-sm text-[#66717D] mt-1.5 leading-relaxed">
@@ -1658,16 +1693,19 @@ export function AdminModerationDashboardView() {
 
             {/* Mandatory Reason Textarea */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#111820]">
+              <label htmlFor="rejection-reason-textarea" className="text-xs font-bold text-[#111820]">
                 Detailed Rejection Explanation <span className="text-rose-600">*</span>
               </label>
               <textarea
+                id="rejection-reason-textarea"
                 rows={4}
                 value={rejectionReasonText}
                 onChange={(e) => {
                   setRejectionReasonText(e.target.value);
                   if (rejectionError) setRejectionError('');
                 }}
+                aria-invalid={!!rejectionError}
+                aria-describedby={rejectionError ? "rejection-error-msg" : undefined}
                 placeholder="Explain clearly what requirements must be met before this vehicle can be published..."
                 className="w-full p-3.5 rounded-2xl bg-[#F5F2EB]/50 border border-[#66717D]/25 text-sm text-[#111820] placeholder-[#66717D] focus:outline-none focus:ring-2 focus:ring-[#111820] focus:bg-white transition"
               />
@@ -1676,7 +1714,7 @@ export function AdminModerationDashboardView() {
                 <span>{rejectionReasonText.length} chars</span>
               </span>
               {rejectionError && (
-                <span className="text-xs text-rose-600 font-bold mt-1">
+                <span id="rejection-error-msg" role="alert" className="text-xs text-rose-600 font-bold mt-1">
                   ⚠️ {rejectionError}
                 </span>
               )}
@@ -1705,19 +1743,21 @@ export function AdminModerationDashboardView() {
       {/* ========================================================= */}
       {selectedDispute && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
+          <div role="dialog" aria-modal="true" aria-labelledby="dispute-mediation-modal-title" className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
             
             <div className="flex items-start justify-between border-b border-[#66717D]/15 pb-4">
               <div>
                 <span className="text-[10px] uppercase font-bold text-[#66717D] tracking-wider">
                   Incident Arbitration
                 </span>
-                <h3 className="text-xl font-black text-[#111820]">
+                <h3 id="dispute-mediation-modal-title" className="text-xl font-black text-[#111820]">
                   Mediate Dispute #{selectedDispute.id}
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => setSelectedDispute(null)}
+                aria-label="Close mediation modal"
                 className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center text-sm font-bold hover:bg-[#66717D]/20 transition cursor-pointer"
               >
                 ✕

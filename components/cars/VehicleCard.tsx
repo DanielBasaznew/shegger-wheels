@@ -140,6 +140,7 @@ export function VehicleCard({
           <Link
             href={`/cars/${car.id}`}
             id={`view-details-${car.id}`}
+            aria-label={`View details for ${car.make} ${car.model}`}
             className="px-4 py-2 rounded-xl bg-[#111820] hover:bg-[#1E293B] text-white font-semibold text-xs transition-colors inline-flex items-center gap-1.5 shadow-xs"
           >
             <span>View Details</span>

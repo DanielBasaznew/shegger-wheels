@@ -56,16 +56,36 @@ export function Header() {
     }
   }
 
-  // Close dropdown when clicking outside
+  const userButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
+
+  // Close dropdown when clicking outside or pressing Escape
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setUserDropdownOpen(false);
       }
     }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        if (userDropdownOpen) {
+          setUserDropdownOpen(false);
+          userButtonRef.current?.focus();
+        } else if (mobileMenuOpen) {
+          setMobileMenuOpen(false);
+          mobileToggleRef.current?.focus();
+        }
+      }
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [userDropdownOpen, mobileMenuOpen]);
 
   const handleSignOut = () => {
     signOutDemoUser();
@@ -198,12 +218,14 @@ export function Header() {
           {session && currentUser ? (
             <div className="relative" ref={dropdownRef}>
               <button
+                ref={userButtonRef}
                 type="button"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white border border-[#66717D]/25 shadow-xs hover:border-[#111820] transition-colors cursor-pointer"
                 id="header-user-profile"
                 aria-expanded={userDropdownOpen}
                 aria-haspopup="true"
+                aria-controls="user-dropdown-menu"
               >
                 {currentUser.avatarUrl ? (
                   <Image
@@ -227,12 +249,17 @@ export function Header() {
                     {session.activeRole}
                   </span>
                 </div>
-                <span className="text-xs text-[#66717D] ml-0.5">▾</span>
+                <span className="text-xs text-[#66717D] ml-0.5" aria-hidden="true">▾</span>
               </button>
 
               {/* User Dropdown Menu */}
               {userDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-[#66717D]/20 shadow-xl p-3 flex flex-col gap-2 z-50 animate-scale-in">
+                <div
+                  id="user-dropdown-menu"
+                  role="menu"
+                  aria-labelledby="header-user-profile"
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-[#66717D]/20 shadow-xl p-3 flex flex-col gap-2 z-50 animate-scale-in"
+                >
                   <div className="p-3 rounded-xl bg-[#F6F3EC] flex flex-col gap-1">
                     <span className="text-xs font-bold text-[#111820]">{currentUser.name}</span>
                     <span className="text-[11px] text-[#66717D] truncate">{currentUser.email}</span>
@@ -340,18 +367,21 @@ export function Header() {
 
           {/* Mobile Menu Toggle Button */}
           <button
+            ref={mobileToggleRef}
             type="button"
+            id="mobile-menu-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-[#111820] hover:bg-[#EBE8E1] transition-colors"
+            className="lg:hidden p-2 rounded-xl text-[#111820] hover:bg-[#EBE8E1] transition-colors cursor-pointer"
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation-drawer"
           >
             {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             )}
@@ -361,7 +391,12 @@ export function Header() {
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#F5F2EB] border-b border-[#66717D]/20 px-4 pt-2 pb-6 flex flex-col gap-3 shadow-lg">
+        <div
+          id="mobile-navigation-drawer"
+          role="region"
+          aria-label="Mobile Navigation Menu"
+          className="lg:hidden bg-[#F5F2EB] border-b border-[#66717D]/20 px-4 pt-2 pb-6 flex flex-col gap-3 shadow-lg"
+        >
           <nav className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link

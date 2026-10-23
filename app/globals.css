@@ -58,3 +58,29 @@ body {
   font-size: 11px;
   line-height: 16px;
 }
+
+/* Accessibility: Global High-Contrast Focus Visible Rings */
+:focus-visible {
+  outline: 2px solid #111820;
+  outline-offset: 2px;
+}
+
+/* Dark container focus ring override for high visibility */
+.bg-obsidian :focus-visible,
+[class*="bg-[#111820]"] :focus-visible,
+[class*="bg-black"] :focus-visible {
+  outline: 2px solid #D5F36A;
+  outline-offset: 2px;
+}
+
+/* Accessibility: Respect User Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

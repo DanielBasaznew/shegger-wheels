@@ -35,6 +35,18 @@ export function SubmitReviewModal({
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Escape key dismiss listener
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const activeRating = hoverRating || rating;
@@ -70,15 +82,20 @@ export function SubmitReviewModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="submit-review-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto"
+    >
       <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
         
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-[#66717D]/12 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl">⭐</span>
-              <h3 className="text-xl font-black text-[#111820]">
+              <span className="text-xl" aria-hidden="true">⭐</span>
+              <h3 id="submit-review-modal-title" className="text-xl font-black text-[#111820]">
                 Review Your Trip
               </h3>
             </div>
@@ -87,7 +104,9 @@ export function SubmitReviewModal({
             </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close dialog"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition cursor-pointer"
           >
             ✕
@@ -99,22 +118,29 @@ export function SubmitReviewModal({
           
           {/* Star Rating Selector */}
           <div className="flex flex-col items-center justify-center gap-2 p-5 rounded-2xl bg-[#F5F2EB]/60 border border-[#66717D]/12 text-center">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
+            <span id="star-rating-label" className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
               Select Your Overall Rating
             </span>
 
-            <div className="flex items-center gap-2 text-3xl sm:text-4xl my-1">
+            <div
+              role="radiogroup"
+              aria-labelledby="star-rating-label"
+              className="flex items-center gap-2 text-3xl sm:text-4xl my-1"
+            >
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
+                  role="radio"
+                  aria-checked={rating === star}
+                  aria-label={`${star} Star${star > 1 ? 's' : ''}`}
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
                   className="transition transform hover:scale-115 focus:outline-hidden cursor-pointer"
-                  title={`${star} Star${star > 1 ? 's' : ''}`}
                 >
                   <span
+                    aria-hidden="true"
                     className={
                       star <= activeRating
                         ? 'text-amber-400 drop-shadow-xs'
@@ -127,22 +153,25 @@ export function SubmitReviewModal({
               ))}
             </div>
 
-            <span className="text-xs font-semibold text-[#111820] h-5">
+            <span className="text-xs font-semibold text-[#111820] h-5" aria-live="polite">
               {RATING_DESCRIPTIONS[activeRating]}
             </span>
           </div>
 
           {/* Written Feedback Textarea */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#111820] flex justify-between">
+            <label htmlFor="review-comment-textarea" className="text-xs font-bold text-[#111820] flex justify-between">
               <span>Your Review &amp; Experience <span className="text-rose-600">*</span></span>
               <span className="text-[#66717D] font-normal text-[11px]">
                 {comment.length} / 10 min chars
               </span>
             </label>
             <textarea
+              id="review-comment-textarea"
               rows={4}
               value={comment}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'review-error-banner' : undefined}
               onChange={(e) => {
                 setComment(e.target.value);
                 if (error) setError('');
@@ -154,8 +183,13 @@ export function SubmitReviewModal({
 
           {/* Error Banner */}
           {error && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2">
-              <span>⚠️</span>
+            <div
+              id="review-error-banner"
+              role="alert"
+              aria-live="assertive"
+              className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2"
+            >
+              <span aria-hidden="true">⚠️</span>
               <span>{error}</span>
             </div>
           )}

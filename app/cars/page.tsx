@@ -283,9 +283,11 @@ function CatalogueContent() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             {/* Search Input */}
             <div className="md:col-span-8 relative flex items-center">
-              <span className="absolute left-4 text-[#66717D]">🔍</span>
+              <span className="absolute left-4 text-[#66717D]" aria-hidden="true">🔍</span>
               <input
+                id="cars-search-input"
                 type="text"
+                aria-label="Search vehicles by make, model, or neighbourhood"
                 placeholder="Search by make, model, or neighbourhood (e.g. Prado, Bole, Kazanchis)..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
@@ -307,11 +309,14 @@ function CatalogueContent() {
             <div className="md:hidden flex items-center">
               <button
                 type="button"
+                id="mobile-filter-toggle"
+                aria-expanded={mobileFilterOpen}
+                aria-controls="catalogue-filter-sidebar"
                 onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
                 className="w-full h-12 px-4 rounded-2xl bg-[#111820] text-white font-semibold text-sm flex items-center justify-center gap-2"
               >
                 <span>⚙️ Refine Filters</span>
-                {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-[#D5F36A]" />}
+                {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-[#D5F36A]" aria-hidden="true" />}
               </button>
             </div>
 
@@ -426,6 +431,8 @@ function CatalogueContent() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* LEFT FILTER SIDEBAR (Visible on Desktop, Collapsible on Mobile) */}
             <aside
+              id="catalogue-filter-sidebar"
+              aria-label="Vehicle filters"
               className={`lg:col-span-4 xl:col-span-3 ${
                 mobileFilterOpen ? 'block' : 'hidden lg:block'
               } bg-white p-5 sm:p-6 rounded-3xl border border-[#66717D]/18 shadow-sm flex flex-col gap-6 sticky top-24`}
@@ -434,9 +441,19 @@ function CatalogueContent() {
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-base text-[#111820]">Refine Fleet</span>
                 </div>
-                <span className="font-specs-tabular text-xs font-bold text-[#536600] bg-[#D5F36A]/30 px-2.5 py-0.5 rounded-full border border-[#D5F36A]">
-                  {sortedCars.length} Available
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-specs-tabular text-xs font-bold text-[#536600] bg-[#D5F36A]/30 px-2.5 py-0.5 rounded-full border border-[#D5F36A]">
+                    {sortedCars.length} Available
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setMobileFilterOpen(false)}
+                    aria-label="Close vehicle filters"
+                    className="lg:hidden p-1.5 rounded-lg text-[#66717D] hover:text-[#111820] hover:bg-[#F1EEE7] transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
 
               {/* Neighbourhood Hubs Checkboxes */}
@@ -518,6 +535,7 @@ function CatalogueContent() {
                     <button
                       key={mode}
                       type="button"
+                      aria-pressed={selectedGearbox === mode}
                       onClick={() => handleGearboxChange(mode)}
                       className={`py-2 rounded-lg transition-colors cursor-pointer text-center ${
                         selectedGearbox === mode
@@ -541,6 +559,7 @@ function CatalogueContent() {
                     <button
                       key={seat}
                       type="button"
+                      aria-pressed={selectedSeats === seat}
                       onClick={() => handleSeatsChange(seat)}
                       className={`py-2 rounded-lg transition-colors cursor-pointer text-center ${
                         selectedSeats === seat
@@ -554,20 +573,30 @@ function CatalogueContent() {
                 </div>
               </div>
 
-              {/* Reset Sidebar Action */}
-              {hasActiveFilters && (
+              {/* Action Buttons for Mobile / Reset */}
+              <div className="flex flex-col gap-2 pt-2">
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="w-full py-2.5 rounded-xl border border-[#66717D]/30 text-xs font-bold text-[#111820] hover:bg-[#F1EEE7] transition-colors cursor-pointer"
+                  >
+                    Clear All Filters
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  onClick={handleResetFilters}
-                  className="w-full py-2.5 rounded-xl border border-[#66717D]/30 text-xs font-bold text-[#111820] hover:bg-[#F1EEE7] transition-colors cursor-pointer"
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="lg:hidden w-full py-2.5 rounded-xl bg-[#111820] text-white text-xs font-bold hover:bg-[#1E293B] transition-colors"
                 >
-                  Clear All Filters
+                  Apply & View Results ({sortedCars.length})
                 </button>
-              )}
+              </div>
             </aside>
 
             {/* RIGHT FLEET INVENTORY GRID */}
-            <main className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
+            <div id="catalogue-results" className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
               {/* Grid Header Info */}
               <div className="flex items-center justify-between text-xs text-[#44474B]">
                 <div className="flex items-center gap-2">
@@ -577,7 +606,7 @@ function CatalogueContent() {
                   <span>of {sortedCars.length} verified vehicles</span>
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5 text-[#536600] font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-[#536600]" />
+                  <span className="w-2 h-2 rounded-full bg-[#536600]" aria-hidden="true" />
                   <span>Live TeleBirr instant booking enabled</span>
                 </div>
               </div>
@@ -592,7 +621,7 @@ function CatalogueContent() {
               ) : (
                 /* Empty State */
                 <div className="p-10 sm:p-14 rounded-3xl bg-white border border-[#66717D]/18 text-center flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-[#F1EEE7] flex items-center justify-center text-3xl">
+                  <div className="w-16 h-16 rounded-2xl bg-[#F1EEE7] flex items-center justify-center text-3xl" aria-hidden="true">
                     🔍
                   </div>
                   <h3 className="text-xl font-bold text-[#111820]">
@@ -613,10 +642,11 @@ function CatalogueContent() {
 
               {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="mt-8 pt-6 border-t border-[#66717D]/15 flex items-center justify-between gap-4">
+                <nav aria-label="Catalogue pagination" className="mt-8 pt-6 border-t border-[#66717D]/15 flex items-center justify-between gap-4">
                   <button
                     type="button"
                     disabled={currentPage === 1}
+                    aria-label="Previous page"
                     onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                     className="px-4 py-2 rounded-xl border border-[#66717D]/25 text-xs font-bold text-[#111820] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#EBE8E1] transition-colors"
                   >
@@ -628,6 +658,8 @@ function CatalogueContent() {
                       <button
                         key={pageNum}
                         type="button"
+                        aria-label={`Page ${pageNum}`}
+                        aria-current={currentPage === pageNum ? 'page' : undefined}
                         onClick={() => setCurrentPage(pageNum)}
                         className={`w-9 h-9 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                           currentPage === pageNum
@@ -643,12 +675,13 @@ function CatalogueContent() {
                   <button
                     type="button"
                     disabled={currentPage === totalPages}
+                    aria-label="Next page"
                     onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                     className="px-4 py-2 rounded-xl border border-[#66717D]/25 text-xs font-bold text-[#111820] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#EBE8E1] transition-colors"
                   >
                     Next →
                   </button>
-                </div>
+                </nav>
               )}
 
               {/* Custom Model Request Banner */}
@@ -674,7 +707,7 @@ function CatalogueContent() {
                   Contact Concierge
                 </Link>
               </div>
-            </main>
+            </div>
           </div>
         </Container>
       </section>
