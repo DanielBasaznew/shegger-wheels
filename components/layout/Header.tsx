@@ -4,7 +4,7 @@ import React, { useState, useSyncExternalStore, useRef, useEffect } from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { getUserById } from '@/lib/storage';
+import { getUserById, resetDemoData } from '@/lib/storage';
 import { User, DemoSession, UserRole } from '@/lib/types';
 import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
 
@@ -73,6 +73,20 @@ export function Header() {
     setMobileMenuOpen(false);
     if (pathname.startsWith('/dashboard') || pathname.startsWith('/checkout')) {
       router.push('/');
+    }
+  };
+
+  const handleResetDemo = () => {
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm(
+        'Reset Shegger Wheels demo data?\n\nThis restores initial baseline seeds (cars, bookings, reviews, notifications) without affecting unrelated browser storage.'
+      );
+      if (confirmed) {
+        resetDemoData();
+        setUserDropdownOpen(false);
+        setMobileMenuOpen(false);
+        router.refresh();
+      }
     }
   };
 
@@ -291,8 +305,17 @@ export function Header() {
                     )}
                   </div>
 
-                  {/* Sign Out Action */}
-                  <div className="pt-2 border-t border-[#66717D]/12">
+                  {/* Reset Demo Data & Sign Out */}
+                  <div className="pt-2 border-t border-[#66717D]/12 flex flex-col gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handleResetDemo}
+                      className="w-full py-1.5 px-3 rounded-xl bg-[#F1EEE7] hover:bg-[#E6E2D8] text-[#44474B] font-semibold text-[11px] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      title="Restores seed cars, bookings, reviews, and notifications"
+                    >
+                      <span>🔄</span>
+                      <span>Reset Demo Seed Data</span>
+                    </button>
                     <button
                       type="button"
                       onClick={handleSignOut}
@@ -383,6 +406,13 @@ export function Header() {
                   </div>
                 )}
 
+                <button
+                  type="button"
+                  onClick={handleResetDemo}
+                  className="w-full py-2 rounded-xl bg-[#F1EEE7] text-[#44474B] font-semibold text-xs text-center mb-1.5"
+                >
+                  🔄 Reset Demo Seed Data
+                </button>
                 <button
                   type="button"
                   onClick={handleSignOut}

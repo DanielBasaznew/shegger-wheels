@@ -338,6 +338,14 @@ export function initializeDemoData(forceReset = false): void {
 export function resetDemoData(): void {
   if (!isBrowser()) return;
   initializeDemoData(true);
+  try {
+    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new Event('shegger-notification-change'));
+    window.dispatchEvent(new Event('shegger-storage-change'));
+    window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'all' } }));
+  } catch (error) {
+    console.warn('[Shegger Storage] Failed to dispatch reset events:', error);
+  }
 }
 
 // ==========================================

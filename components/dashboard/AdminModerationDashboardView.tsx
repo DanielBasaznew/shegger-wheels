@@ -8,14 +8,18 @@ import {
   CarStatus,
   User,
   DemoSession,
+  Dispute,
+  DisputeStatus,
+  Booking,
 } from '@/lib/types';
-import { SEED_CARS, SEED_USERS } from '@/lib/seeds';
-import { getUserById } from '@/lib/storage';
+import { SEED_CARS, SEED_USERS, SEED_DISPUTES, SEED_BOOKINGS } from '@/lib/seeds';
+import { getUserById, saveDispute } from '@/lib/storage';
 import {
   moderateCarListing,
   getAdminModerationMetrics,
   ADDIS_NEIGHBOURHOODS,
 } from '@/lib/fleet';
+import { transitionBookingStatus } from '@/lib/bookings';
 
 // ==========================================
 // SSR-Safe Storage Synchronizers
@@ -24,7 +28,11 @@ import {
 function subscribeToStorage(callback: () => void) {
   if (typeof window === 'undefined') return () => {};
   window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
+  window.addEventListener('shegger-storage-change', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('shegger-storage-change', callback);
+  };
 }
 
 let cachedCarsRaw = '';
@@ -90,6 +98,50 @@ function getServerSessionSnapshot(): DemoSession | null {
   return null;
 }
 
+let cachedDisputesRaw = '';
+let cachedDisputes: Dispute[] = SEED_DISPUTES;
+
+function getDisputesSnapshot(): Dispute[] {
+  if (typeof window === 'undefined') return SEED_DISPUTES;
+  try {
+    const raw = window.localStorage.getItem('sw_disputes_v1') || '';
+    if (raw !== cachedDisputesRaw) {
+      cachedDisputesRaw = raw;
+      const loaded = raw ? JSON.parse(raw) : [];
+      cachedDisputes = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_DISPUTES;
+    }
+    return cachedDisputes;
+  } catch {
+    return SEED_DISPUTES;
+  }
+}
+
+let cachedBookingsRaw = '';
+let cachedBookings: Booking[] = SEED_BOOKINGS;
+
+function getBookingsSnapshot(): Booking[] {
+  if (typeof window === 'undefined') return SEED_BOOKINGS;
+  try {
+    const raw = window.localStorage.getItem('sw_bookings_v1') || '';
+    if (raw !== cachedBookingsRaw) {
+      cachedBookingsRaw = raw;
+      const loaded = raw ? JSON.parse(raw) : [];
+      cachedBookings = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_BOOKINGS;
+    }
+    return cachedBookings;
+  } catch {
+    return SEED_BOOKINGS;
+  }
+}
+
+function getServerDisputesSnapshot(): Dispute[] {
+  return SEED_DISPUTES;
+}
+
+function getServerBookingsSnapshot(): Booking[] {
+  return SEED_BOOKINGS;
+}
+
 // Preset administrative rejection reasons
 const PRESET_REJECTION_REASONS = [
   'Photos are low resolution, blurry, or do not clearly show vehicle condition.',
@@ -103,20 +155,33 @@ export function AdminModerationDashboardView() {
   const cars = useSyncExternalStore(subscribeToStorage, getCarsSnapshot, getServerCarsSnapshot);
   const users = useSyncExternalStore(subscribeToStorage, getUsersSnapshot, getServerUsersSnapshot);
   const session = useSyncExternalStore(subscribeToStorage, getSessionSnapshot, getServerSessionSnapshot);
+  const disputes = useSyncExternalStore(subscribeToStorage, getDisputesSnapshot, getServerDisputesSnapshot);
+  const bookings = useSyncExternalStore(subscribeToStorage, getBookingsSnapshot, getServerBookingsSnapshot);
 
-  // Filter & Search states
+  // Section switcher: 'vehicles' vs 'disputes'
+  const [activeSection, setActiveSection] = useState<'vehicles' | 'disputes'>('vehicles');
+
+  // Filter & Search states for vehicles
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | CarStatus>('pending');
   const [neighbourhoodFilter, setNeighbourhoodFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price_asc' | 'price_desc'>('newest');
 
-  // Modals state
+  // Modals state for vehicles
   const [inspectingCar, setInspectingCar] = useState<Car | null>(null);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [carToApprove, setCarToApprove] = useState<Car | null>(null);
   const [carToReject, setCarToReject] = useState<Car | null>(null);
   const [rejectionReasonText, setRejectionReasonText] = useState('');
   const [rejectionError, setRejectionError] = useState('');
+
+  // Disputes management state
+  const [disputeFilter, setDisputeFilter] = useState<'all' | DisputeStatus>('all');
+  const [disputeSearch, setDisputeSearch] = useState('');
+  const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
+  const [resolutionAction, setResolutionAction] = useState<'resolve' | 'investigate'>('resolve');
+  const [resolutionNotesInput, setResolutionNotesInput] = useState('');
+  const [resolutionError, setResolutionError] = useState('');
 
   // Operational feedback banner
   const [alertNotice, setAlertNotice] = useState<{
@@ -126,6 +191,39 @@ export function AdminModerationDashboardView() {
 
   // Compute metrics
   const metrics = useMemo(() => getAdminModerationMetrics(cars), [cars]);
+
+  // Compute dispute metrics
+  const disputeMetrics = useMemo(() => {
+    return {
+      total: disputes.length,
+      open: disputes.filter((d) => d.status === 'open').length,
+      investigating: disputes.filter((d) => d.status === 'investigating').length,
+      resolved: disputes.filter((d) => d.status === 'resolved').length,
+    };
+  }, [disputes]);
+
+  // Filtered & sorted disputes
+  const filteredDisputes = useMemo(() => {
+    return disputes
+      .filter((d) => {
+        if (disputeFilter !== 'all' && d.status !== disputeFilter) return false;
+        if (disputeSearch.trim()) {
+          const q = disputeSearch.toLowerCase().trim();
+          const booking = bookings.find((b) => b.id === d.bookingId);
+          const car = booking ? cars.find((c) => c.id === booking.carId) : undefined;
+          const carTitle = car ? `${car.make} ${car.model}`.toLowerCase() : '';
+          const match =
+            d.id.toLowerCase().includes(q) ||
+            d.bookingId.toLowerCase().includes(q) ||
+            d.reason.toLowerCase().includes(q) ||
+            d.description.toLowerCase().includes(q) ||
+            carTitle.includes(q);
+          if (!match) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }, [disputes, disputeFilter, disputeSearch, bookings, cars]);
 
   // Current admin user info
   const currentAdminUser = useMemo(() => {
@@ -255,6 +353,84 @@ export function AdminModerationDashboardView() {
     }
   };
 
+  // Execute dispute resolution
+  const handleResolveDispute = () => {
+    if (!selectedDispute) return;
+    if (!session) {
+      setResolutionError('Administrator session required.');
+      return;
+    }
+
+    if (!resolutionNotesInput.trim() || resolutionNotesInput.trim().length < 5) {
+      setResolutionError('Resolution or mediation notes (minimum 5 characters) are required.');
+      return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (resolutionAction === 'resolve') {
+      // 1. Transition booking to resolved status (triggers in-app notifications to both renter and owner)
+      transitionBookingStatus(
+        selectedDispute.bookingId,
+        'resolved',
+        { userId: session.userId, role: 'admin' },
+        { reason: resolutionNotesInput.trim() }
+      );
+
+      // 2. Persist resolved dispute state
+      const updatedDispute: Dispute = {
+        ...selectedDispute,
+        status: 'resolved',
+        resolutionNotes: resolutionNotesInput.trim(),
+        resolvedBy: session.userId,
+        resolvedAt: now,
+      };
+
+      const saved = saveDispute(updatedDispute);
+      if (saved) {
+        setAlertNotice({
+          type: 'success',
+          message: `Dispute #${selectedDispute.id} formally resolved. Settlement notes recorded and notifications dispatched to involved parties.`,
+        });
+        setSelectedDispute(null);
+        setResolutionNotesInput('');
+        setResolutionError('');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('storage'));
+          window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
+        }
+      } else {
+        setResolutionError('Failed to persist dispute resolution.');
+      }
+    } else {
+      // Mark as investigating
+      const updatedDispute: Dispute = {
+        ...selectedDispute,
+        status: 'investigating',
+        resolutionNotes: resolutionNotesInput.trim()
+          ? `[Investigation Note]: ${resolutionNotesInput.trim()}`
+          : selectedDispute.resolutionNotes,
+      };
+
+      const saved = saveDispute(updatedDispute);
+      if (saved) {
+        setAlertNotice({
+          type: 'success',
+          message: `Dispute #${selectedDispute.id} moved to Active Investigation status.`,
+        });
+        setSelectedDispute(null);
+        setResolutionNotesInput('');
+        setResolutionError('');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('storage'));
+          window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
+        }
+      } else {
+        setResolutionError('Failed to update dispute status.');
+      }
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-[#F5F2EB] py-8 text-[#111820]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
@@ -326,6 +502,47 @@ export function AdminModerationDashboardView() {
           </div>
         )}
 
+        {/* ========================================================= */}
+        {/* Primary Governance Switcher: Fleet vs Disputes */}
+        {/* ========================================================= */}
+        <div className="flex items-center gap-3 border-b border-[#66717D]/18 pb-4">
+          <button
+            type="button"
+            onClick={() => setActiveSection('vehicles')}
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeSection === 'vehicles'
+                ? 'bg-[#111820] text-white shadow-md ring-2 ring-[#D5F36A]'
+                : 'bg-white text-[#44474B] border border-[#66717D]/18 hover:bg-[#F5F2EB]'
+            }`}
+          >
+            <span>🚗 Vehicle Moderation Queue</span>
+            {metrics.pending > 0 && (
+              <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-[#D5F36A] text-[#111820]">
+                {metrics.pending} pending
+              </span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveSection('disputes')}
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeSection === 'disputes'
+                ? 'bg-[#111820] text-white shadow-md ring-2 ring-[#D5F36A]'
+                : 'bg-white text-[#44474B] border border-[#66717D]/18 hover:bg-[#F5F2EB]'
+            }`}
+          >
+            <span>⚖️ Disputes & Incidents Ledger</span>
+            {disputeMetrics.open > 0 && (
+              <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-[#B9674B] text-white">
+                {disputeMetrics.open} open
+              </span>
+            )}
+          </button>
+        </div>
+
+        {activeSection === 'vehicles' ? (
+          <>
         {/* ========================================================= */}
         {/* Summary KPI Cards */}
         {/* ========================================================= */}
@@ -882,6 +1099,259 @@ export function AdminModerationDashboardView() {
             </div>
           </div>
         )}
+        </>
+      ) : (
+        /* ========================================================= */
+        /* Disputes & Incidents Ledger Section */
+        /* ========================================================= */
+        <div className="flex flex-col gap-6">
+          {/* Dispute KPI Summary Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <button
+              onClick={() => setDisputeFilter('all')}
+              className={`p-5 rounded-2xl text-left border transition cursor-pointer flex flex-col justify-between ${
+                disputeFilter === 'all'
+                  ? 'bg-[#111820] text-white border-[#111820] shadow-md ring-2 ring-[#D5F36A]'
+                  : 'bg-white text-[#111820] border-[#66717D]/18 hover:border-[#111820]/40'
+              }`}
+            >
+              <span className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
+                Total Incidents
+              </span>
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="text-3xl font-black">{disputeMetrics.total}</span>
+                <span className="text-xs opacity-70">Historical total</span>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setDisputeFilter('open')}
+              className={`p-5 rounded-2xl text-left border transition cursor-pointer flex flex-col justify-between ${
+                disputeFilter === 'open'
+                  ? 'bg-[#111820] text-white border-[#111820] shadow-md ring-2 ring-[#B9674B]'
+                  : 'bg-white text-[#111820] border-[#66717D]/18 hover:border-[#111820]/40'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
+                  Open Cases
+                </span>
+                {disputeMetrics.open > 0 && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#B9674B] text-white animate-pulse">
+                    Action Req.
+                  </span>
+                )}
+              </div>
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="text-3xl font-black">{disputeMetrics.open}</span>
+                <span className="text-xs opacity-70">Awaiting mediation</span>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setDisputeFilter('investigating')}
+              className={`p-5 rounded-2xl text-left border transition cursor-pointer flex flex-col justify-between ${
+                disputeFilter === 'investigating'
+                  ? 'bg-[#111820] text-white border-[#111820] shadow-md ring-2 ring-sky-400'
+                  : 'bg-white text-[#111820] border-[#66717D]/18 hover:border-[#111820]/40'
+              }`}
+            >
+              <span className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
+                Under Investigation
+              </span>
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="text-3xl font-black">{disputeMetrics.investigating}</span>
+                <span className="text-xs opacity-70">In review</span>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setDisputeFilter('resolved')}
+              className={`p-5 rounded-2xl text-left border transition cursor-pointer flex flex-col justify-between ${
+                disputeFilter === 'resolved'
+                  ? 'bg-[#111820] text-white border-[#111820] shadow-md ring-2 ring-emerald-400'
+                  : 'bg-white text-[#111820] border-[#66717D]/18 hover:border-[#111820]/40'
+              }`}
+            >
+              <span className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
+                Formally Resolved
+              </span>
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="text-3xl font-black">{disputeMetrics.resolved}</span>
+                <span className="text-xs opacity-70">Closed cases</span>
+              </div>
+            </button>
+          </div>
+
+          {/* Search & Filter Header for Disputes */}
+          <div className="p-4 sm:p-5 bg-white rounded-2xl border border-[#66717D]/18 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-1.5 flex-wrap w-full sm:w-auto">
+              {(['all', 'open', 'investigating', 'resolved'] as const).map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setDisputeFilter(filter)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${
+                    disputeFilter === filter
+                      ? 'bg-[#111820] text-white shadow-xs'
+                      : 'bg-[#F5F2EB] text-[#44474B] hover:bg-[#66717D]/15'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+
+            <div className="w-full sm:w-72">
+              <input
+                type="text"
+                placeholder="Search dispute reason, car or ID..."
+                value={disputeSearch}
+                onChange={(e) => setDisputeSearch(e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl bg-[#F5F2EB] border border-[#66717D]/20 text-xs text-[#111820] placeholder-[#66717D] focus:outline-none focus:ring-2 focus:ring-[#111820] focus:bg-white transition"
+              />
+            </div>
+          </div>
+
+          {/* Dispute Cards List */}
+          {filteredDisputes.length === 0 ? (
+            <div className="p-12 text-center bg-white rounded-3xl border border-[#66717D]/18 shadow-xs flex flex-col items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-[#F5F2EB] flex items-center justify-center text-3xl mb-3">
+                ⚖️
+              </div>
+              <h3 className="text-lg font-bold text-[#111820]">No Disputes Found</h3>
+              <p className="text-xs text-[#66717D] mt-1 max-w-sm">
+                No incidents match your selected status and search criteria.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {filteredDisputes.map((dispute) => {
+                const booking = bookings.find((b) => b.id === dispute.bookingId);
+                const car = booking ? cars.find((c) => c.id === booking.carId) : undefined;
+                const openerUser = users.find((u) => u.id === dispute.openedBy);
+                const isResolved = dispute.status === 'resolved';
+
+                return (
+                  <div
+                    key={dispute.id}
+                    className="p-5 sm:p-6 bg-white rounded-3xl border border-[#66717D]/18 shadow-xs flex flex-col gap-4"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#66717D]/10 pb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono font-bold text-xs bg-[#111820] text-white px-2.5 py-1 rounded-lg">
+                          #{dispute.id}
+                        </span>
+                        <span className="text-xs text-[#66717D]">
+                          Filed {new Date(dispute.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                        <span className="text-xs text-[#66717D] font-mono">
+                          Booking: <Link href={`/bookings/${dispute.bookingId}`} className="text-[#111820] font-bold hover:underline">{dispute.bookingId}</Link>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                            dispute.status === 'open'
+                              ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                              : dispute.status === 'investigating'
+                              ? 'bg-sky-100 text-sky-900 border border-sky-300'
+                              : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                          }`}
+                        >
+                          {dispute.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Left: Vehicle Context */}
+                      <div className="p-3 rounded-2xl bg-[#F5F2EB]/60 flex items-center gap-3">
+                        {car?.photos?.[0] ? (
+                          <div className="relative w-16 h-14 rounded-xl overflow-hidden shrink-0 bg-[#EBE8E1]">
+                            <Image
+                              src={car.photos[0]}
+                              alt={car.model}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-16 h-14 rounded-xl bg-[#111820] text-white flex items-center justify-center text-xl shrink-0">
+                            🚗
+                          </div>
+                        )}
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-xs font-bold text-[#111820] truncate">
+                            {car ? `${car.year} ${car.make} ${car.model}` : 'Vehicle Record'}
+                          </span>
+                          <span className="text-[11px] text-[#66717D] truncate">
+                            {car?.neighbourhood || 'Addis Ababa'}
+                          </span>
+                          {booking && (
+                            <span className="text-[10px] text-[#111820]/70 font-mono mt-0.5">
+                              {booking.startDate} → {booking.endDate}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Center: Disputant & Incident */}
+                      <div className="flex flex-col gap-1.5 md:col-span-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold text-rose-950 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-lg">
+                            {dispute.reason}
+                          </span>
+                          <span className="text-xs text-[#44474B]">
+                            Raised by <strong className="text-[#111820]">{openerUser?.name || dispute.openedBy}</strong> ({dispute.openedByRole})
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#44474B] bg-[#F5F2EB]/40 p-3 rounded-xl border border-[#66717D]/12 leading-relaxed">
+                          &ldquo;{dispute.description}&rdquo;
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Resolution Footer */}
+                    {isResolved ? (
+                      <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex flex-col gap-1 text-xs">
+                        <div className="flex items-center justify-between text-emerald-950 font-bold">
+                          <span>✓ Formally Resolved &amp; Closed</span>
+                          <span className="text-[11px] font-normal text-emerald-800">
+                            {dispute.resolvedAt && new Date(dispute.resolvedAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-emerald-900 leading-relaxed">
+                          <strong>Admin Settlement Notes:</strong> {dispute.resolutionNotes || 'Case closed in accordance with marketplace terms.'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between pt-2 border-t border-[#66717D]/10">
+                        <span className="text-[11px] text-[#66717D]">
+                          {dispute.status === 'investigating'
+                            ? 'Case actively under support investigation.'
+                            : 'Immediate administrative action required to release or freeze simulated escrow.'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedDispute(dispute);
+                            setResolutionNotesInput(dispute.resolutionNotes || '');
+                            setResolutionError('');
+                          }}
+                          className="px-4 py-2 rounded-xl text-xs font-bold bg-[#111820] text-white hover:bg-[#111820]/90 transition shadow-xs cursor-pointer"
+                        >
+                          Mediate &amp; Resolve Case →
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
       </div>
 
       {/* ========================================================= */}
@@ -1251,6 +1721,124 @@ export function AdminModerationDashboardView() {
                 className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#B9674B] text-white hover:bg-[#B9674B]/90 transition shadow-xs"
               >
                 Confirm Rejection
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* 4. Dispute Case Mediation & Resolution Modal */}
+      {/* ========================================================= */}
+      {selectedDispute && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
+            
+            <div className="flex items-start justify-between border-b border-[#66717D]/15 pb-4">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-[#66717D] tracking-wider">
+                  Incident Arbitration
+                </span>
+                <h3 className="text-xl font-black text-[#111820]">
+                  Mediate Dispute #{selectedDispute.id}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSelectedDispute(null)}
+                className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center text-sm font-bold hover:bg-[#66717D]/20 transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-[#F5F2EB] flex flex-col gap-1.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-[#111820]">Reason: {selectedDispute.reason}</span>
+                <span className="font-mono text-[10px] text-[#66717D]">
+                  Booking: {selectedDispute.bookingId}
+                </span>
+              </div>
+              <p className="text-[#44474B] italic">
+                &ldquo;{selectedDispute.description}&rdquo;
+              </p>
+            </div>
+
+            {/* Decision Action Toggle */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-[#111820]">Arbitration Action</label>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setResolutionAction('resolve')}
+                  className={`p-3 rounded-xl text-xs font-bold text-left transition border cursor-pointer ${
+                    resolutionAction === 'resolve'
+                      ? 'bg-emerald-50 border-emerald-500 text-emerald-950 ring-2 ring-emerald-500/20'
+                      : 'bg-white border-[#66717D]/20 text-[#44474B] hover:bg-[#F5F2EB]'
+                  }`}
+                >
+                  <div className="font-black">✓ Formally Resolve</div>
+                  <div className="text-[10px] font-normal opacity-80 mt-0.5">
+                    Close dispute, update booking status, and notify parties.
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setResolutionAction('investigate')}
+                  className={`p-3 rounded-xl text-xs font-bold text-left transition border cursor-pointer ${
+                    resolutionAction === 'investigate'
+                      ? 'bg-sky-50 border-sky-500 text-sky-950 ring-2 ring-sky-500/20'
+                      : 'bg-white border-[#66717D]/20 text-[#44474B] hover:bg-[#F5F2EB]'
+                  }`}
+                >
+                  <div className="font-black">🔍 Under Investigation</div>
+                  <div className="text-[10px] font-normal opacity-80 mt-0.5">
+                    Record evidence notes while mediation is ongoing.
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Resolution Notes Input */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-[#111820]">
+                Administrative Findings &amp; Settlement Notes <span className="text-rose-600">*</span>
+              </label>
+              <textarea
+                rows={4}
+                value={resolutionNotesInput}
+                onChange={(e) => {
+                  setResolutionNotesInput(e.target.value);
+                  if (resolutionError) setResolutionError('');
+                }}
+                placeholder="Enter formal findings, escrow disbursement instructions, or settlement details..."
+                className="w-full p-3.5 rounded-2xl bg-[#F5F2EB]/50 border border-[#66717D]/25 text-xs text-[#111820] placeholder-[#66717D] focus:outline-none focus:ring-2 focus:ring-[#111820] focus:bg-white transition"
+              />
+              <span className="text-[11px] text-[#66717D] flex justify-between">
+                <span>Minimum 5 characters required</span>
+                <span>{resolutionNotesInput.length} chars</span>
+              </span>
+              {resolutionError && (
+                <span className="text-xs text-rose-600 font-bold mt-1">
+                  ⚠️ {resolutionError}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2 border-t border-[#66717D]/12">
+              <button
+                type="button"
+                onClick={() => setSelectedDispute(null)}
+                className="px-4 py-2.5 rounded-xl text-xs font-bold bg-[#F5F2EB] text-[#111820] hover:bg-[#66717D]/20 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleResolveDispute}
+                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#111820] text-white hover:bg-[#111820]/90 transition shadow-xs cursor-pointer"
+              >
+                Confirm Decision &amp; Save
               </button>
             </div>
           </div>

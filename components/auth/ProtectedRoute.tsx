@@ -98,7 +98,40 @@ export function ProtectedRoute({
     );
   }
 
-  // 2. Role Check
+  // 2. Suspended Account Barrier
+  if (currentUser.status === 'suspended') {
+    return (
+      <div className="w-full py-20 bg-[#F5F2EB]">
+        <Container>
+          <div className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-red-200 shadow-sm flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-2xl bg-red-100 text-red-900 flex items-center justify-center text-2xl mb-4 font-bold">
+              🚫
+            </div>
+            <Badge variant="terracotta" className="mb-2 uppercase">
+              Account Suspended
+            </Badge>
+            <h1 className="text-2xl font-bold text-red-950 mb-2">Access Restricted</h1>
+            <p className="text-sm text-[#44474B] mb-6 leading-relaxed">
+              Your demo account (<strong className="text-[#111820]">{currentUser.name}</strong>) has been suspended due to simulated policy or administrative review flags. Access to protected areas and operations is restricted.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <Button variant="primary" href="/signin" size="md">
+                Switch to an Active Persona →
+              </Button>
+              <Button variant="outline" href="/cars" size="md">
+                Browse Public Fleet
+              </Button>
+            </div>
+            <div className="mt-6 pt-4 border-t border-[#66717D]/15 text-[11px] text-[#66717D]">
+              Administrative security guardrail active.
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  // 3. Role Check
   if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(session.activeRole)) {
     // Check if account holds the required role in its roles array (coexisting roles)
     const canSwitchToRequired = allowedRoles.find((role) => currentUser?.roles.includes(role));

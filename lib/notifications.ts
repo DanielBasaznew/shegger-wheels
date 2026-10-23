@@ -344,3 +344,23 @@ export function notifyReviewResponse(review: Review, car?: Car): Notification {
     carId: review.carId,
   });
 }
+
+/**
+ * Triggered when an administrator moderates a vehicle listing.
+ * Notifies the vehicle owner of approval or rejection with reason.
+ */
+export function notifyListingModerated(car: Car, action: 'approve' | 'reject', reason?: string): Notification {
+  const carTitle = `${car.year} ${car.make} ${car.model}`;
+  const isApproved = action === 'approve';
+
+  return sendNotification({
+    recipientId: car.ownerId,
+    type: 'system',
+    title: isApproved ? 'Vehicle Listing Approved' : 'Vehicle Listing Rejected',
+    message: isApproved
+      ? `Congratulations! Your listing for ${carTitle} has been verified and is now live for bookings.`
+      : `Your listing for ${carTitle} was not approved. Reason: ${reason || 'Does not meet marketplace standards.'}`,
+    link: isApproved ? `/cars/${car.id}` : `/dashboard/host`,
+    carId: car.id,
+  });
+}

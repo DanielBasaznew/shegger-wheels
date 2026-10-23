@@ -9,6 +9,7 @@
 import { Car, CarStatus, UserRole } from './types';
 import { getCars, getCarById, saveCar, getUserById, getCurrentSession } from './storage';
 import { formatDateString } from './bookings';
+import { notifyListingModerated } from './notifications';
 
 // ==========================================
 // Types & Interfaces
@@ -563,6 +564,13 @@ export function moderateCarListing(
   const saved = saveCar(updatedCar);
   if (!saved) {
     return { success: false, error: 'Storage failure: Failed to save moderation decision.' };
+  }
+
+  // Notify vehicle owner of moderation decision
+  try {
+    notifyListingModerated(updatedCar, input.action, input.reason);
+  } catch (notifErr) {
+    console.warn('[Shegger Fleet] Failed to dispatch moderation notification:', notifErr);
   }
 
   return { success: true, car: updatedCar };
