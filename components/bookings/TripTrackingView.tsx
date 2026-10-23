@@ -5,10 +5,7 @@ import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { Booking, Car, User, DemoSession } from '@/lib/types';
 import {
-  getBookings,
-  getCars,
   getUserById,
-  getCurrentSession,
 } from '@/lib/storage';
 import {
   formatDisplayDate,

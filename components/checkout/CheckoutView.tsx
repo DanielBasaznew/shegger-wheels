@@ -8,9 +8,7 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Car, User, Booking, DemoSession } from '@/lib/types';
 import {
-  getCars,
   getUserById,
-  getCurrentSession,
   getCheckoutDraft,
   setCheckoutDraft,
 } from '@/lib/storage';
