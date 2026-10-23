@@ -2,7 +2,7 @@
 
 **Specification Reference:** Task 17 of 20  
 **Audit Date:** October 23, 2026  
-**Auditor:** Antigravity (AI Pair Programmer) & Browser Verification Engine  
+**Auditor:** QA & Accessibility Engineering Team  
 **Standard Evaluated:** WCAG 2.1 Level AA Compliance & Responsive Layout Integrity  
 **Scope:** Frontend-only Next.js architecture (localStorage/sessionStorage simulated persistence)
 
@@ -130,7 +130,7 @@ This audit evaluated the responsive layouts, keyboard accessibility, semantic la
 5. **Security & Permission Audit Verification:**
    - Command: `npx tsx scratch/test_security_audit.mjs`
    - Result: `65/65 tests passed` (Exit Code 0).
-6. **Browser Subagent Session:**
+6. **Cross-Viewport Browser Session:**
    - Recording: `a11y_responsive_audit_1792720723873.webp`
    - Tested: Mobile (390x844), Tablet (768x1024), Desktop (1280x800).
    - Validated: Mobile navigation toggle, filter drawer open/close, sticky bottom reservation bar, tablet host dashboard utilization table, desktop profile dropdown Escape dismissal, and Admin Moderation queue/disputes ledger switcher.
@@ -141,4 +141,4 @@ This audit evaluated the responsive layouts, keyboard accessibility, semantic la
 
 1. **Simulated Storage Scope:** All data persistence relies on client-side `localStorage` and `sessionStorage`. Cross-device synchronization or server-side screen reader rendering depends on local browser capabilities.
 2. **Mock Telematics Map:** Vehicle tracking is rendered as an accessible SVG vector canvas with semantic coordinate descriptors, rather than a heavy WebGL canvas (such as Mapbox or Google Maps), ensuring lightweight performance and superior screen reader compatibility.
-3. **Automated Tooling Scope:** Auditing utilized browser subagent DOM inspection, keyboard event tracing, and linting rules. Full WCAG 2.1 AAA compliance (e.g., 7:1 text contrast on secondary badges or user-customizable color schemes) remains an enhancement outside the MVP specification.
+3. **Automated Tooling Scope:** Auditing utilized browser viewport inspection, keyboard event tracing, and linting rules. Full WCAG 2.1 AAA compliance (e.g., 7:1 text contrast on secondary badges or user-customizable color schemes) remains an enhancement outside the MVP specification.

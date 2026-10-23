@@ -233,7 +233,7 @@ export function Header() {
                     alt={currentUser.name}
                     width={28}
                     height={28}
-                    unoptimized
+                    unoptimized={!currentUser.avatarUrl.includes('images.unsplash.com')}
                     className="w-7 h-7 rounded-full object-cover"
                   />
                 ) : (

@@ -20,6 +20,10 @@ import {
 import { SEED_CARS, SEED_USERS, SEED_REVIEWS } from '@/lib/seeds';
 import { getCarRatingSummary } from '@/lib/reviews';
 
+function isOptimizableImage(url?: string): boolean {
+  return Boolean(url && (url.startsWith('/') || url.includes('images.unsplash.com')));
+}
+
 // SSR-safe storage synchronizer for cars
 let cachedStorageCars: Car[] = [];
 let lastRawCars = '';
@@ -500,7 +504,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 src={photosList[0]}
                 alt={`${car.year} ${car.make} ${car.model} in ${car.neighbourhood}, Addis Ababa`}
                 fill
-                unoptimized
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                unoptimized={!isOptimizableImage(photosList[0])}
                 priority
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -523,7 +528,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   src={photosList[1] || photosList[0]}
                   alt={`${car.make} ${car.model} cockpit and digital infotainment display`}
                   fill
-                  unoptimized
+                  sizes="(max-width: 1024px) 50vw, 33vw"
+                  unoptimized={!isOptimizableImage(photosList[1] || photosList[0])}
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <span className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-[#111820]/80 backdrop-blur-md text-white font-label-caps text-[9px] uppercase">
@@ -537,7 +543,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   src={photosList[2] || photosList[0]}
                   alt={`${car.make} ${car.model} spacious passenger seating layout`}
                   fill
-                  unoptimized
+                  sizes="(max-width: 1024px) 50vw, 33vw"
+                  unoptimized={!isOptimizableImage(photosList[2] || photosList[0])}
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <span className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-[#111820]/80 backdrop-blur-md text-white font-label-caps text-[9px] uppercase">
@@ -551,7 +558,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   src={photosList[3] || photosList[0]}
                   alt={`${car.make} ${car.model} alloy wheels and exterior details`}
                   fill
-                  unoptimized
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  unoptimized={!isOptimizableImage(photosList[3] || photosList[0])}
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <button
@@ -658,7 +666,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                         alt={`Host ${host.name}`}
                         width={64}
                         height={64}
-                        unoptimized
+                        unoptimized={!isOptimizableImage(host.avatarUrl)}
                         className="w-16 h-16 rounded-full object-cover shadow-xs border border-[#111820]/10"
                       />
                       <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-[#D5F36A] flex items-center justify-center text-[#111820] text-xs shadow-xs font-bold">
@@ -1270,7 +1278,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   alt={host.name}
                   width={40}
                   height={40}
-                  unoptimized
+                  unoptimized={!isOptimizableImage(host.avatarUrl)}
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
@@ -1369,7 +1377,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               src={photosList[activePhotoIdx]}
               alt={`${car.make} ${car.model} view ${activePhotoIdx + 1}`}
               fill
-              unoptimized
+              sizes="100vw"
+              unoptimized={!isOptimizableImage(photosList[activePhotoIdx])}
               className="object-contain"
             />
 
@@ -1411,7 +1420,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   activePhotoIdx === idx ? 'border-[#D5F36A] scale-105' : 'border-transparent opacity-60'
                 }`}
               >
-                <Image src={p} alt={`Thumbnail ${idx + 1}`} fill unoptimized className="object-cover" />
+                <Image src={p} alt={`Thumbnail ${idx + 1}`} fill sizes="64px" unoptimized={!isOptimizableImage(p)} className="object-cover" />
               </button>
             ))}
           </div>
