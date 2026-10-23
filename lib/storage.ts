@@ -293,6 +293,17 @@ function isNotification(item: unknown): item is Notification {
   );
 }
 
+function isDemoSession(item: unknown): item is DemoSession {
+  if (!item || typeof item !== 'object') return false;
+  const s = item as Partial<DemoSession>;
+  return (
+    typeof s.userId === 'string' &&
+    s.userId.trim().length > 0 &&
+    (s.activeRole === 'renter' || s.activeRole === 'owner' || s.activeRole === 'admin') &&
+    typeof s.signedInAt === 'string'
+  );
+}
+
 // ==========================================
 // Seed Data Initialization
 // ==========================================
@@ -502,6 +513,18 @@ export function getNotifications(): Notification[] {
 }
 
 export function getNotificationsForUser(userId: string): Notification[] {
+  if (!userId || typeof userId !== 'string') return [];
+
+  // Tenant Isolation Security Barrier: If an active session is in browser,
+  // callers may only access their own notifications unless they possess the platform admin role.
+  const session = getCurrentSession();
+  if (session && session.userId !== userId) {
+    const user = getUserById(session.userId);
+    if (!user || (!user.roles.includes('admin') && session.activeRole !== 'admin')) {
+      return [];
+    }
+  }
+
   return getNotifications()
     .filter((n) => n.recipientId === userId)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -528,6 +551,17 @@ export function saveNotification(notification: Notification): boolean {
 }
 
 export function markNotificationAsRead(id: string, userId: string): boolean {
+  if (!id || !userId) return false;
+
+  // Authorization barrier: must have active, non-suspended session matching recipient or admin
+  const session = getCurrentSession();
+  if (!session) return false;
+  const user = getUserById(session.userId);
+  if (!user || user.status === 'suspended') return false;
+  if (session.userId !== userId && !user.roles.includes('admin') && session.activeRole !== 'admin') {
+    return false;
+  }
+
   const list = getNotifications();
   const index = list.findIndex((n) => n.id === id && n.recipientId === userId);
   if (index < 0) return false;
@@ -545,6 +579,17 @@ export function markNotificationAsRead(id: string, userId: string): boolean {
 }
 
 export function markAllNotificationsAsRead(userId: string): boolean {
+  if (!userId) return false;
+
+  // Authorization barrier: must have active, non-suspended session matching recipient or admin
+  const session = getCurrentSession();
+  if (!session) return false;
+  const user = getUserById(session.userId);
+  if (!user || user.status === 'suspended') return false;
+  if (session.userId !== userId && !user.roles.includes('admin') && session.activeRole !== 'admin') {
+    return false;
+  }
+
   const list = getNotifications();
   let modified = false;
   const updated = list.map((n) => {
@@ -568,6 +613,17 @@ export function markAllNotificationsAsRead(userId: string): boolean {
 }
 
 export function deleteNotification(id: string, userId: string): boolean {
+  if (!id || !userId) return false;
+
+  // Authorization barrier: must have active, non-suspended session matching recipient or admin
+  const session = getCurrentSession();
+  if (!session) return false;
+  const user = getUserById(session.userId);
+  if (!user || user.status === 'suspended') return false;
+  if (session.userId !== userId && !user.roles.includes('admin') && session.activeRole !== 'admin') {
+    return false;
+  }
+
   const list = getNotifications();
   const filtered = list.filter((n) => !(n.id === id && n.recipientId === userId));
   if (filtered.length === list.length) return false;
@@ -588,7 +644,7 @@ export function deleteNotification(id: string, userId: string): boolean {
 // ==========================================
 
 export function getCurrentSession(): DemoSession | null {
-  return readSession<DemoSession | null>(SESSION_KEYS.SESSION, null);
+  return readSession<DemoSession | null>(SESSION_KEYS.SESSION, null, isDemoSession);
 }
 
 export function setCurrentSession(session: DemoSession): boolean {

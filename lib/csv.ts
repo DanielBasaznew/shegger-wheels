@@ -16,7 +16,13 @@ import { formatDateString } from './bookings';
  */
 export function escapeCSVValue(value: unknown): string {
   if (value === null || value === undefined) return '';
-  const str = String(value);
+  let str = String(value);
+
+  // Formula injection defense (CWE-1236): Prepend single quote if string starts with formula trigger
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = `'${str}`;
+  }
+
   if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
     return `"${str.replace(/"/g, '""')}"`;
   }

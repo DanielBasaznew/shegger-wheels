@@ -14,7 +14,7 @@ import {
 } from '@/lib/storage';
 import {
   formatDisplayDate,
-  transitionBookingStatus,
+  cancelBookingByRenter,
 } from '@/lib/bookings';
 import { getSafeReturnUrl } from '@/lib/auth';
 import { SEED_BOOKINGS, SEED_CARS } from '@/lib/seeds';
@@ -208,11 +208,10 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
   const handleCancelBooking = () => {
     if (!isCurrentRenter) return;
 
-    const res = transitionBookingStatus(
+    const res = cancelBookingByRenter(
       booking.id,
-      'cancelled',
       { userId: session.userId, role: 'renter' },
-      { reason: cancellationReason || 'Cancelled from receipt page' }
+      cancellationReason || 'Cancelled from receipt page'
     );
 
     if (res.success) {

@@ -13,13 +13,16 @@ import {
   Booking,
 } from '@/lib/types';
 import { SEED_CARS, SEED_USERS, SEED_DISPUTES, SEED_BOOKINGS } from '@/lib/seeds';
-import { getUserById, saveDispute } from '@/lib/storage';
+import { getUserById } from '@/lib/storage';
 import {
   moderateCarListing,
   getAdminModerationMetrics,
   ADDIS_NEIGHBOURHOODS,
 } from '@/lib/fleet';
-import { transitionBookingStatus } from '@/lib/bookings';
+import {
+  resolveDisputeByAdmin,
+  updateDisputeStatusByAdmin,
+} from '@/lib/bookings';
 
 // ==========================================
 // SSR-Safe Storage Synchronizers
@@ -361,33 +364,14 @@ export function AdminModerationDashboardView() {
       return;
     }
 
-    if (!resolutionNotesInput.trim() || resolutionNotesInput.trim().length < 5) {
-      setResolutionError('Resolution or mediation notes (minimum 5 characters) are required.');
-      return;
-    }
-
-    const now = new Date().toISOString();
-
     if (resolutionAction === 'resolve') {
-      // 1. Transition booking to resolved status (triggers in-app notifications to both renter and owner)
-      transitionBookingStatus(
-        selectedDispute.bookingId,
-        'resolved',
+      const res = resolveDisputeByAdmin(
+        selectedDispute.id,
         { userId: session.userId, role: 'admin' },
-        { reason: resolutionNotesInput.trim() }
+        resolutionNotesInput.trim()
       );
 
-      // 2. Persist resolved dispute state
-      const updatedDispute: Dispute = {
-        ...selectedDispute,
-        status: 'resolved',
-        resolutionNotes: resolutionNotesInput.trim(),
-        resolvedBy: session.userId,
-        resolvedAt: now,
-      };
-
-      const saved = saveDispute(updatedDispute);
-      if (saved) {
+      if (res.success) {
         setAlertNotice({
           type: 'success',
           message: `Dispute #${selectedDispute.id} formally resolved. Settlement notes recorded and notifications dispatched to involved parties.`,
@@ -395,25 +379,18 @@ export function AdminModerationDashboardView() {
         setSelectedDispute(null);
         setResolutionNotesInput('');
         setResolutionError('');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new Event('storage'));
-          window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
-        }
       } else {
-        setResolutionError('Failed to persist dispute resolution.');
+        setResolutionError(res.error || 'Failed to persist dispute resolution.');
       }
     } else {
-      // Mark as investigating
-      const updatedDispute: Dispute = {
-        ...selectedDispute,
-        status: 'investigating',
-        resolutionNotes: resolutionNotesInput.trim()
-          ? `[Investigation Note]: ${resolutionNotesInput.trim()}`
-          : selectedDispute.resolutionNotes,
-      };
+      const res = updateDisputeStatusByAdmin(
+        selectedDispute.id,
+        { userId: session.userId, role: 'admin' },
+        'investigating',
+        resolutionNotesInput.trim()
+      );
 
-      const saved = saveDispute(updatedDispute);
-      if (saved) {
+      if (res.success) {
         setAlertNotice({
           type: 'success',
           message: `Dispute #${selectedDispute.id} moved to Active Investigation status.`,
@@ -421,12 +398,8 @@ export function AdminModerationDashboardView() {
         setSelectedDispute(null);
         setResolutionNotesInput('');
         setResolutionError('');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new Event('storage'));
-          window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
-        }
       } else {
-        setResolutionError('Failed to update dispute status.');
+        setResolutionError(res.error || 'Failed to update dispute status.');
       }
     }
   };

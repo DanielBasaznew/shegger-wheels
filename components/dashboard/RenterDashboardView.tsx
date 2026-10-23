@@ -13,7 +13,7 @@ import {
 } from '@/lib/storage';
 import {
   formatDisplayDate,
-  transitionBookingStatus,
+  cancelBookingByRenter,
 } from '@/lib/bookings';
 import { downloadRenterBookingsCSV } from '@/lib/csv';
 import { switchActiveRole } from '@/lib/auth';
@@ -226,11 +226,10 @@ export function RenterDashboardView() {
       return;
     }
 
-    const res = transitionBookingStatus(
+    const res = cancelBookingByRenter(
       bookingToCancel.id,
-      'cancelled',
       { userId: session.userId, role: 'renter' },
-      { reason: cancellationReason || 'Cancelled by renter from dashboard' }
+      cancellationReason || 'Cancelled by renter from dashboard'
     );
 
     if (res.success) {

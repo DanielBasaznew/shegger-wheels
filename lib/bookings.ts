@@ -10,6 +10,7 @@ import {
   Booking,
   BookingStatus,
   Car,
+  Dispute,
   PaymentStatus,
   UserRole,
 } from './types';
@@ -21,6 +22,8 @@ import {
   getCarById,
   getCurrentSession,
   getUserById,
+  getDisputeById,
+  saveDispute,
   clearCheckoutDraft,
 } from './storage';
 import {
@@ -34,10 +37,21 @@ import {
   notifyDisputeResolved,
 } from './notifications';
 
-
 // ==========================================
 // Date & Duration Utilities
 // ==========================================
+
+export function isValidDateString(dateStr: string): boolean {
+  if (!dateStr || typeof dateStr !== 'string') return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  return (
+    date.getFullYear() === y &&
+    date.getMonth() === m - 1 &&
+    date.getDate() === d
+  );
+}
 
 export function formatDateString(date: Date): string {
   const y = date.getFullYear();
@@ -272,8 +286,14 @@ export function createBooking(input: CreateBookingInput): CreateBookingResult {
     };
   }
 
-  // 2. Validate dates
-  const todayStr = formatDateString(new Date());
+  // 2. Validate dates & input format
+  if (!input.carId || typeof input.carId !== 'string' || !input.carId.trim()) {
+    return {
+      success: false,
+      error: 'A valid vehicle listing ID is required.',
+    };
+  }
+
   if (!input.startDate || !input.endDate) {
     return {
       success: false,
@@ -281,6 +301,14 @@ export function createBooking(input: CreateBookingInput): CreateBookingResult {
     };
   }
 
+  if (!isValidDateString(input.startDate) || !isValidDateString(input.endDate)) {
+    return {
+      success: false,
+      error: 'Dates must be in valid YYYY-MM-DD format with real calendar days.',
+    };
+  }
+
+  const todayStr = formatDateString(new Date());
   if (input.startDate < todayStr) {
     return {
       success: false,
@@ -292,6 +320,21 @@ export function createBooking(input: CreateBookingInput): CreateBookingResult {
     return {
       success: false,
       error: 'Return date must be strictly after the pick-up date.',
+    };
+  }
+
+  const rentalDays = calculateDaysBetween(input.startDate, input.endDate);
+  if (rentalDays > 90) {
+    return {
+      success: false,
+      error: 'Rental duration exceeds the maximum permitted window (90 days).',
+    };
+  }
+
+  if (input.pickupNotes && input.pickupNotes.length > 500) {
+    return {
+      success: false,
+      error: 'Pick-up logistics notes must not exceed 500 characters.',
     };
   }
 
@@ -495,6 +538,43 @@ export function transitionBookingStatus(
   actor: TransitionActor,
   options?: TransitionOptions
 ): TransitionResult {
+  // 1. Session verification (Signed-out mutations barrier)
+  const session = getCurrentSession();
+  if (!session) {
+    return {
+      success: false,
+      error: 'Authentication required. Please sign in to perform actions on bookings.',
+    };
+  }
+
+  // 2. User existence and suspension check
+  const user = getUserById(actor.userId);
+  if (!user) {
+    return {
+      success: false,
+      error: `User record "${actor.userId}" could not be found.`,
+    };
+  }
+
+  if (user.status === 'suspended') {
+    return {
+      success: false,
+      error: 'Your account is suspended. Actions on bookings are restricted.',
+    };
+  }
+
+  // Session user mismatch verification
+  const sessionUser = getUserById(session.userId);
+  const sessionIsAdmin = Boolean(sessionUser?.roles.includes('admin') && session.activeRole === 'admin');
+
+  if (session.userId !== actor.userId && !sessionIsAdmin) {
+    return {
+      success: false,
+      error: `Session mismatch: Signed in as "${session.userId}", not "${actor.userId}".`,
+    };
+  }
+
+  // 3. Booking lookup
   const booking = getBookingById(bookingId);
   if (!booking) {
     return {
@@ -505,7 +585,7 @@ export function transitionBookingStatus(
 
   const currentStatus = booking.status;
 
-  // 1. Check if transition exists in FSM
+  // 4. Check if transition exists in FSM
   const allowedTransitionsFromCurrent = VALID_TRANSITIONS[currentStatus];
   if (!allowedTransitionsFromCurrent) {
     return {
@@ -522,10 +602,10 @@ export function transitionBookingStatus(
     };
   }
 
-  // 2. Actor permission & ownership validation
-  const isAdmin = actor.role === 'admin';
-  const isRenter = booking.renterId === actor.userId;
-  const isOwner = booking.ownerId === actor.userId;
+  // Strict role verification: actor can only exercise admin privileges if their account holds the admin role
+  const isAdmin = Boolean((actor.role === 'admin' || session.activeRole === 'admin') && user.roles.includes('admin'));
+  const isRenter = booking.renterId === actor.userId && user.roles.includes('renter');
+  const isOwner = booking.ownerId === actor.userId && user.roles.includes('owner');
 
   let isAuthorized = false;
   if (isAdmin) {
@@ -541,24 +621,6 @@ export function transitionBookingStatus(
       success: false,
       error: `Unauthorized: User "${actor.userId}" is not authorized to transition this booking to "${targetStatus}".`,
     };
-  }
-
-  // Session & suspension verification if session exists
-  const session = getCurrentSession();
-  if (session) {
-    if (session.userId !== actor.userId && !isAdmin) {
-      return {
-        success: false,
-        error: `Session mismatch: Signed in as "${session.userId}", not "${actor.userId}".`,
-      };
-    }
-    const user = getUserById(session.userId);
-    if (user && user.status === 'suspended') {
-      return {
-        success: false,
-        error: 'Your account is suspended. Actions on bookings are restricted.',
-      };
-    }
   }
 
   // 3. Stale & Availability Conflict Check: Prevent confirming if car is unavailable or conflicting
@@ -657,7 +719,7 @@ function validateOwnerAction(
   actor: { userId: string; role: UserRole }
 ): { valid: boolean; booking?: Booking; error?: string } {
   const session = getCurrentSession();
-  if (!session || session.userId !== actor.userId) {
+  if (!session) {
     return {
       valid: false,
       error: 'Authentication required. Please sign in as the vehicle owner.',
@@ -676,7 +738,19 @@ function validateOwnerAction(
     };
   }
 
-  if (!user.roles.includes('owner') && !user.roles.includes('admin')) {
+  const sessionUser = getUserById(session.userId);
+  const sessionIsAdmin = Boolean(sessionUser?.roles.includes('admin') && session.activeRole === 'admin');
+
+  if (session.userId !== actor.userId && !sessionIsAdmin) {
+    return {
+      valid: false,
+      error: `Session mismatch: Signed in as "${session.userId}", not "${actor.userId}".`,
+    };
+  }
+
+  const isAdmin = Boolean((actor.role === 'admin' || session.activeRole === 'admin') && user.roles.includes('admin'));
+
+  if (!user.roles.includes('owner') && !isAdmin) {
     return {
       valid: false,
       error: 'Your account does not possess vehicle owner permissions.',
@@ -688,7 +762,7 @@ function validateOwnerAction(
     return { valid: false, error: 'Reservation record not found.' };
   }
 
-  if (booking.ownerId !== actor.userId && actor.role !== 'admin') {
+  if (booking.ownerId !== actor.userId && !isAdmin) {
     return {
       valid: false,
       error: 'Unauthorized: You do not own the vehicle for this reservation.',
@@ -981,5 +1055,317 @@ export function getBookingsForRenter(renterId: string): Booking[] {
 
 export function getBookingsForOwner(ownerId: string): Booking[] {
   return getBookings().filter((b) => b.ownerId === ownerId);
+}
+
+// ==========================================
+// Renter-Specific & Dispute Domain Operations
+// ==========================================
+
+/**
+ * Validated domain cancellation by renter.
+ * Enforces renter ownership, non-suspended account, and eligible booking status.
+ */
+export function cancelBookingByRenter(
+  bookingId: string,
+  actor: { userId: string; role: UserRole },
+  reason?: string
+): TransitionResult {
+  const session = getCurrentSession();
+  if (!session || session.userId !== actor.userId) {
+    return {
+      success: false,
+      error: 'Authentication required. Please sign in as the renter.',
+    };
+  }
+
+  const user = getUserById(actor.userId);
+  if (!user || user.status === 'suspended') {
+    return {
+      success: false,
+      error: 'Your account is suspended. Cancellations are restricted.',
+    };
+  }
+
+  const booking = getBookingById(bookingId);
+  if (!booking) {
+    return { success: false, error: `Booking "${bookingId}" not found.` };
+  }
+
+  const isAdmin = Boolean(user.roles.includes('admin') && (actor.role === 'admin' || session.activeRole === 'admin'));
+  if (booking.renterId !== actor.userId && !isAdmin) {
+    return {
+      success: false,
+      error: 'Unauthorized: You can only cancel reservations that you personally booked.',
+    };
+  }
+
+  if (booking.status !== 'requested' && booking.status !== 'confirmed') {
+    return {
+      success: false,
+      error: `Only "requested" or "confirmed" bookings can be cancelled. Current status: "${booking.status}".`,
+    };
+  }
+
+  const cleanReason = reason ? reason.trim().slice(0, 500) : 'Cancelled by renter';
+  return transitionBookingStatus(
+    bookingId,
+    'cancelled',
+    {
+      userId: actor.userId,
+      role: isAdmin ? 'admin' : 'renter',
+    },
+    { reason: cleanReason }
+  );
+}
+
+export interface OpenDisputeInput {
+  reason: string;
+  description?: string;
+}
+
+export interface DisputeOperationResult {
+  success: boolean;
+  dispute?: Dispute;
+  booking?: Booking;
+  error?: string;
+}
+
+/**
+ * Opens a formal dispute on an in-progress or completed rental.
+ * Strictly verifies participant ownership (renter, owner, or admin) and non-suspended status.
+ */
+export function openDispute(
+  bookingId: string,
+  actor: { userId: string; role: UserRole },
+  input: OpenDisputeInput
+): DisputeOperationResult {
+  const session = getCurrentSession();
+  if (!session || session.userId !== actor.userId) {
+    return {
+      success: false,
+      error: 'Authentication required. Please sign in to submit a dispute ticket.',
+    };
+  }
+
+  const user = getUserById(actor.userId);
+  if (!user || user.status === 'suspended') {
+    return {
+      success: false,
+      error: 'Your account is suspended. Dispute operations are restricted.',
+    };
+  }
+
+  const booking = getBookingById(bookingId);
+  if (!booking) {
+    return { success: false, error: `Booking "${bookingId}" not found.` };
+  }
+
+  const isAdmin = Boolean(user.roles.includes('admin') && (actor.role === 'admin' || session.activeRole === 'admin'));
+  const isRenter = booking.renterId === actor.userId;
+  const isOwner = booking.ownerId === actor.userId;
+
+  if (!isRenter && !isOwner && !isAdmin) {
+    return {
+      success: false,
+      error: 'Unauthorized: Only the renter or owner involved in this reservation can raise a dispute.',
+    };
+  }
+
+  if (booking.status !== 'in_progress' && booking.status !== 'completed') {
+    return {
+      success: false,
+      error: `Disputes can only be raised for active "in_progress" trips or "completed" rentals. Current status: "${booking.status}".`,
+    };
+  }
+
+  if (!input.reason || input.reason.trim().length < 5) {
+    return {
+      success: false,
+      error: 'A clear dispute reason of at least 5 characters is required.',
+    };
+  }
+
+  const cleanReason = input.reason.trim().slice(0, 200);
+  const cleanDescription = input.description ? input.description.trim().slice(0, 2000) : cleanReason;
+
+  // 1. Transition booking to 'disputed'
+  const transitionRes = transitionBookingStatus(
+    bookingId,
+    'disputed',
+    {
+      userId: actor.userId,
+      role: isAdmin ? 'admin' : isOwner ? 'owner' : 'renter',
+    },
+    { reason: cleanReason }
+  );
+
+  if (!transitionRes.success) {
+    return { success: false, error: transitionRes.error };
+  }
+
+  // 2. Create persistent dispute entity
+  const now = new Date().toISOString();
+  const disputeId = `dispute_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`;
+  const newDispute: Dispute = {
+    id: disputeId,
+    bookingId: booking.id,
+    openedBy: actor.userId,
+    openedByRole: isOwner ? 'owner' : 'renter',
+    reason: cleanReason,
+    description: cleanDescription,
+    status: 'open',
+    createdAt: now,
+  };
+
+  saveDispute(newDispute);
+
+  if (typeof window !== 'undefined') {
+    try {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
+    } catch {}
+  }
+
+  return {
+    success: true,
+    dispute: newDispute,
+    booking: transitionRes.booking,
+  };
+}
+
+/**
+ * Resolves a dispute with administrator notes.
+ * Enforces admin-only permissions, non-suspended account, mandatory settlement notes,
+ * and a strict conflict-of-interest barrier (admin cannot resolve own dispute).
+ */
+export function resolveDisputeByAdmin(
+  disputeId: string,
+  adminActor: { userId: string; role: UserRole },
+  resolutionNotes: string
+): DisputeOperationResult {
+  const session = getCurrentSession();
+  if (!session || session.userId !== adminActor.userId) {
+    return { success: false, error: 'Authentication required. Please sign in as an administrator.' };
+  }
+
+  const user = getUserById(adminActor.userId);
+  if (!user || user.status === 'suspended') {
+    return { success: false, error: 'Your account is suspended. Administrative operations are restricted.' };
+  }
+
+  if (!user.roles.includes('admin') || adminActor.role !== 'admin' || session.activeRole !== 'admin') {
+    return { success: false, error: 'Unauthorized: Only platform administrators can resolve disputes.' };
+  }
+
+  const dispute = getDisputeById(disputeId);
+  if (!dispute) {
+    return { success: false, error: `Dispute record "${disputeId}" not found.` };
+  }
+
+  const booking = getBookingById(dispute.bookingId);
+  if (!booking) {
+    return { success: false, error: `Associated booking "${dispute.bookingId}" not found.` };
+  }
+
+  // Conflict of interest check: admin cannot be the renter or owner of the booking under dispute
+  if (booking.renterId === adminActor.userId || booking.ownerId === adminActor.userId) {
+    return {
+      success: false,
+      error: 'Conflict of interest: Administrators cannot resolve disputes for bookings they are personally involved in.',
+    };
+  }
+
+  if (!resolutionNotes || resolutionNotes.trim().length < 5) {
+    return {
+      success: false,
+      error: 'Detailed resolution notes (at least 5 characters) are required to close a dispute.',
+    };
+  }
+
+  const cleanNotes = resolutionNotes.trim().slice(0, 2000);
+
+  // 1. Transition booking to resolved status
+  const transitionRes = transitionBookingStatus(
+    booking.id,
+    'resolved',
+    { userId: adminActor.userId, role: 'admin' },
+    { reason: cleanNotes }
+  );
+
+  // 2. Persist resolved dispute state
+  const now = new Date().toISOString();
+  const updatedDispute: Dispute = {
+    ...dispute,
+    status: 'resolved',
+    resolutionNotes: cleanNotes,
+    resolvedBy: adminActor.userId,
+    resolvedAt: now,
+  };
+
+  saveDispute(updatedDispute);
+
+  if (typeof window !== 'undefined') {
+    try {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
+    } catch {}
+  }
+
+  return {
+    success: true,
+    dispute: updatedDispute,
+    booking: transitionRes.booking || booking,
+  };
+}
+
+/**
+ * Updates a dispute status to 'investigating' with investigation notes.
+ */
+export function updateDisputeStatusByAdmin(
+  disputeId: string,
+  adminActor: { userId: string; role: UserRole },
+  status: 'investigating',
+  notes?: string
+): DisputeOperationResult {
+  const session = getCurrentSession();
+  if (!session || session.userId !== adminActor.userId) {
+    return { success: false, error: 'Authentication required. Please sign in as an administrator.' };
+  }
+
+  const user = getUserById(adminActor.userId);
+  if (!user || user.status === 'suspended') {
+    return { success: false, error: 'Your account is suspended. Administrative operations are restricted.' };
+  }
+
+  if (!user.roles.includes('admin') || adminActor.role !== 'admin' || session.activeRole !== 'admin') {
+    return { success: false, error: 'Unauthorized: Only platform administrators can update dispute statuses.' };
+  }
+
+  const dispute = getDisputeById(disputeId);
+  if (!dispute) {
+    return { success: false, error: `Dispute record "${disputeId}" not found.` };
+  }
+
+  const updatedDispute: Dispute = {
+    ...dispute,
+    status,
+    resolutionNotes: notes?.trim()
+      ? `[Investigation Note]: ${notes.trim().slice(0, 2000)}`
+      : dispute.resolutionNotes,
+  };
+
+  saveDispute(updatedDispute);
+
+  if (typeof window !== 'undefined') {
+    try {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { entity: 'disputes' } }));
+    } catch {}
+  }
+
+  return {
+    success: true,
+    dispute: updatedDispute,
+  };
 }
 

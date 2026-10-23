@@ -127,42 +127,7 @@ export function createReview(
     };
   }
 
-  // 3. Retrieve booking
-  const booking = getBookingById(input.bookingId);
-  if (!booking) {
-    return {
-      success: false,
-      error: `Booking "${input.bookingId}" not found.`,
-    };
-  }
-
-  // 4. Verify renter ownership
-  if (booking.renterId !== actor.userId) {
-    return {
-      success: false,
-      error: 'Unauthorized: You can only review rental trips that you personally booked.',
-    };
-  }
-
-  // 5. Verify completion status
-  if (booking.status !== 'completed' && booking.status !== 'reviewed') {
-    return {
-      success: false,
-      error: `Cannot review an unfinished trip. Current booking status is "${booking.status}". Reviews are only accepted after return handover completion.`,
-    };
-  }
-
-  // 6. Duplicate prevention check
-  const existingReviews = getReviews();
-  const alreadyReviewed = existingReviews.some((r) => r.bookingId === booking.id);
-  if (alreadyReviewed) {
-    return {
-      success: false,
-      error: 'Duplicate review: You have already submitted a review for this booking.',
-    };
-  }
-
-  // 7. Validate star rating (1 to 5 integer)
+  // 3. Validate star rating (1 to 5 integer)
   const ratingNum = Number(input.rating);
   if (!Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) {
     return {
@@ -171,12 +136,53 @@ export function createReview(
     };
   }
 
-  // 8. Validate comment length
+  // 4. Validate comment length
   const commentText = input.comment ? input.comment.trim() : '';
   if (commentText.length < 10) {
     return {
       success: false,
       error: 'Please provide at least 10 characters of detailed feedback for your review.',
+    };
+  }
+  if (commentText.length > 2000) {
+    return {
+      success: false,
+      error: 'Review comment must not exceed 2,000 characters.',
+    };
+  }
+
+  // 5. Retrieve booking
+  const booking = getBookingById(input.bookingId);
+  if (!booking) {
+    return {
+      success: false,
+      error: `Booking "${input.bookingId}" not found.`,
+    };
+  }
+
+  // 6. Verify renter ownership
+  if (booking.renterId !== actor.userId) {
+    return {
+      success: false,
+      error: 'Unauthorized: You can only review rental trips that you personally booked.',
+    };
+  }
+
+  // 7. Verify completion status
+  if (booking.status !== 'completed' && booking.status !== 'reviewed') {
+    return {
+      success: false,
+      error: `Cannot review an unfinished trip. Current booking status is "${booking.status}". Reviews are only accepted after return handover completion.`,
+    };
+  }
+
+  // 8. Duplicate prevention check
+  const existingReviews = getReviews();
+  const alreadyReviewed = existingReviews.some((r) => r.bookingId === booking.id);
+  if (alreadyReviewed) {
+    return {
+      success: false,
+      error: 'Duplicate review: You have already submitted a review for this booking.',
     };
   }
 
@@ -268,9 +274,9 @@ export function respondToReview(
     };
   }
 
-  // 4. Authorization check: Actor must be the vehicle owner (or platform admin)
-  const isOwner = review.ownerId === actor.userId;
-  const isAdmin = actor.role === 'admin' || session.activeRole === 'admin';
+  // 4. Authorization check: Actor must be the vehicle owner (or verified platform admin)
+  const isAdmin = Boolean((actor.role === 'admin' || session.activeRole === 'admin') && user.roles.includes('admin'));
+  const isOwner = review.ownerId === actor.userId && user.roles.includes('owner');
 
   if (!isOwner && !isAdmin) {
     return {
@@ -285,6 +291,12 @@ export function respondToReview(
     return {
       success: false,
       error: 'Host response must be at least 5 characters long.',
+    };
+  }
+  if (cleanedReply.length > 2000) {
+    return {
+      success: false,
+      error: 'Host response must not exceed 2,000 characters.',
     };
   }
 

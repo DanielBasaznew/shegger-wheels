@@ -8,16 +8,21 @@
 
 import { Notification, NotificationType, Booking, Car, Review, UserRole } from './types';
 import { saveNotification, getUserById, getCarById } from './storage';
+import { getSafeReturnUrl } from './auth';
 
 // ==========================================
 // Safe Navigation URL Generator
 // ==========================================
 
 export function getSafeNotificationLink(type: NotificationType, bookingId?: string, carId?: string): string {
+  const safeIdRegex = /^[a-zA-Z0-9_-]+$/;
+  const cleanBookingId = bookingId && safeIdRegex.test(bookingId) ? bookingId : undefined;
+  const cleanCarId = carId && safeIdRegex.test(carId) ? carId : undefined;
+
   switch (type) {
     case 'trip_started':
     case 'booking_confirmed':
-      return bookingId ? `/bookings/${bookingId}/track` : '/dashboard';
+      return cleanBookingId ? `/bookings/${cleanBookingId}/track` : '/dashboard';
     case 'booking_requested':
       return '/dashboard/host';
     case 'booking_declined':
@@ -25,12 +30,12 @@ export function getSafeNotificationLink(type: NotificationType, bookingId?: stri
     case 'trip_completed':
     case 'dispute_opened':
     case 'dispute_resolved':
-      return bookingId ? `/bookings/${bookingId}` : '/dashboard';
+      return cleanBookingId ? `/bookings/${cleanBookingId}` : '/dashboard';
     case 'review_received':
     case 'review_response':
-      return carId ? `/cars/${carId}#reviews-section` : '/dashboard';
+      return cleanCarId ? `/cars/${cleanCarId}#reviews-section` : '/dashboard';
     default:
-      return bookingId ? `/bookings/${bookingId}` : '/dashboard';
+      return cleanBookingId ? `/bookings/${cleanBookingId}` : '/dashboard';
   }
 }
 
@@ -50,16 +55,19 @@ export interface CreateNotificationInput {
 
 /**
  * Persists and dispatches a typed in-app notification.
+ * Guaranteed safe internal link routing.
  */
 export function sendNotification(input: CreateNotificationInput): Notification {
   const notificationId = `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const safeLink = getSafeReturnUrl(input.link, '/dashboard');
+
   const notification: Notification = {
     id: notificationId,
     recipientId: input.recipientId,
     type: input.type,
     title: input.title,
     message: input.message,
-    link: input.link,
+    link: safeLink,
     read: false,
     bookingId: input.bookingId,
     carId: input.carId,

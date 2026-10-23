@@ -15,8 +15,8 @@ import { getUsers, getCurrentSession, setCurrentSession, clearCurrentSession } f
 /**
  * Validates and sanitizes a return or redirect path to prevent open redirect vulnerabilities.
  * Only allows safe same-origin relative application paths starting with a single '/'
- * and strictly rejects protocol-relative paths ('//'), backslash bypasses ('/\', '\/'),
- * external schemes ('http:', 'https:', 'javascript:', 'data:'), and malformed inputs.
+ * and strictly rejects protocol-relative paths ('//'), backslash bypasses ('/\\', '\\/'),
+ * external schemes ('http:', 'https:', 'javascript:', 'data:'), encoded tricks, and control chars.
  */
 export function getSafeReturnUrl(
   rawUrl: string | null | undefined,
@@ -27,6 +27,11 @@ export function getSafeReturnUrl(
   }
 
   const trimmed = rawUrl.trim();
+
+  // Reject control characters (0x00-0x1F, 0x7F)
+  if (/[\x00-\x1F\x7F]/.test(trimmed)) {
+    return fallback;
+  }
 
   // Must begin with a single '/' and not with '//' or '/\'
   if (!trimmed.startsWith('/') || trimmed.startsWith('//') || trimmed.startsWith('/\\')) {
@@ -41,6 +46,23 @@ export function getSafeReturnUrl(
   // Reject any protocol indicators or colon before query/hash (e.g. /http:evil.com)
   const pathPart = trimmed.split('?')[0].split('#')[0];
   if (pathPart.includes(':')) {
+    return fallback;
+  }
+
+  // Defensive URI-decode check against hidden '//', '\\', or colon schemes
+  try {
+    const decoded = decodeURIComponent(trimmed);
+    if (decoded.startsWith('//') || decoded.startsWith('/\\') || decoded.includes('\\')) {
+      return fallback;
+    }
+    const decodedPathPart = decoded.split('?')[0].split('#')[0];
+    if (decodedPathPart.includes(':')) {
+      return fallback;
+    }
+    if (/[\x00-\x1F\x7F]/.test(decoded)) {
+      return fallback;
+    }
+  } catch {
     return fallback;
   }
 
@@ -65,7 +87,6 @@ export function getSafeReturnUrl(
   }
 }
 
-// ==========================================
 // Demo Authentication Operations
 // ==========================================
 
@@ -174,7 +195,7 @@ export function switchActiveRole(newRole: UserRole): boolean {
 
   const users = getUsers();
   const user = users.find((u) => u.id === session.userId);
-  if (!user || !user.roles.includes(newRole)) return false;
+  if (!user || user.status === 'suspended' || !user.roles.includes(newRole)) return false;
 
   const updatedSession: DemoSession = {
     ...session,

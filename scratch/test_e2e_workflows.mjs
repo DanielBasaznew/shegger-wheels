@@ -11,22 +11,11 @@
 
 import {
   getCars,
-  getCarById,
   saveCar,
-  getUsers,
-  getUserById,
   getBookings,
-  getBookingById,
-  saveBooking,
-  getReviews,
-  saveReview,
   getDisputes,
   saveDispute,
-  getNotifications,
-  saveNotification,
   getNotificationsForUser,
-  markNotificationAsRead,
-  getCurrentSession,
   setCurrentSession,
   clearCurrentSession,
   resetDemoData,
@@ -34,23 +23,18 @@ import {
 
 import {
   signInAsDemoUser,
-  signOutDemoUser,
-  switchActiveRole,
   getSafeReturnUrl,
 } from '../lib/auth.ts';
 
 import {
   createBooking,
   transitionBookingStatus,
-  calculateTrustedPrice,
   getOwnerEarningsAnalytics,
 } from '../lib/bookings.ts';
 
 import {
   createCarListing,
-  updateCarListing,
   moderateCarListing,
-  getAdminModerationMetrics,
 } from '../lib/fleet.ts';
 
 import {
@@ -171,13 +155,13 @@ assert(
   'Booking pricing snapshot correctly calculates days, rates, and escrow deposit'
 );
 
-// 6. Host receives in-app notification of new request
+// 6. Host signs in and receives in-app notification of new request
+signInAsDemoUser(selectedCar.ownerId, 'owner');
 const ownerNotifications = getNotificationsForUser(selectedCar.ownerId);
 const requestNotif = ownerNotifications.find((n) => n.bookingId === createdBooking.id && n.type === 'booking_requested');
 assert(!!requestNotif, 'Owner receives booking request in-app notification');
 
-// 7. Host signs in and confirms the booking
-signInAsDemoUser(selectedCar.ownerId, 'owner');
+// 7. Host confirms the booking
 const confirmRes = transitionBookingStatus(
   createdBooking.id,
   'confirmed',
@@ -230,12 +214,14 @@ const reviewRes = createReview(
 );
 assert(reviewRes.success && reviewRes.review, 'Renter review submitted and verified');
 
-// 13. Owner notified of new review
+// 13. Owner signs in and is notified of new review
+signInAsDemoUser(selectedCar.ownerId, 'owner');
 const updatedOwnerNotifs = getNotificationsForUser(selectedCar.ownerId);
 const reviewNotif = updatedOwnerNotifs.find((n) => n.bookingId === createdBooking.id && n.type === 'review_received');
 assert(!!reviewNotif, 'Host receives rating & review in-app notification');
 
 // 14. Duplicate review prevented
+signInAsDemoUser('user_renter_01', 'renter');
 const dupReviewRes = createReview(
   { userId: renterAuth.session.userId, role: 'renter' },
   {

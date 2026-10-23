@@ -221,8 +221,14 @@ export function createCarListing(
   if (!input.make || input.make.trim().length < 2) {
     return { success: false, error: 'Vehicle make is required (min 2 characters).' };
   }
+  if (input.make.trim().length > 50) {
+    return { success: false, error: 'Vehicle make must not exceed 50 characters.' };
+  }
   if (!input.model || input.model.trim().length < 1) {
     return { success: false, error: 'Vehicle model name is required.' };
+  }
+  if (input.model.trim().length > 50) {
+    return { success: false, error: 'Vehicle model must not exceed 50 characters.' };
   }
 
   const currentYear = new Date().getFullYear();
@@ -241,10 +247,10 @@ export function createCarListing(
     return { success: false, error: 'Seating capacity must be between 2 and 16 passengers.' };
   }
 
-  if (!input.pricePerDay || input.pricePerDay < 500) {
+  if (!input.pricePerDay || input.pricePerDay < 500 || input.pricePerDay > 500000 || !Number.isFinite(input.pricePerDay)) {
     return {
       success: false,
-      error: 'Daily rental rate must be at least 500 ETB.',
+      error: 'Daily rental rate must be between 500 ETB and 500,000 ETB.',
     };
   }
 
@@ -256,6 +262,12 @@ export function createCarListing(
     return {
       success: false,
       error: 'Vehicle description must be at least 10 characters.',
+    };
+  }
+  if (input.description.trim().length > 3000) {
+    return {
+      success: false,
+      error: 'Vehicle description must not exceed 3,000 characters.',
     };
   }
 
@@ -331,9 +343,9 @@ export function updateCarListing(
     return { success: false, error: 'Vehicle listing not found.' };
   }
 
-  // Ownership Check: Actor must own the car or be platform admin
+  // Ownership Check: Actor must own the car or be verified platform admin
+  const isAdmin = Boolean((actor.role === 'admin' || session.activeRole === 'admin') && user.roles.includes('admin'));
   const isOwner = existingCar.ownerId === actor.userId;
-  const isAdmin = actor.role === 'admin';
 
   if (!isOwner && !isAdmin) {
     return {
@@ -360,8 +372,13 @@ export function updateCarListing(
   }
 
   // Validate price if updated
-  if (updates.pricePerDay !== undefined && updates.pricePerDay < 500) {
-    return { success: false, error: 'Daily rental rate must be at least 500 ETB.' };
+  if (updates.pricePerDay !== undefined && (updates.pricePerDay < 500 || updates.pricePerDay > 500000 || !Number.isFinite(updates.pricePerDay))) {
+    return { success: false, error: 'Daily rental rate must be between 500 ETB and 500,000 ETB.' };
+  }
+
+  // Validate description if updated
+  if (updates.description !== undefined && (updates.description.trim().length < 10 || updates.description.trim().length > 3000)) {
+    return { success: false, error: 'Vehicle description must be between 10 and 3,000 characters.' };
   }
 
   // Build updated car preserving immutable identifiers
@@ -455,7 +472,15 @@ export function updateCarBlackoutDates(
     return { success: false, error: 'Vehicle listing not found.' };
   }
 
-  if (car.ownerId !== actor.userId && actor.role !== 'admin') {
+  if (!Array.isArray(dates)) {
+    return { success: false, error: 'Blackout dates must be an array of date strings.' };
+  }
+
+  const session = getCurrentSession();
+  const user = session ? getUserById(session.userId) : null;
+  const isAdmin = Boolean((actor.role === 'admin' || session?.activeRole === 'admin') && user?.roles.includes('admin'));
+
+  if (car.ownerId !== actor.userId && !isAdmin) {
     return { success: false, error: 'Unauthorized: You do not own this vehicle.' };
   }
 
@@ -464,7 +489,7 @@ export function updateCarBlackoutDates(
   // Validate dates: YYYY-MM-DD
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
   for (const d of dates) {
-    if (!dateRegex.test(d)) {
+    if (!d || typeof d !== 'string' || !dateRegex.test(d)) {
       return {
         success: false,
         error: `Invalid date format "${d}". Must be YYYY-MM-DD.`,
@@ -513,18 +538,18 @@ export function moderateCarListing(
     return { success: false, error: 'Authentication required to moderate vehicle listings.' };
   }
 
-  // 2. Role validation: Must have admin role
-  if (adminActor.role !== 'admin' || session.activeRole !== 'admin') {
+  // 2. User status check
+  const user = getUserById(adminActor.userId);
+  if (!user || user.status === 'suspended') {
+    return { success: false, error: 'Your account is suspended. Administrative operations are restricted.' };
+  }
+
+  // 3. Role validation: Must have admin role in account and active session
+  if (!user.roles.includes('admin') || adminActor.role !== 'admin' || session.activeRole !== 'admin') {
     return {
       success: false,
       error: 'Unauthorized: Only platform administrators can moderate vehicle listings.',
     };
-  }
-
-  // 3. User status check
-  const user = getUserById(adminActor.userId);
-  if (!user || user.status === 'suspended') {
-    return { success: false, error: 'Your account is suspended. Administrative operations are restricted.' };
   }
 
   // 4. Retrieve vehicle
