@@ -16,7 +16,7 @@ import {
   BookingStatus,
   Review,
 } from '@/lib/types';
-import { getUserById } from '@/lib/storage';
+import { getUserById, isOptimizableImage } from '@/lib/storage';
 import {
   createCarListing,
   updateCarListing,
@@ -913,7 +913,7 @@ export function HostFleetDashboardView() {
                           src={car.featuredImage || car.photos[0] || DEMO_PHOTO_PRESETS[0].url}
                           alt={`${car.make} ${car.model}`}
                           fill
-                          unoptimized
+                          unoptimized={!isOptimizableImage(car.featuredImage || car.photos[0] || DEMO_PHOTO_PRESETS[0].url)}
                           className="object-cover transition-transform duration-300 hover:scale-105"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
@@ -1275,7 +1275,7 @@ export function HostFleetDashboardView() {
                               src={car?.featuredImage || car?.photos?.[0] || DEMO_PHOTO_PRESETS[0].url}
                               alt="Vehicle"
                               fill
-                              unoptimized
+                              unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos?.[0] || DEMO_PHOTO_PRESETS[0].url)}
                               className="object-cover"
                               sizes="64px"
                             />
@@ -1657,7 +1657,7 @@ export function HostFleetDashboardView() {
                               src={v.featuredImage || DEMO_PHOTO_PRESETS[0].url}
                               alt={v.model}
                               fill
-                              unoptimized
+                              unoptimized={!isOptimizableImage(v.featuredImage || DEMO_PHOTO_PRESETS[0].url)}
                               className="object-cover"
                               sizes="40px"
                             />
@@ -2271,7 +2271,7 @@ export function HostFleetDashboardView() {
                         src={car?.featuredImage || DEMO_PHOTO_PRESETS[0].url}
                         alt="Car"
                         fill
-                        unoptimized
+                        unoptimized={!isOptimizableImage(car?.featuredImage || DEMO_PHOTO_PRESETS[0].url)}
                         className="object-cover"
                         sizes="64px"
                       />
@@ -2770,7 +2770,7 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
                         src={preset.url}
                         alt={preset.label}
                         fill
-                        unoptimized
+                        unoptimized={!isOptimizableImage(preset.url)}
                         className="object-cover"
                         sizes="140px"
                       />

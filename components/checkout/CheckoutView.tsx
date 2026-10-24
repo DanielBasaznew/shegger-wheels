@@ -11,6 +11,7 @@ import {
   getUserById,
   getCheckoutDraft,
   setCheckoutDraft,
+  isOptimizableImage,
 } from '@/lib/storage';
 import {
   formatDateString,
@@ -964,6 +965,7 @@ export function CheckoutView() {
                     src={selectedCar.featuredImage || selectedCar.photos[0]}
                     alt={`${selectedCar.make} ${selectedCar.model}`}
                     fill
+                    unoptimized={!isOptimizableImage(selectedCar.featuredImage || selectedCar.photos[0])}
                     className="object-cover"
                     sizes="96px"
                   />

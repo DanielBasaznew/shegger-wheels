@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Car } from '@/lib/types';
-import { getUserById } from '@/lib/storage';
+import { getUserById, isOptimizableImage } from '@/lib/storage';
 
 export interface VehicleCardProps {
   car: Car;
@@ -34,8 +34,6 @@ export function VehicleCard({
   // Tag styling
   const tagText = tag || (car.pricePerDay <= 3000 ? 'ECONOMY' : car.seats >= 7 ? 'EXPEDITION READY' : 'INSTANT BOOK');
 
-  const isOptimizable = typeof photoUrl === 'string' && (photoUrl.startsWith('/') || photoUrl.includes('images.unsplash.com'));
-
   return (
     <div
       className={`group flex flex-col bg-white rounded-2xl overflow-hidden border border-[#66717D]/18 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-xl hover:border-[#111820]/30 transition-all duration-300 ${className}`}
@@ -47,7 +45,7 @@ export function VehicleCard({
           src={photoUrl}
           alt={`${car.make} ${car.model}`}
           fill
-          unoptimized={!isOptimizable}
+          unoptimized={!isOptimizableImage(photoUrl)}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />

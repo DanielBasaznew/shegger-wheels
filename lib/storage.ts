@@ -685,3 +685,17 @@ export function setCheckoutDraft(draft: CheckoutDraft): boolean {
 export function clearCheckoutDraft(): void {
   removeSession(SESSION_KEYS.CHECKOUT_DRAFT);
 }
+
+// ==========================================
+// Image Optimization Utilities
+// ==========================================
+
+/**
+ * Determines whether an image URL is safe for Next.js image optimization pipeline.
+ * Unsplash URLs and local relative paths can be optimized with responsive WebP/AVIF.
+ * Arbitrary external URLs return false so they can be marked unoptimized and avoid hostname errors.
+ */
+export function isOptimizableImage(url?: string | null): boolean {
+  if (!url || typeof url !== 'string') return false;
+  return url.startsWith('/') || url.includes('images.unsplash.com');
+}

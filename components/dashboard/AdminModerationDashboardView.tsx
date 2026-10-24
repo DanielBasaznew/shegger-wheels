@@ -13,7 +13,7 @@ import {
   Booking,
 } from '@/lib/types';
 import { SEED_CARS, SEED_USERS, SEED_DISPUTES, SEED_BOOKINGS } from '@/lib/seeds';
-import { getUserById } from '@/lib/storage';
+import { getUserById, isOptimizableImage } from '@/lib/storage';
 import {
   moderateCarListing,
   getAdminModerationMetrics,
@@ -848,6 +848,7 @@ export function AdminModerationDashboardView() {
                                   alt={`${car.make} ${car.model}`}
                                   fill
                                   sizes="64px"
+                                  unoptimized={!isOptimizableImage(car.photos[0])}
                                   className="object-cover group-hover:scale-105 transition duration-300"
                                 />
                               ) : (
@@ -998,6 +999,7 @@ export function AdminModerationDashboardView() {
                             alt={`${car.make} ${car.model}`}
                             fill
                             sizes="(max-width: 768px) 100vw, 50vw"
+                            unoptimized={!isOptimizableImage(car.photos[0])}
                             className="object-cover"
                           />
                         ) : (
@@ -1279,6 +1281,8 @@ export function AdminModerationDashboardView() {
                               src={car.photos[0]}
                               alt={car.model}
                               fill
+                              sizes="64px"
+                              unoptimized={!isOptimizableImage(car.photos[0])}
                               className="object-cover"
                             />
                           </div>
@@ -1420,6 +1424,7 @@ export function AdminModerationDashboardView() {
                     alt={`${inspectingCar.make} ${inspectingCar.model}`}
                     fill
                     sizes="(max-width: 768px) 100vw, 800px"
+                    unoptimized={!isOptimizableImage(inspectingCar.photos[activePhotoIndex])}
                     className="object-cover"
                   />
                 ) : (
@@ -1446,6 +1451,7 @@ export function AdminModerationDashboardView() {
                         alt={`Thumbnail ${idx + 1}`}
                         fill
                         sizes="80px"
+                        unoptimized={!isOptimizableImage(photo)}
                         className="object-cover"
                       />
                     </button>

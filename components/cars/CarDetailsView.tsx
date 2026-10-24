@@ -16,13 +16,10 @@ import {
   getCurrentSession,
   setCheckoutDraft,
   STORAGE_KEYS,
+  isOptimizableImage,
 } from '@/lib/storage';
 import { SEED_CARS, SEED_USERS, SEED_REVIEWS } from '@/lib/seeds';
 import { getCarRatingSummary } from '@/lib/reviews';
-
-function isOptimizableImage(url?: string): boolean {
-  return Boolean(url && (url.startsWith('/') || url.includes('images.unsplash.com')));
-}
 
 // SSR-safe storage synchronizer for cars
 let cachedStorageCars: Car[] = [];
@@ -880,6 +877,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                                   alt={reviewerName}
                                   width={40}
                                   height={40}
+                                  unoptimized={!isOptimizableImage(reviewer.avatarUrl)}
                                   className="w-10 h-10 rounded-full object-cover border border-[#66717D]/15"
                                 />
                               ) : (

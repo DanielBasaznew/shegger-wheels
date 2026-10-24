@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Booking, Car, User, DemoSession } from '@/lib/types';
 import {
   getUserById,
+  isOptimizableImage,
 } from '@/lib/storage';
 import {
   formatDisplayDate,
@@ -397,6 +398,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
                     src={car.featuredImage || car.photos[0]}
                     alt={`${car.make} ${car.model}`}
                     fill
+                    unoptimized={!isOptimizableImage(car.featuredImage || car.photos[0])}
                     className="object-cover"
                     sizes="64px"
                   />

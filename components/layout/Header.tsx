@@ -4,7 +4,7 @@ import React, { useState, useSyncExternalStore, useRef, useEffect } from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { getUserById, resetDemoData } from '@/lib/storage';
+import { getUserById, resetDemoData, isOptimizableImage } from '@/lib/storage';
 import { User, DemoSession, UserRole } from '@/lib/types';
 import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
 
@@ -233,7 +233,7 @@ export function Header() {
                     alt={currentUser.name}
                     width={28}
                     height={28}
-                    unoptimized={!currentUser.avatarUrl.includes('images.unsplash.com')}
+                    unoptimized={!isOptimizableImage(currentUser.avatarUrl)}
                     className="w-7 h-7 rounded-full object-cover"
                   />
                 ) : (

@@ -7,6 +7,7 @@ import { Container } from '@/components/ui/Container';
 import { Booking, BookingStatus, Car, User, DemoSession } from '@/lib/types';
 import {
   getUserById,
+  isOptimizableImage,
 } from '@/lib/storage';
 import {
   formatDisplayDate,
@@ -590,6 +591,7 @@ export function RenterDashboardView() {
                   src={spotlightCar.featuredImage || spotlightCar.photos[0]}
                   alt={`${spotlightCar.make} ${spotlightCar.model}`}
                   fill
+                  unoptimized={!isOptimizableImage(spotlightCar.featuredImage || spotlightCar.photos[0])}
                   className="object-cover opacity-75"
                   sizes="(max-width: 1024px) 100vw, 58vw"
                 />
@@ -911,6 +913,7 @@ export function RenterDashboardView() {
                                   }
                                   alt={car ? `${car.make} ${car.model}` : 'Vehicle'}
                                   fill
+                                  unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos[0] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=200&q=80')}
                                   className="object-cover"
                                   sizes="48px"
                                 />
@@ -1240,6 +1243,7 @@ export function RenterDashboardView() {
                         }
                         alt="Vehicle"
                         fill
+                        unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos[0] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=200&q=80')}
                         className="object-cover"
                         sizes="56px"
                       />
