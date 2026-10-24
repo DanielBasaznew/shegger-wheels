@@ -339,7 +339,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
       <div className="w-full min-h-[70vh] bg-[#F5F2EB] py-16 flex items-center justify-center">
         <Container className="max-w-md text-center">
           <div className="p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm flex flex-col items-center">
-            <span className="text-4xl mb-3">📍</span>
+            <span className="material-symbols-outlined text-4xl mb-3 text-[#66717D]">location_off</span>
             <h1 className="text-xl font-bold text-[#111820] mb-2">Trip Not Found</h1>
             <p className="text-xs text-[#66717D] mb-6">
               Could not locate a booking record with ID #{bookingId.toUpperCase()}.
@@ -363,7 +363,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
         <Container className="max-w-md text-center">
           <div className="p-8 rounded-3xl bg-white border border-red-200 shadow-sm flex flex-col items-center">
             <div className="w-12 h-12 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xl mb-4 font-bold">
-              🔒
+              <span className="material-symbols-outlined text-xl text-red-700">lock</span>
             </div>
             <h1 className="text-xl font-bold text-red-950 mb-2">Restricted Tracking Hub</h1>
             <p className="text-xs text-[#66717D] mb-6 leading-relaxed">
@@ -395,7 +395,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
               href={`/bookings/${booking.id}`}
               className="text-xs font-bold text-[#66717D] hover:text-[#111820] flex items-center gap-1.5 transition-colors"
             >
-              <span>←</span>
+              <span className="material-symbols-outlined text-[14px]">arrow_back</span>
               <span>Back to Booking Receipt</span>
             </Link>
             <span className="text-xs text-[#66717D]">/</span>
@@ -420,14 +420,19 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
                 : 'bg-red-50 border-red-200 text-red-900'
             }`}
           >
-            <span>{actionFeedback.message}</span>
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-base">
+                {actionFeedback.type === 'success' ? 'check_circle' : 'warning'}
+              </span>
+              <span>{actionFeedback.message}</span>
+            </div>
             <button
               type="button"
               onClick={() => setActionFeedback(null)}
               aria-label="Dismiss feedback message"
               className="text-xs opacity-60 hover:opacity-100 cursor-pointer ml-3"
             >
-              ✕
+              <span className="material-symbols-outlined text-[14px]">close</span>
             </button>
           </div>
         )}
@@ -473,7 +478,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
 
           {/* Prototype Simulation Notice */}
           <div className="p-3.5 rounded-2xl bg-[#F5F2EB] border border-[#66717D]/15 flex items-start gap-3">
-            <span className="text-lg">ℹ️</span>
+            <span className="material-symbols-outlined text-lg text-[#536600]">info</span>
             <div className="flex-1 text-xs text-[#44474B] leading-relaxed">
               <strong className="text-[#111820] font-semibold">Simulated Prototype Environment:</strong> Vehicle positioning, telemetry readouts, and corridor waypoints are simulated in-memory using deterministic browser storage. No real GPS, external tracking APIs, or paid map subscriptions are connected.
             </div>
@@ -512,7 +517,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
                         Stage 0{s.step}
                       </span>
                       {isPast ? (
-                        <span className="text-xs font-bold">✓</span>
+                        <span className="material-symbols-outlined text-xs">check</span>
                       ) : isCurrent ? (
                         <span className="w-2 h-2 rounded-full bg-[#D5F36A] animate-pulse" />
                       ) : null}
@@ -558,9 +563,10 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
                   id="start-trip-btn"
                   onClick={handleStartTrip}
                   disabled={isProcessing}
-                  className="w-full sm:w-auto py-2.5 px-5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                  className="w-full sm:w-auto py-2.5 px-5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
-                  {isProcessing ? 'Verifying...' : '🔑 Confirm Handover & Start Trip'}
+                  <span className="material-symbols-outlined text-[14px]">key</span>
+                  <span>{isProcessing ? 'Verifying...' : 'Confirm Handover & Start Trip'}</span>
                 </button>
               )}
 
@@ -570,9 +576,10 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
                   id="complete-trip-btn"
                   onClick={handleCompleteTrip}
                   disabled={isProcessing}
-                  className="w-full sm:w-auto py-2.5 px-5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                  className="w-full sm:w-auto py-2.5 px-5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
-                  {isProcessing ? 'Processing...' : '🏁 Finalize Return & Complete Trip'}
+                  <span className="material-symbols-outlined text-[14px]">task_alt</span>
+                  <span>{isProcessing ? 'Processing...' : 'Finalize Return & Complete Trip'}</span>
                 </button>
               )}
 
@@ -594,7 +601,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
           <div className="lg:col-span-8 bg-white rounded-3xl p-6 border border-[#66717D]/12 shadow-sm flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-base" aria-hidden="true">🗺️</span>
+                <span className="material-symbols-outlined text-base text-[#111820]" aria-hidden="true">map</span>
                 <h2 className="text-base font-bold text-[#111820]">
                   Addis Ababa Simulated Corridor Map
                 </h2>
@@ -605,9 +612,12 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
                   <button
                     type="button"
                     onClick={() => setIsSimulating(!isSimulating)}
-                    className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] transition-colors cursor-pointer"
+                    className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] transition-colors cursor-pointer flex items-center gap-1"
                   >
-                    {isSimulating ? '⏸ Pause Path' : '▶ Resume Path'}
+                    <span className="material-symbols-outlined text-[14px]">
+                      {isSimulating ? 'pause' : 'play_arrow'}
+                    </span>
+                    <span>{isSimulating ? 'Pause Path' : 'Resume Path'}</span>
                   </button>
                 </div>
               )}

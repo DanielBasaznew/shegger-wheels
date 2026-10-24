@@ -283,7 +283,9 @@ function CatalogueContent() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             {/* Search Input */}
             <div className="md:col-span-8 relative flex items-center">
-              <span className="absolute left-4 text-[#66717D]" aria-hidden="true">🔍</span>
+              <span className="material-symbols-outlined text-[#75777C] absolute left-4 text-[22px]" aria-hidden="true">
+                search
+              </span>
               <input
                 id="cars-search-input"
                 type="text"
@@ -291,16 +293,16 @@ function CatalogueContent() {
                 placeholder="Search by make, model, or neighbourhood (e.g. Prado, Bole, Kazanchis)..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full h-12 pl-11 pr-10 rounded-2xl bg-white border border-[#66717D]/25 focus:border-[#111820] text-sm text-[#111820] outline-none shadow-xs transition-colors"
+                className="w-full h-12 pl-12 pr-10 rounded-2xl bg-white border border-[#66717D]/25 focus:border-[#111820] text-sm text-[#111820] outline-none shadow-xs transition-colors"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => handleSearchChange('')}
-                  className="absolute right-3.5 text-[#66717D] hover:text-[#111820] text-sm"
+                  className="absolute right-3.5 text-[#66717D] hover:text-[#111820] flex items-center justify-center p-1"
                   aria-label="Clear search input"
                 >
-                  ✕
+                  <span className="material-symbols-outlined text-[18px]">close</span>
                 </button>
               )}
             </div>
@@ -315,7 +317,8 @@ function CatalogueContent() {
                 onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
                 className="w-full h-12 px-4 rounded-2xl bg-[#111820] text-white font-semibold text-sm flex items-center justify-center gap-2"
               >
-                <span>⚙️ Refine Filters</span>
+                <span className="material-symbols-outlined text-[20px]">filter_list</span>
+                <span>Refine Filters</span>
                 {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-[#D5F36A]" aria-hidden="true" />}
               </button>
             </div>
@@ -350,10 +353,10 @@ function CatalogueContent() {
                 <button
                   type="button"
                   onClick={() => handleSearchChange('')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E5E2DB] text-[#111820] font-specs-tabular text-[13px] hover:bg-[#EBE8E1] transition-colors"
                 >
                   <span>Query: &ldquo;{searchQuery}&rdquo;</span>
-                  <span>✕</span>
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               )}
 
@@ -362,10 +365,10 @@ function CatalogueContent() {
                   key={n}
                   type="button"
                   onClick={() => toggleNeighbourhood(n)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E5E2DB] text-[#111820] font-specs-tabular text-[13px] hover:bg-[#EBE8E1] transition-colors"
                 >
-                  <span>Hub: {n}</span>
-                  <span>✕</span>
+                  <span>{n}</span>
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               ))}
 
@@ -373,10 +376,10 @@ function CatalogueContent() {
                 <button
                   type="button"
                   onClick={() => handleMaxPriceChange(12000)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-medium font-specs-tabular"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E5E2DB] text-[#111820] font-specs-tabular text-[13px] hover:bg-[#EBE8E1] transition-colors"
                 >
                   <span>&lt; {maxPrice.toLocaleString()} ETB</span>
-                  <span>✕</span>
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               )}
 
@@ -384,10 +387,10 @@ function CatalogueContent() {
                 <button
                   type="button"
                   onClick={() => handleGearboxChange('All')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E5E2DB] text-[#111820] font-specs-tabular text-[13px] hover:bg-[#EBE8E1] transition-colors"
                 >
                   <span>{selectedGearbox}</span>
-                  <span>✕</span>
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               )}
 
@@ -395,10 +398,10 @@ function CatalogueContent() {
                 <button
                   type="button"
                   onClick={() => handleCategoryChange('All')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E5E2DB] text-[#111820] font-specs-tabular text-[13px] hover:bg-[#EBE8E1] transition-colors"
                 >
                   <span>{selectedCategory}</span>
-                  <span>✕</span>
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               )}
 
@@ -406,19 +409,20 @@ function CatalogueContent() {
                 <button
                   type="button"
                   onClick={() => handleSeatsChange('All')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E5E2DB] text-[#111820] font-specs-tabular text-[13px] hover:bg-[#EBE8E1] transition-colors"
                 >
                   <span>{selectedSeats} Seats</span>
-                  <span>✕</span>
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               )}
 
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="inline-flex items-center gap-1 px-3 py-1 text-[#536600] hover:text-[#111820] font-bold text-xs underline cursor-pointer ml-auto"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[#536600] hover:text-[#111820] font-bold text-xs transition-colors ml-auto sm:ml-2 cursor-pointer"
               >
-                Reset all filters
+                <span className="material-symbols-outlined text-[16px]">restart_alt</span>
+                <span>Reset all filters</span>
               </button>
             </div>
           )}
@@ -439,10 +443,11 @@ function CatalogueContent() {
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#66717D]/12">
                 <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">filter_alt</span>
                   <span className="font-bold text-base text-[#111820]">Refine Fleet</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-specs-tabular text-xs font-bold text-[#536600] bg-[#D5F36A]/30 px-2.5 py-0.5 rounded-full border border-[#D5F36A]">
+                  <span className="font-specs-tabular text-xs font-bold text-[#171E00] bg-[#CEEC64] px-2.5 py-0.5 rounded-full">
                     {sortedCars.length} Available
                   </span>
                   <button
@@ -597,16 +602,16 @@ function CatalogueContent() {
 
             {/* RIGHT FLEET INVENTORY GRID */}
             <div id="catalogue-results" className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
-              {/* Grid Header Info */}
-              <div className="flex items-center justify-between text-xs text-[#44474B]">
+              {/* Grid Header Info / Live Feedback Ribbon */}
+              <div className="flex items-center justify-between bg-[#F1EEE7] p-3 rounded-xl border border-[#66717D]/15 text-xs text-[#44474B]">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#111820]">
-                    Showing {sortedCars.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, sortedCars.length)}
+                  <span className="material-symbols-outlined text-[#536600] text-[20px]">local_shipping</span>
+                  <span className="font-specs-tabular text-sm text-[#111820]">
+                    Showing <strong className="font-bold">{sortedCars.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, sortedCars.length)}</strong> of <strong className="font-bold">{allCars.length}</strong> verified vehicles in Addis Ababa
                   </span>
-                  <span>of {sortedCars.length} verified vehicles</span>
                 </div>
-                <div className="hidden sm:flex items-center gap-1.5 text-[#536600] font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-[#536600]" aria-hidden="true" />
+                <div className="hidden sm:flex items-center gap-1.5 text-[#536600] font-semibold text-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#536600] animate-pulse" aria-hidden="true" />
                   <span>Live TeleBirr instant booking enabled</span>
                 </div>
               </div>
@@ -621,8 +626,8 @@ function CatalogueContent() {
               ) : (
                 /* Empty State */
                 <div className="p-10 sm:p-14 rounded-3xl bg-white border border-[#66717D]/18 text-center flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-[#F1EEE7] flex items-center justify-center text-3xl" aria-hidden="true">
-                    🔍
+                  <div className="w-16 h-16 rounded-2xl bg-[#F1EEE7] flex items-center justify-center text-[#536600]" aria-hidden="true">
+                    <span className="material-symbols-outlined text-[32px]">manage_search</span>
                   </div>
                   <h3 className="text-xl font-bold text-[#111820]">
                     No vehicles match your current criteria
@@ -633,9 +638,10 @@ function CatalogueContent() {
                   <button
                     type="button"
                     onClick={handleResetFilters}
-                    className="px-6 py-2.5 rounded-full bg-[#111820] text-white font-semibold text-xs mt-2 hover:bg-[#1E293B] transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-[#111820] text-white font-semibold text-xs mt-2 hover:bg-[#1E293B] transition-colors cursor-pointer"
                   >
-                    Reset All Filters
+                    <span className="material-symbols-outlined text-[16px]">restart_alt</span>
+                    <span>Reset All Filters</span>
                   </button>
                 </div>
               )}
@@ -684,28 +690,38 @@ function CatalogueContent() {
                 </nav>
               )}
 
-              {/* Custom Model Request Banner */}
-              <div className="mt-8 p-6 rounded-3xl bg-white border border-[#66717D]/18 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-2xl bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-xl shrink-0">
-                    💡
+              {/* Custom Model Concierge Request Banner (Stitch Spec) */}
+              <div className="mt-8 p-6 lg:p-8 rounded-3xl bg-[#F6F3EC] border border-[#66717D]/15 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-[#EBE8E1] flex items-center justify-center text-[#536600] shrink-0">
+                    <span className="material-symbols-outlined text-[28px]">manage_search</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold text-[#111820]">
-                      Looking for a specific vehicle or fleet size?
+                    <span className="text-base font-bold text-[#111820]">
+                      Can&apos;t locate a specific model?
                     </span>
-                    <span className="text-xs text-[#66717D]">
-                      Our concierge team can coordinate private owner bookings across any Addis sub-city.
-                    </span>
+                    <p className="text-sm text-[#44474B] mt-1 max-w-xl leading-relaxed">
+                      No cars match your exact criteria? Try widening your price range, relaxing transmission locks, or exploring nearby neighborhoods like Bole Atlas or Sarbet.
+                    </p>
                   </div>
                 </div>
 
-                <Link
-                  href="/#how-it-works"
-                  className="px-5 py-2.5 rounded-full bg-[#111820] text-white font-semibold text-xs shrink-0 hover:bg-[#1E293B] transition-colors"
-                >
-                  Contact Concierge
-                </Link>
+                <div className="flex items-center gap-3 shrink-0 self-stretch sm:self-auto justify-end">
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="px-4 py-2.5 rounded-xl bg-white hover:bg-[#EBE8E1] text-[#111820] font-semibold text-xs transition-colors border border-[#66717D]/20 cursor-pointer"
+                  >
+                    Reset Filters
+                  </button>
+                  <Link
+                    href="/#how-it-works"
+                    className="px-5 py-2.5 rounded-xl bg-[#111820] text-white hover:bg-[#1E293B] font-semibold text-xs transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <span>Request Custom Model</span>
+                    <span className="material-symbols-outlined text-[16px]">north_east</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

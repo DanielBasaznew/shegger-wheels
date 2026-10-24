@@ -159,7 +159,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
       <div className="w-full min-h-[60vh] flex items-center justify-center bg-[#F5F2EB] py-16">
         <Container>
           <div className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm text-center flex flex-col items-center">
-            <span className="text-4xl mb-3">🔒</span>
+            <span className="material-symbols-outlined text-4xl mb-3 text-[#111820]">lock</span>
             <Badge variant="terracotta" className="mb-2">
               Authentication Required
             </Badge>
@@ -185,7 +185,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
       <div className="w-full min-h-[60vh] flex items-center justify-center bg-[#F5F2EB] py-16">
         <Container>
           <div className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm text-center flex flex-col items-center">
-            <span className="text-4xl mb-3">📋</span>
+            <span className="material-symbols-outlined text-4xl mb-3 text-[#66717D]">event_busy</span>
             <Badge variant="neutral" className="mb-2">
               Record Missing
             </Badge>
@@ -211,7 +211,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
       <div className="w-full min-h-[60vh] flex items-center justify-center bg-[#F5F2EB] py-16">
         <Container>
           <div className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-red-200 shadow-sm text-center flex flex-col items-center">
-            <span className="text-4xl mb-3">🚫</span>
+            <span className="material-symbols-outlined text-4xl mb-3 text-[#B9674B]">gavel</span>
             <Badge variant="terracotta" className="mb-2">
               Access Denied
             </Badge>
@@ -266,7 +266,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
             href="/dashboard"
             className="text-xs font-bold text-[#66717D] hover:text-[#111820] flex items-center gap-1.5 transition-colors"
           >
-            <span>←</span>
+            <span className="material-symbols-outlined text-[14px]">arrow_back</span>
             <span>Back to Renter Dashboard</span>
           </Link>
           <span className="font-mono text-xs text-[#66717D]">
@@ -314,7 +314,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
             <div className="p-4 sm:p-5 rounded-2xl bg-[#111820] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
               <div className="flex items-center gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-[#D5F36A] text-[#111820] flex items-center justify-center text-xl shrink-0">
-                  📍
+                  <span className="material-symbols-outlined text-xl">location_on</span>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -339,8 +339,9 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
                 id="view-trip-tracking-btn"
                 className="py-2.5 px-5 rounded-full bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] font-bold text-xs transition-colors shrink-0 shadow-xs flex items-center gap-1.5"
               >
-                <span>📍</span>
-                <span>Open Live Trip Tracker →</span>
+                <span className="material-symbols-outlined text-[14px]">location_on</span>
+                <span>Open Live Trip Tracker</span>
+                <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
               </Link>
             </div>
           )}
@@ -349,7 +350,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
           {booking.status === 'completed' && isBookingReviewable(booking, session?.userId || '').canReview && (
             <div className="p-4 sm:p-5 rounded-2xl bg-[#D5F36A]/25 border border-[#B8DC30] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="text-3xl">⭐</span>
+                <span className="material-symbols-outlined text-3xl text-amber-500">star</span>
                 <div>
                   <h3 className="font-extrabold text-sm text-[#111820]">
                     Your trip has ended! How was your journey?
@@ -364,7 +365,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
                 onClick={() => setIsReviewModalOpen(true)}
                 className="py-2.5 px-5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer shrink-0 shadow-xs flex items-center gap-1.5"
               >
-                <span>★</span>
+                <span className="material-symbols-outlined text-[14px]">star</span>
                 <span>Leave a Review</span>
               </button>
             </div>
@@ -373,7 +374,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
           {booking.status === 'reviewed' && (
             <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2.5">
-                <span className="text-base">✓</span>
+                <span className="material-symbols-outlined text-base">check</span>
                 <span className="font-bold">
                   Trip Completed &amp; Reviewed — Your verified feedback is published on the vehicle page.
                 </span>
@@ -381,9 +382,10 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
               {car && (
                 <Link
                   href={`/cars/${car.id}#reviews-section`}
-                  className="font-bold text-emerald-900 underline hover:text-emerald-950 shrink-0"
+                  className="font-bold text-emerald-900 underline hover:text-emerald-950 shrink-0 inline-flex items-center gap-1"
                 >
-                  View Review →
+                  <span>View Review</span>
+                  <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
                 </Link>
               )}
             </div>
@@ -434,7 +436,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
                   className="w-8 h-8 rounded-full bg-white hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm shadow-xs transition-colors"
                   title="Call Host"
                 >
-                  📞
+                  <span className="material-symbols-outlined text-[16px]">call</span>
                 </a>
               </div>
             )}
@@ -499,7 +501,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
           {/* TeleBirr Escrow Ledger */}
           <div className="p-4 rounded-2xl bg-[#111820] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-3">
-              <span className="text-xl">📱</span>
+              <span className="material-symbols-outlined text-xl text-[#D5F36A]">account_balance_wallet</span>
               <div>
                 <span className="text-white/60 text-[10px] uppercase font-bold block">
                   TeleBirr Mock Escrow Ledger
@@ -545,7 +547,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
                   onClick={() => setIsReviewModalOpen(true)}
                   className="py-2.5 px-4 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
                 >
-                  <span>★</span>
+                  <span className="material-symbols-outlined text-[14px]">star</span>
                   <span>Leave Review</span>
                 </button>
               )}
@@ -566,7 +568,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
         <div className="fixed inset-0 z-50 bg-[#111820]/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-4 border border-[#66717D]/15">
             <div className="flex items-center gap-3 text-red-600">
-              <span className="text-3xl">⚠️</span>
+              <span className="material-symbols-outlined text-3xl">warning</span>
               <div>
                 <h3 className="text-lg font-bold text-[#111820]">Cancel Reservation</h3>
                 <span className="text-xs text-[#66717D]">Ref #{booking.id.toUpperCase()}</span>

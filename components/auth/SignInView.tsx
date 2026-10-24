@@ -148,7 +148,9 @@ export function SignInView() {
           <div className="relative z-10 space-y-8">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-xl bg-[#CEEC64] flex items-center justify-center text-[#171E00] shadow-md font-bold text-xl">
-                🚗
+                <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  directions_car
+                </span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-lg tracking-tight text-white">
@@ -176,8 +178,8 @@ export function SignInView() {
             {/* Pillar List */}
             <div className="space-y-5 pt-2">
               <div className="flex items-start gap-4">
-                <div className="p-2.5 rounded-xl bg-white/5 text-[#D5F36A] text-lg mt-0.5">
-                  ✓
+                <div className="p-2.5 rounded-xl bg-white/5 text-[#D5F36A] text-lg mt-0.5 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-xl">verified_user</span>
                 </div>
                 <div>
                   <p className="font-bold text-sm text-white">Verified Hosts across 6 Sheggar Hubs</p>
@@ -188,8 +190,8 @@ export function SignInView() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-2.5 rounded-xl bg-white/5 text-[#D5F36A] text-lg mt-0.5">
-                  🔒
+                <div className="p-2.5 rounded-xl bg-white/5 text-[#D5F36A] text-lg mt-0.5 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-xl">account_balance_wallet</span>
                 </div>
                 <div>
                   <p className="font-bold text-sm text-white">Automated TeleBirr Escrow Protection</p>
@@ -200,8 +202,8 @@ export function SignInView() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-2.5 rounded-xl bg-white/5 text-[#D5F36A] text-lg mt-0.5">
-                  💵
+                <div className="p-2.5 rounded-xl bg-white/5 text-[#D5F36A] text-lg mt-0.5 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-xl">price_check</span>
                 </div>
                 <div>
                   <p className="font-bold text-sm text-white">Transparent ETB Rates &amp; Zero Surcharges</p>
@@ -250,7 +252,7 @@ export function SignInView() {
 
               {/* Evaluator Discovery Hint */}
               <div className="p-3 rounded-xl bg-[#EBE8E1]/70 border border-[#66717D]/15 text-xs text-[#44474B] flex items-center gap-2">
-                <span className="text-base">💡</span>
+                <span className="material-symbols-outlined text-base text-[#536600]">lightbulb</span>
                 <span>
                   <strong>Evaluator Guide:</strong> Click any active persona below to sign in instantly. Click <em>Kibreab Tesfaye</em> to verify that suspended accounts are properly blocked.
                 </span>
@@ -267,7 +269,7 @@ export function SignInView() {
                 }`}
                 role="alert"
               >
-                <span className="text-lg shrink-0 mt-0.5">⚠️</span>
+                <span className="material-symbols-outlined text-lg shrink-0 mt-0.5">warning</span>
                 <div className="flex flex-col gap-0.5">
                   <span className="font-bold">Authentication Notice</span>
                   <p className="leading-relaxed">{errorMessage}</p>
@@ -280,7 +282,7 @@ export function SignInView() {
                 className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm flex items-center gap-3 animate-fade-in"
                 role="status"
               >
-                <span className="text-lg">✓</span>
+                <span className="material-symbols-outlined text-lg">check_circle</span>
                 <span className="font-bold">
                   Access Granted as {selectedPersona.name} ({selectedPersona.role}) • Redirecting safely...
                 </span>
@@ -324,7 +326,9 @@ export function SignInView() {
                               isSuspended ? 'bg-red-600' : 'bg-[#536600]'
                             }`}
                           >
-                            {isSuspended ? '✕' : '✓'}
+                            <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                              {isSuspended ? 'close' : 'check'}
+                            </span>
                           </span>
                         </div>
 
@@ -382,7 +386,7 @@ export function SignInView() {
                             ? `Continue as ${persona.name.split(' ')[0]}`
                             : `Switch to ${persona.name.split(' ')[0]}`}
                         </span>
-                        <span>→</span>
+                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
                       </button>
                     </div>
                   </div>
@@ -459,7 +463,7 @@ export function SignInView() {
                   ) : (
                     <>
                       <span>Sign In as {selectedPersona.name} ({selectedPersona.role})</span>
-                      <span>→</span>
+                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
                     </>
                   )}
                 </button>
@@ -467,7 +471,7 @@ export function SignInView() {
 
               {/* Protocol Verification Notice */}
               <div className="p-4 rounded-2xl bg-[#EBE8E1]/60 border border-[#66717D]/15 flex items-start gap-3">
-                <span className="text-[#B9674B] text-base mt-0.5">ℹ️</span>
+                <span className="material-symbols-outlined text-[#536600] text-lg shrink-0 mt-0.5">info</span>
                 <div className="text-xs text-[#44474B] leading-relaxed">
                   <span className="font-bold text-[#111820]">Protocol Verification Notice:</span> Suspended or unverified accounts trigger an immediate security block. All active pre-configured personas above hold active validation certificates.
                 </div>
@@ -480,7 +484,7 @@ export function SignInView() {
                 href="/cars"
                 className="inline-flex items-center gap-1.5 hover:text-[#111820] transition-colors font-semibold"
               >
-                <span>←</span>
+                <span className="material-symbols-outlined text-sm">arrow_back</span>
                 <span>Return to Fleet Catalogue</span>
               </Link>
               <div className="flex items-center gap-4">

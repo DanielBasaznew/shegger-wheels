@@ -341,8 +341,10 @@ export function CheckoutView() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-6 border-t border-[#66717D]/12">
             {/* Step 1 */}
             <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#F5F2EB]">
-              <div className="w-7 h-7 rounded-full bg-[#111820] text-[#D5F36A] flex items-center justify-center shrink-0 text-xs font-bold">
-                ✓
+              <div className="w-7 h-7 rounded-full bg-[#111820] text-[#D5F36A] flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  check
+                </span>
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-label-caps uppercase text-[#66717D]">
@@ -369,7 +371,11 @@ export function CheckoutView() {
                     : 'bg-[#111820] text-[#D5F36A]'
                 }`}
               >
-                {simState === 'ready' ? '2' : '✓'}
+                {simState === 'ready' ? (
+                  '2'
+                ) : (
+                  <span className="material-symbols-outlined text-[16px]">check</span>
+                )}
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-label-caps uppercase text-[#536600] font-bold">
@@ -398,7 +404,11 @@ export function CheckoutView() {
                     : 'bg-[#E5E2DB] text-[#66717D]'
                 }`}
               >
-                {simState === 'receipt' ? '✓' : '3'}
+                {simState === 'receipt' ? (
+                  <span className="material-symbols-outlined text-[16px]">check</span>
+                ) : (
+                  '3'
+                )}
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-label-caps uppercase text-[#66717D]">
@@ -429,7 +439,11 @@ export function CheckoutView() {
                     : 'bg-[#E5E2DB] text-[#66717D]'
                 }`}
               >
-                4
+                {simState === 'receipt' ? (
+                  <span className="material-symbols-outlined text-[16px]">check</span>
+                ) : (
+                  '4'
+                )}
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-label-caps uppercase text-[#66717D]">
@@ -454,7 +468,7 @@ export function CheckoutView() {
                 aria-live="assertive"
                 className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-3"
               >
-                <span className="text-lg" aria-hidden="true">⚠️</span>
+                <span className="material-symbols-outlined text-lg shrink-0 mt-0.5" aria-hidden="true">warning</span>
                 <div className="text-xs leading-relaxed">
                   <p className="font-bold mb-0.5">Booking Submission Error</p>
                   <p>{submissionError}</p>
@@ -470,7 +484,7 @@ export function CheckoutView() {
                 aria-live="assertive"
                 className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-3"
               >
-                <span className="text-lg" aria-hidden="true">📅</span>
+                <span className="material-symbols-outlined text-lg shrink-0 mt-0.5" aria-hidden="true">calendar_month</span>
                 <div className="text-xs leading-relaxed">
                   <p className="font-bold mb-0.5">Rental Dates Unavailable</p>
                   <p>{conflictResult.conflictReason}</p>
@@ -490,7 +504,9 @@ export function CheckoutView() {
                   </h2>
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D5F36A]/40 text-[#3E4C00] text-[11px] font-bold uppercase">
-                  <span>✓</span>
+                  <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    verified
+                  </span>
                   <span>Identity Synced</span>
                 </div>
               </div>
@@ -530,8 +546,8 @@ export function CheckoutView() {
 
               {/* Official Registry Telemetry Badge */}
               <div className="bg-[#F5F2EB]/60 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3.5 border border-[#66717D]/10">
-                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[#536600] shrink-0 shadow-xs border border-[#66717D]/10 text-xl">
-                  🪪
+                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[#536600] shrink-0 shadow-xs border border-[#66717D]/10">
+                  <span className="material-symbols-outlined text-[24px]">badge</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -539,7 +555,7 @@ export function CheckoutView() {
                       Ethiopian Driver&apos;s License Status
                     </span>
                     <span className="inline-flex items-center gap-1 text-[#536600] text-[11px] font-bold">
-                      <span>✓</span> Validated Active
+                      <span className="material-symbols-outlined text-[16px]">check_circle</span> Validated Active
                     </span>
                   </div>
                   <p className="text-xs text-[#66717D] mt-0.5">
@@ -625,7 +641,7 @@ export function CheckoutView() {
                     />
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg" aria-hidden="true">📍</span>
+                        <span className="material-symbols-outlined text-[20px] text-[#111820]" aria-hidden="true">location_on</span>
                         <span className="text-sm font-bold text-[#111820]">
                           Host Self-Pickup
                         </span>
@@ -638,7 +654,7 @@ export function CheckoutView() {
                             : 'bg-transparent text-transparent'
                         }`}
                       >
-                        ✓
+                        <span className="material-symbols-outlined text-[14px]">check</span>
                       </div>
                     </div>
                     <p className="text-xs text-[#66717D] mb-3 leading-relaxed">
@@ -673,7 +689,7 @@ export function CheckoutView() {
                     />
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg" aria-hidden="true">✈️</span>
+                        <span className="material-symbols-outlined text-[20px] text-[#111820]" aria-hidden="true">flight_land</span>
                         <span className="text-sm font-bold text-[#111820]">
                           Airport Concierge
                         </span>
@@ -686,7 +702,7 @@ export function CheckoutView() {
                             : 'bg-transparent text-transparent'
                         }`}
                       >
-                        ✓
+                        <span className="material-symbols-outlined text-[14px]">check</span>
                       </div>
                     </div>
                     <p className="text-xs text-[#66717D] mb-3 leading-relaxed">
@@ -724,7 +740,7 @@ export function CheckoutView() {
 
               {/* Demo Disclaimer Ribbon */}
               <div className="bg-[#F5F2EB] rounded-2xl p-4 mb-6 flex items-start gap-3 border border-[#66717D]/10">
-                <span className="text-lg shrink-0">ℹ️</span>
+                <span className="material-symbols-outlined text-[20px] text-[#111820] shrink-0 mt-0.5">info</span>
                 <p className="text-xs text-[#66717D] leading-relaxed">
                   <strong className="text-[#111820] font-semibold">
                     Interactive Sandbox Simulation:
@@ -774,7 +790,7 @@ export function CheckoutView() {
                       Linked TeleBirr Account
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm">📱</span>
+                      <span className="material-symbols-outlined text-[#D5F36A] text-[18px]">account_balance_wallet</span>
                       <span className="font-mono text-sm font-bold tracking-wider text-white">
                         +251 91 •••• {currentUser.phone.slice(-4) || '4567'}
                       </span>
@@ -792,7 +808,7 @@ export function CheckoutView() {
 
                 {/* Escrow Protocol Explanation */}
                 <div className="flex items-start gap-3 bg-white/5 p-3.5 rounded-xl border border-white/5">
-                  <span className="text-[#D5F36A] text-lg shrink-0 mt-0.5">🛡️</span>
+                  <span className="material-symbols-outlined text-[#D5F36A] text-[20px] shrink-0 mt-0.5">verified_user</span>
                   <p className="text-xs leading-relaxed text-white/80">
                     <strong className="text-white">Escrow Protection Protocol:</strong>{' '}
                     Rental funds of{' '}
@@ -813,7 +829,7 @@ export function CheckoutView() {
                   <div className="space-y-4">
                     <div className="p-4 rounded-2xl bg-[#F5F2EB] flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-base">🔢</span>
+                        <span className="material-symbols-outlined text-[18px] text-[#111820]">pin</span>
                         <span className="text-xs font-semibold text-[#111820]">
                           Simulated USSD PIN Protocol
                         </span>
@@ -836,7 +852,7 @@ export function CheckoutView() {
                       <span>
                         Complete Simulated Payment ({pricing.total.toLocaleString()} ETB)
                       </span>
-                      <span className="text-lg">→</span>
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </button>
                   </div>
                 )}

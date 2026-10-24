@@ -29,18 +29,18 @@ export function VehicleCard({
   const photoUrl = car.featuredImage || car.photos[0] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80';
 
   // Compute category label
-  const categoryLabel = car.seats >= 7 ? '7-SEAT SUV / 4X4' : car.transmission === 'Manual' ? 'COMPACT SEDAN' : 'MIDSIZE URBAN SUV';
+  const categoryLabel = car.seats >= 7 ? 'Executive 4x4' : car.transmission === 'Manual' ? 'Compact Sedan' : 'Midsize Urban SUV';
 
   // Tag styling
-  const tagText = tag || (car.pricePerDay <= 3000 ? 'ECONOMY' : car.seats >= 7 ? 'EXPEDITION READY' : 'INSTANT BOOK');
+  const tagText = tag || (car.pricePerDay <= 3000 ? 'ULTRA ECONOMY' : car.seats >= 7 ? 'INSTANT EXPEDITION' : 'INSTANT BOOK');
 
   return (
-    <div
-      className={`group flex flex-col bg-white rounded-2xl overflow-hidden border border-[#66717D]/18 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-xl hover:border-[#111820]/30 transition-all duration-300 ${className}`}
+    <article
+      className={`group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 border border-outline-variant/15 ${className}`}
       id={`car-card-${car.id}`}
     >
       {/* 16:10 Photo Showcase */}
-      <div className="relative w-full aspect-[16/10] overflow-hidden bg-[#F1EEE7]">
+      <div className="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
         <Image
           src={photoUrl}
           alt={`${car.make} ${car.model}`}
@@ -51,89 +51,93 @@ export function VehicleCard({
         />
 
         {/* Top-Left Badge */}
-        <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#D5F36A] text-[#111820] font-label-caps text-[10px] font-bold shadow-xs">
-          <span>⚡ {tagText}</span>
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/85 backdrop-blur-md text-on-primary font-label-caps text-label-caps shadow-xs">
+          <span className="material-symbols-outlined text-secondary-fixed text-[14px]">bolt</span>
+          <span>{tagText}</span>
         </div>
 
         {/* Top-Right Neighbourhood Pill */}
-        <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#111820] font-label-caps text-[10px] uppercase shadow-xs">
+        <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-caps text-label-caps uppercase shadow-xs">
           {car.neighbourhood}
         </div>
 
         {/* Bottom-Left Transmission/Drive Chip */}
-        <div className="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-[#111820]/80 backdrop-blur-md text-white font-specs-tabular text-[11px] font-semibold">
-          {car.transmission} • {car.seats} Seats
+        <div className="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-secondary-container text-on-secondary-fixed font-specs-tabular text-[12px] font-bold">
+          {car.seats} Seater • {car.transmission === 'Automatic' ? 'Auto AWD' : 'Manual'}
         </div>
       </div>
 
       {/* Content Body */}
-      <div className="p-5 flex flex-col flex-1 justify-between gap-3.5">
+      <div className="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
         <div className="flex flex-col gap-1">
           {/* Category & Rating */}
           <div className="flex items-center justify-between">
-            <span className="font-label-caps text-[10px] text-[#66717D] uppercase tracking-wider font-semibold">
+            <span className="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">
               {categoryLabel}
             </span>
-            <div className="flex items-center gap-1 text-[#111820] font-specs-tabular text-xs">
-              <span className="text-[#536600] font-bold">★</span>
+            <div className="flex items-center gap-1 text-on-surface font-specs-tabular text-[12px]">
+              <span className="material-symbols-outlined text-secondary text-[16px]">star</span>
               <span className="font-bold">{rating}</span>
-              <span className="text-[#66717D]">({tripsCount} trips)</span>
+              <span className="text-on-surface-variant">({tripsCount} trips)</span>
             </div>
           </div>
 
           {/* Title */}
-          <h3 className="font-headline-sm text-lg font-bold text-[#111820] tracking-tight group-hover:text-[#536600] transition-colors line-clamp-1">
+          <h2 className="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-secondary transition-colors line-clamp-1">
             {car.make} {car.model}
-          </h3>
+          </h2>
 
-          <span className="font-specs-tabular text-xs text-[#66717D]">
+          <span className="font-specs-tabular text-[13px] text-on-surface-variant">
             {car.year} • {car.transmission} • {car.fuelType || 'Petrol'}
           </span>
         </div>
 
         {/* Specs Strip */}
-        <div className="flex items-center justify-between py-2 px-3 bg-[#F6F3EC] rounded-xl text-[#111820] font-specs-tabular text-xs">
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#66717D]">🪑</span> {car.seats} Seats
+        <div className="flex items-center justify-between py-2 px-3 bg-surface-container-low rounded-xl text-on-surface font-specs-tabular text-[12px]">
+          <span className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-[15px] text-on-surface-variant">airline_seat_recline_normal</span>
+            <span>{car.seats} Seats</span>
           </span>
-          <span className="text-[#66717D]/30">/</span>
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#66717D]">⚙️</span> {car.transmission}
+          <span className="text-outline-variant">/</span>
+          <span className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-[15px] text-on-surface-variant">settings</span>
+            <span>{car.transmission}</span>
           </span>
-          <span className="text-[#66717D]/30">/</span>
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#66717D]">⛽</span> {car.fuelType || 'Petrol'}
+          <span className="text-outline-variant">/</span>
+          <span className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-[15px] text-on-surface-variant">local_gas_station</span>
+            <span>{car.fuelType || 'Petrol'}</span>
           </span>
         </div>
 
-        {/* Host Info Row */}
+        {/* Host Meta */}
         <div className="flex items-center justify-between pt-1">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#EBE8E1] text-[#111820] flex items-center justify-center font-bold text-[11px]">
+            <div className="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface text-[12px]">
               {hostInitials}
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-xs font-semibold text-[#111820]">{hostName}</span>
-              <span className="font-label-caps text-[9px] text-[#536600] uppercase font-bold">
-                Verified Host
+              <span className="font-title-md text-[13px] text-on-surface">{hostName}</span>
+              <span className="font-label-caps text-[9px] text-secondary uppercase font-bold">
+                Superhost
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 text-[#66717D] text-xs font-specs-tabular">
-            <span className="text-[#536600]">✓</span>
-            <span>ID & Escrow OK</span>
+          <div className="flex items-center gap-1 text-on-surface-variant text-[12px]">
+            <span className="material-symbols-outlined text-[16px] text-secondary">verified</span>
+            <span>ID &amp; TeleBirr OK</span>
           </div>
         </div>
 
         {/* Pricing & Call to Action */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#66717D]/15 mt-1">
+        <div className="flex items-center justify-between pt-2 border-t border-surface-container">
           <div className="flex flex-col">
-            <span className="font-specs-tabular text-lg font-bold text-[#111820]">
-              {car.pricePerDay.toLocaleString()} <span className="text-xs font-normal text-[#66717D]">ETB / day</span>
+            <span className="font-specs-tabular text-headline-sm font-bold text-on-surface">
+              {car.pricePerDay.toLocaleString()} <span className="text-[13px] font-normal text-on-surface-variant">ETB / day</span>
             </span>
-            <span className="font-label-caps text-[9px] text-[#66717D]">
-              Direct Local Pricing
+            <span className="font-label-caps text-[10px] text-on-surface-variant">
+              Includes Comprehensive Cover
             </span>
           </div>
 
@@ -141,13 +145,13 @@ export function VehicleCard({
             href={`/cars/${car.id}`}
             id={`view-details-${car.id}`}
             aria-label={`View details for ${car.make} ${car.model}`}
-            className="px-4 py-2 rounded-xl bg-[#111820] hover:bg-[#1E293B] text-white font-semibold text-xs transition-colors inline-flex items-center gap-1.5 shadow-xs"
+            className="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
           >
             <span>View Details</span>
-            <span aria-hidden="true">→</span>
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

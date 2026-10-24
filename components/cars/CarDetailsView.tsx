@@ -422,15 +422,17 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               {/* Badges Bar */}
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820] text-white font-label-caps text-[10px] tracking-wider uppercase shadow-xs">
-                  <span className="text-[#D5F36A]">★</span>
+                  <span className="material-symbols-outlined text-[#D5F36A] text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    verified
+                  </span>
                   Top Rated Host
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CEEC64]/40 text-[#2C3800] font-label-caps text-[10px] tracking-wider uppercase font-bold">
-                  <span>⚡</span>
+                  <span className="material-symbols-outlined text-[15px]">bolt</span>
                   Instant Confirmation
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBE8E1] text-[#44474B] font-label-caps text-[10px] tracking-wider uppercase">
-                  <span>📍</span>
+                  <span className="material-symbols-outlined text-[15px]">location_on</span>
                   {car.neighbourhood} Pickup
                 </span>
               </div>
@@ -443,8 +445,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               {/* Stats Bar */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#66717D]">
                 <div className="flex items-center gap-1">
-                  <span className="text-[#536600] font-bold">
-                    {ratingSummary.totalReviews > 0 ? `★ ${ratingSummary.averageRating.toFixed(1)}` : '★ New'}
+                  <span className="text-[#536600] font-bold flex items-center gap-0.5">
+                    <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    {ratingSummary.totalReviews > 0 ? ratingSummary.averageRating.toFixed(1) : 'New'}
                   </span>
                   <a href="#reviews-section" className="underline hover:text-[#111820]">
                     ({reviews.length} {reviews.length === 1 ? 'verified review' : 'verified reviews'})
@@ -459,7 +462,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 </div>
                 <span className="text-[#66717D]/30">•</span>
                 <div className="inline-flex items-center gap-1 text-[#536600] font-semibold">
-                  <span>♾️</span>
+                  <span className="material-symbols-outlined text-[16px]">all_inclusive</span>
                   <span>Unlimited urban km included</span>
                 </div>
               </div>
@@ -471,9 +474,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 type="button"
                 onClick={handleShare}
                 aria-label="Share listing"
-                className="relative p-2.5 rounded-full bg-white hover:bg-[#F1EEE7] border border-[#66717D]/20 text-[#111820] transition-colors shadow-xs cursor-pointer"
+                className="relative p-2.5 rounded-full bg-white hover:bg-[#F1EEE7] border border-[#66717D]/20 text-[#111820] transition-colors shadow-xs cursor-pointer flex items-center justify-center"
               >
-                <span>🔗</span>
+                <span className="material-symbols-outlined text-[20px]">share</span>
                 {isCopied && (
                   <span className="absolute -bottom-8 right-0 bg-[#111820] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md whitespace-nowrap animate-fade-in">
                     Link copied!
@@ -484,10 +487,10 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 type="button"
                 onClick={() => setIsFavorited(!isFavorited)}
                 aria-label="Save to favorites"
-                className="p-2.5 rounded-full bg-white hover:bg-[#F1EEE7] border border-[#66717D]/20 text-[#111820] transition-colors shadow-xs cursor-pointer"
+                className="p-2.5 rounded-full bg-white hover:bg-[#F1EEE7] border border-[#66717D]/20 text-[#111820] transition-colors shadow-xs cursor-pointer flex items-center justify-center"
               >
-                <span className={isFavorited ? 'text-[#B9674B]' : 'text-[#66717D]'}>
-                  {isFavorited ? '❤️' : '🤍'}
+                <span className={`material-symbols-outlined text-[20px] ${isFavorited ? 'text-[#B9674B]' : 'text-[#66717D]'}`} style={isFavorited ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+                  {isFavorited ? 'favorite' : 'favorite_border'}
                 </span>
               </button>
             </div>
@@ -564,7 +567,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   onClick={() => setIsGalleryModalOpen(true)}
                   className="absolute inset-0 w-full h-full bg-[#111820]/40 hover:bg-[#111820]/55 backdrop-blur-[2px] transition-all flex items-center justify-center gap-2 text-white font-title-md text-sm font-semibold cursor-pointer"
                 >
-                  <span>📷</span>
+                  <span className="material-symbols-outlined text-[20px]">photo_library</span>
                   <span>View Full Photo Showcase</span>
                 </button>
               </div>
@@ -579,7 +582,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               <section className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <h2 className="font-title-md text-sm font-bold text-[#111820] uppercase tracking-wider flex items-center gap-2">
-                    <span>⚙️</span>
+                    <span className="material-symbols-outlined text-secondary text-[20px]">tune</span>
                     Vehicle Mechanical Architecture
                   </h2>
                   <span className="font-specs-tabular text-xs text-[#66717D]">
@@ -589,9 +592,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {/* Tile 1: Passenger Capacity */}
-                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs hover:border-[#111820]/30 transition-colors">
                     <div className="flex items-center gap-1.5 text-[#66717D] font-label-caps text-[10px] uppercase font-bold">
-                      <span>👥</span>
+                      <span className="material-symbols-outlined text-[18px]">group</span>
                       <span>Capacity</span>
                     </div>
                     <span className="text-sm text-[#111820] font-bold">{car.seats} Seats</span>
@@ -599,9 +602,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   </div>
 
                   {/* Tile 2: Transmission */}
-                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs hover:border-[#111820]/30 transition-colors">
                     <div className="flex items-center gap-1.5 text-[#66717D] font-label-caps text-[10px] uppercase font-bold">
-                      <span>🕹️</span>
+                      <span className="material-symbols-outlined text-[18px]">settings</span>
                       <span>Transmission</span>
                     </div>
                     <span className="text-sm text-[#111820] font-bold">{car.transmission}</span>
@@ -609,9 +612,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   </div>
 
                   {/* Tile 3: Fuel Powertrain */}
-                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs hover:border-[#111820]/30 transition-colors">
                     <div className="flex items-center gap-1.5 text-[#66717D] font-label-caps text-[10px] uppercase font-bold">
-                      <span>⛽</span>
+                      <span className="material-symbols-outlined text-[18px]">local_gas_station</span>
                       <span>Powertrain</span>
                     </div>
                     <span className="text-sm text-[#111820] font-bold">{car.fuelType || 'Petrol'}</span>
@@ -619,9 +622,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   </div>
 
                   {/* Tile 4: Subcity Hub */}
-                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs hover:border-[#111820]/30 transition-colors">
                     <div className="flex items-center gap-1.5 text-[#66717D] font-label-caps text-[10px] uppercase font-bold">
-                      <span>📍</span>
+                      <span className="material-symbols-outlined text-[18px]">location_on</span>
                       <span>Station Hub</span>
                     </div>
                     <span className="text-sm text-[#111820] font-bold">{car.neighbourhood}</span>
@@ -629,9 +632,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   </div>
 
                   {/* Tile 5: Model Year */}
-                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs hover:border-[#111820]/30 transition-colors">
                     <div className="flex items-center gap-1.5 text-[#66717D] font-label-caps text-[10px] uppercase font-bold">
-                      <span>📅</span>
+                      <span className="material-symbols-outlined text-[18px]">calendar_today</span>
                       <span>Model Year</span>
                     </div>
                     <span className="text-sm text-[#111820] font-bold">{car.year} Release</span>
@@ -639,9 +642,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   </div>
 
                   {/* Tile 6: Climate Control */}
-                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs hover:border-[#111820]/30 transition-colors">
                     <div className="flex items-center gap-1.5 text-[#66717D] font-label-caps text-[10px] uppercase font-bold">
-                      <span>❄️</span>
+                      <span className="material-symbols-outlined text-[18px]">ac_unit</span>
                       <span>Climate</span>
                     </div>
                     <span className="text-sm text-[#111820] font-bold">Front &amp; Rear AC</span>
@@ -667,7 +670,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                         className="w-16 h-16 rounded-full object-cover shadow-xs border border-[#111820]/10"
                       />
                       <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-[#D5F36A] flex items-center justify-center text-[#111820] text-xs shadow-xs font-bold">
-                        ✓
+                        <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                          shield
+                        </span>
                       </div>
                     </div>
                     <div className="flex flex-col">
@@ -690,7 +695,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     onClick={() => setIsContactModalOpen(true)}
                     className="px-4 py-2 rounded-full bg-[#EBE8E1] hover:bg-[#DCDAD3] text-[#111820] text-xs font-bold transition-colors self-start sm:self-auto flex items-center gap-1.5 cursor-pointer"
                   >
-                    <span>💬</span>
+                    <span className="material-symbols-outlined text-[18px]">chat</span>
                     <span>Contact Host</span>
                   </button>
                 </div>
@@ -698,7 +703,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 {/* Host Telemetry Metrics */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="p-3 rounded-xl bg-[#F6F3EC] flex items-center gap-3">
-                    <span className="text-xl">⚡</span>
+                    <span className="material-symbols-outlined text-secondary text-[24px]">verified</span>
                     <div className="flex flex-col">
                       <span className="font-specs-tabular text-xs font-bold text-[#111820]">
                         100% Response Rate
@@ -707,7 +712,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     </div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#F6F3EC] flex items-center gap-3">
-                    <span className="text-xl">🌐</span>
+                    <span className="material-symbols-outlined text-secondary text-[24px]">translate</span>
                     <div className="flex flex-col">
                       <span className="font-specs-tabular text-xs font-bold text-[#111820]">
                         Languages
@@ -716,7 +721,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     </div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#F6F3EC] flex items-center gap-3">
-                    <span className="text-xl">⭐</span>
+                    <span className="material-symbols-outlined text-secondary text-[24px]">workspace_premium</span>
                     <div className="flex flex-col">
                       <span className="font-specs-tabular text-xs font-bold text-[#111820]">
                         Host Rating
@@ -741,8 +746,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
                 {/* Expedition Readiness Callout Bar */}
                 <div className="p-4 rounded-2xl bg-[#EBE8E1]/80 border border-[#66717D]/12 flex items-start gap-3 mt-1">
-                  <span className="text-xl p-2 rounded-xl bg-[#111820] text-[#D5F36A] shrink-0">
-                    🛡️
+                  <span className="p-2 rounded-xl bg-[#111820] text-[#D5F36A] shrink-0 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[20px]">explore</span>
                   </span>
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-[#111820]">
@@ -766,7 +771,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                       key={idx}
                       className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex items-center gap-3 shadow-xs"
                     >
-                      <span className="text-lg text-[#536600]">✓</span>
+                      <span className="material-symbols-outlined text-[#536600] text-[18px]">check_circle</span>
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-[#111820]">{feature}</span>
                         <span className="text-xs text-[#66717D]">Included at zero surcharge</span>
@@ -775,7 +780,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   ))}
                   {/* Default standard protections */}
                   <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex items-center gap-3 shadow-xs">
-                    <span className="text-lg text-[#536600]">🛡️</span>
+                    <span className="material-symbols-outlined text-[#536600] text-[20px]">security</span>
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-[#111820]">
                         Comprehensive Insurance
@@ -786,7 +791,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     </div>
                   </div>
                   <div className="p-3.5 rounded-2xl bg-white border border-[#66717D]/12 flex items-center gap-3 shadow-xs">
-                    <span className="text-lg text-[#536600]">🚨</span>
+                    <span className="material-symbols-outlined text-[#536600] text-[20px]">emergency</span>
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-[#111820]">
                         24/7 Roadside Assistance
@@ -813,7 +818,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="p-4 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
                     <div className="flex items-center gap-1.5 font-bold text-sm text-[#111820]">
-                      <span className="text-[#536600]">📍</span>
+                      <span className="material-symbols-outlined text-[#536600] text-[18px]">location_on</span>
                       <span>Free Pickup in {car.neighbourhood}</span>
                     </div>
                     <p className="text-xs text-[#66717D] leading-relaxed">
@@ -823,7 +828,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
                   <div className="p-4 rounded-2xl bg-white border border-[#66717D]/12 flex flex-col gap-1 shadow-xs">
                     <div className="flex items-center gap-1.5 font-bold text-sm text-[#111820]">
-                      <span className="text-[#111820]">✈️</span>
+                      <span className="material-symbols-outlined text-[#111820] text-[18px]">flight_land</span>
                       <span>Airport &amp; Hotel Concierge Drop-off</span>
                     </div>
                     <p className="text-xs text-[#66717D] leading-relaxed">
@@ -949,7 +954,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="inline-flex items-center gap-1 text-[#536600] text-xs font-bold">
-                      <span>✓</span>
+                      <span className="material-symbols-outlined text-[16px]">check_circle</span>
                       <span>No Deposit Required</span>
                     </span>
                     <span className="font-label-caps text-[9px] text-[#66717D] uppercase">
@@ -1005,21 +1010,21 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   {/* Validation Errors or Duration Banner */}
                   {isPastDate && (
                     <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-1.5">
-                      <span>⚠️</span>
+                      <span className="material-symbols-outlined text-[16px]">warning</span>
                       <span>Pickup date cannot be in the past. Please select today or a future date.</span>
                     </div>
                   )}
 
                   {isInvalidRange && !isPastDate && (
                     <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-1.5">
-                      <span>⚠️</span>
+                      <span className="material-symbols-outlined text-[16px]">warning</span>
                       <span>Return date must be strictly after the pickup date.</span>
                     </div>
                   )}
 
                   {unavailableConflict && (
                     <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-800 text-xs flex items-center gap-1.5">
-                      <span>🔒</span>
+                      <span className="material-symbols-outlined text-[16px]">lock</span>
                       <span>
                         Vehicle is booked on <strong>{unavailableConflict}</strong>. Please adjust your dates.
                       </span>
@@ -1029,7 +1034,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                   {!hasDateError && (
                     <div className="mt-1 px-3 py-2 rounded-xl bg-[#EBE8E1]/80 flex items-center justify-between font-specs-tabular text-xs">
                       <span className="text-[#111820] font-medium flex items-center gap-1.5">
-                        <span>⏱️</span>
+                        <span className="material-symbols-outlined text-[16px]">schedule</span>
                         <span>Duration: {rentalDays} {rentalDays === 1 ? 'Day' : 'Days'}</span>
                       </span>
                       <span className="text-[#66717D] font-bold">
@@ -1061,6 +1066,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                           onChange={() => setHandoverOption('pickup')}
                           className="accent-[#D5F36A]"
                         />
+                        <span className="material-symbols-outlined text-[18px]">location_on</span>
                         <span className="text-xs font-semibold">
                           {car.neighbourhood} Hub Self Pickup
                         </span>
@@ -1086,6 +1092,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                           onChange={() => setHandoverOption('delivery')}
                           className="accent-[#D5F36A]"
                         />
+                        <span className="material-symbols-outlined text-[18px]">flight_land</span>
                         <span className="text-xs font-semibold">
                           Airport / Hotel Concierge Drop-off
                         </span>
@@ -1117,8 +1124,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     <div className="flex items-center justify-between text-[#111820]">
                       <span className="text-[#66717D] flex items-center gap-1">
                         <span>Sheggar Comprehensive Protection</span>
-                        <span className="text-[#536600]" title="Zero excess collision & liability">
-                          ✓
+                        <span className="material-symbols-outlined text-[#536600] text-[15px]" title="Zero excess collision & liability">
+                          check_circle
                         </span>
                       </span>
                       <span className="text-[#536600] font-bold">Included (0 ETB)</span>
@@ -1152,13 +1159,13 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                         </span>
                       </div>
                       <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-[#111820] font-specs-tabular text-xs border border-[#66717D]/15 shadow-xs">
-                        <span className="text-[#536600]">🔒</span>
+                        <span className="material-symbols-outlined text-[#536600] text-[16px]">lock</span>
                         <span className="text-[11px] font-bold">Escrow Protected</span>
                       </div>
                     </div>
 
                     <span className="text-[10px] text-[#66717D] italic mt-0.5">
-                      * Estimated total — Authoritative booking snapshot locked at checkout (Task 8).
+                      * Estimated total — Authoritative booking snapshot locked at checkout.
                     </span>
                   </div>
                 </div>
@@ -1172,12 +1179,12 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     className="w-full py-4 px-6 rounded-full bg-[#D5F36A] hover:bg-[#C8E85B] text-[#111820] font-bold text-sm tracking-tight text-center transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none select-none"
                   >
                     <span>Proceed to Demo Checkout</span>
-                    <span>→</span>
+                    <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                   </button>
 
                   {/* Trust Micro-copy */}
                   <div className="p-3 rounded-xl bg-[#F6F3EC] flex items-start gap-2 text-[#66717D] text-xs">
-                    <span className="text-[#536600] text-sm shrink-0 mt-0.5">🛡️</span>
+                    <span className="material-symbols-outlined text-[#536600] text-[18px] shrink-0 mt-0.5">shield</span>
                     <p className="leading-relaxed text-[11px]">
                       <span className="font-bold text-[#111820]">You won&apos;t be charged yet.</span> Funds are securely locked in TeleBirr escrow until you meet host {host.name.split(' ')[0]} and complete the physical inspection check-in.
                     </p>
@@ -1185,7 +1192,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
                   {/* Cancellation Guarantee */}
                   <div className="flex items-center justify-center gap-1.5 text-[#66717D] text-[11px]">
-                    <span>⏱️</span>
+                    <span className="material-symbols-outlined text-[16px]">schedule</span>
                     <span>Free cancellation up to 24 hours prior to handover</span>
                   </div>
                 </div>
@@ -1193,7 +1200,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 {/* Host Direct Inquiries Footer */}
                 <div className="pt-2 border-t border-[#66717D]/12 flex items-center justify-between text-xs text-[#66717D]">
                   <span className="flex items-center gap-1">
-                    <span>✓</span>
+                    <span className="material-symbols-outlined text-[14px] text-[#536600]">verified</span>
                     <span>Addis Ababa Bureau Reg #ET-04918</span>
                   </span>
                   <Link href="/terms" className="underline hover:text-[#111820]">

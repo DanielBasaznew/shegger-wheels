@@ -317,42 +317,42 @@ export function RenterDashboardView() {
       case 'completed':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-semibold">
-            <span>✓</span>
+            <span className="material-symbols-outlined text-[14px]">check</span>
             <span>Completed</span>
           </span>
         );
       case 'reviewed':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-semibold">
-            <span>★</span>
+            <span className="material-symbols-outlined text-[14px]">star</span>
             <span>Completed &amp; Reviewed</span>
           </span>
         );
       case 'cancelled':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-900 text-xs font-semibold">
-            <span>↩</span>
+            <span className="material-symbols-outlined text-[14px]">undo</span>
             <span>Cancelled • 100% Refunded</span>
           </span>
         );
       case 'declined':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-200 text-stone-800 text-xs font-semibold">
-            <span>✕</span>
+            <span className="material-symbols-outlined text-[14px]">close</span>
             <span>Declined by Host • Refunded</span>
           </span>
         );
       case 'disputed':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-900 text-xs font-semibold">
-            <span>⚠️</span>
+            <span className="material-symbols-outlined text-[14px]">warning</span>
             <span>Under Dispute Investigation</span>
           </span>
         );
       case 'resolved':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-100 text-teal-900 text-xs font-semibold">
-            <span>⚖️</span>
+            <span className="material-symbols-outlined text-[14px]">gavel</span>
             <span>Dispute Resolved</span>
           </span>
         );
@@ -380,8 +380,8 @@ export function RenterDashboardView() {
             }`}
           >
             <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold">
-              <span className="text-xl">
-                {actionFeedback.type === 'success' ? '✅' : '⚠️'}
+              <span className="material-symbols-outlined text-lg">
+                {actionFeedback.type === 'success' ? 'check_circle' : 'warning'}
               </span>
               <span>{actionFeedback.message}</span>
             </div>
@@ -390,7 +390,7 @@ export function RenterDashboardView() {
               onClick={() => setActionFeedback(null)}
               className="p-1 rounded-lg hover:bg-black/5 text-xs font-bold"
             >
-              ✕
+              <span className="material-symbols-outlined text-[16px]">close</span>
             </button>
           </div>
         )}
@@ -446,7 +446,7 @@ export function RenterDashboardView() {
               }`}
               title="Download your personal trip history as a formatted CSV file"
             >
-              <span>📥</span>
+              <span className="material-symbols-outlined text-[16px]">download</span>
               <span>Export Trips (CSV)</span>
             </button>
 
@@ -456,7 +456,7 @@ export function RenterDashboardView() {
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#D5F36A] hover:bg-[#C5E852] text-[#111820] font-bold text-xs sm:text-sm shadow-sm transition-all"
             >
               <span>Browse Available Vehicles</span>
-              <span>→</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </Link>
           </div>
         </header>
@@ -469,8 +469,8 @@ export function RenterDashboardView() {
               <span className="text-[11px] font-label-caps uppercase tracking-wider font-bold">
                 Next Trip Departure
               </span>
-              <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center text-sm">
-                ⏱️
+              <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#66717D] text-lg">schedule</span>
               </div>
             </div>
             <div className="flex flex-col">
@@ -496,8 +496,8 @@ export function RenterDashboardView() {
               <span className="text-[11px] font-label-caps uppercase tracking-wider font-bold">
                 Total Spend
               </span>
-              <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center text-sm">
-                💳
+              <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#66717D] text-lg">payments</span>
               </div>
             </div>
             <div className="flex flex-col">
@@ -512,7 +512,7 @@ export function RenterDashboardView() {
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-[#536600] font-semibold">
-              <span>📈</span>
+              <span className="material-symbols-outlined text-[14px]">trending_up</span>
               <span>Avg. {metrics.averagePerBooking.toLocaleString()} ETB / booking</span>
             </div>
           </div>
@@ -523,8 +523,8 @@ export function RenterDashboardView() {
               <span className="text-[11px] font-label-caps uppercase tracking-wider font-bold">
                 Active Escrow Protection
               </span>
-              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-[#D5F36A] text-sm">
-                🔒
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#D5F36A] text-lg">lock</span>
               </div>
             </div>
             <div className="flex flex-col">
@@ -539,7 +539,7 @@ export function RenterDashboardView() {
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-[#D5F36A] text-xs font-semibold">
-              <span>✓</span>
+              <span className="material-symbols-outlined text-[14px]">check</span>
               <span>Host payout holds until vehicle inspection</span>
             </div>
           </div>
@@ -550,8 +550,8 @@ export function RenterDashboardView() {
               <span className="text-[11px] font-label-caps uppercase tracking-wider font-bold">
                 Sheggar Trust Tier
               </span>
-              <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center text-sm">
-                🛡️
+              <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#66717D] text-lg">verified_user</span>
               </div>
             </div>
             <div className="flex flex-col">
@@ -563,7 +563,10 @@ export function RenterDashboardView() {
               </span>
             </div>
             <div className="flex items-center gap-1 text-xs">
-              <span className="text-amber-500 font-bold">★ 5.0 Host Score</span>
+              <span className="text-amber-500 font-bold inline-flex items-center gap-0.5">
+                <span className="material-symbols-outlined text-[14px] text-amber-500">star</span>
+                5.0 Host Score
+              </span>
               <span className="text-[#66717D] ml-auto">No Cash Deposit</span>
             </div>
           </div>
@@ -603,7 +606,7 @@ export function RenterDashboardView() {
                     {spotlightCar.neighbourhood} Hub
                   </span>
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[#111820] text-xs font-semibold">
-                    <span>⛽</span>
+                    <span className="material-symbols-outlined text-[14px]">local_gas_station</span>
                     <span>Full to Full Policy</span>
                   </div>
                 </div>
@@ -636,7 +639,7 @@ export function RenterDashboardView() {
                       Pickup Logistics
                     </span>
                     <div className="p-4 rounded-2xl bg-[#F5F2EB] flex items-start gap-3">
-                      <span className="text-xl">📍</span>
+                      <span className="material-symbols-outlined text-xl text-[#536600]">location_on</span>
                       <div className="flex flex-col">
                         <span className="text-sm font-bold text-[#111820]">
                           {spotlightCar.neighbourhood} Partner Hub
@@ -675,10 +678,10 @@ export function RenterDashboardView() {
                         <div className="flex items-center gap-2">
                           <a
                             href={`tel:${spotlightHost.phone}`}
-                            className="w-8 h-8 rounded-full bg-white hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm shadow-xs transition-colors"
+                            className="w-8 h-8 rounded-full bg-white hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center shadow-xs transition-colors"
                             title="Call Host"
                           >
-                            📞
+                            <span className="material-symbols-outlined text-[16px]">call</span>
                           </a>
                         </div>
                       </div>
@@ -688,7 +691,7 @@ export function RenterDashboardView() {
                   {/* Escrow Summary Mini-Block */}
                   <div className="flex items-center justify-between px-4 py-3 rounded-2xl bg-[#F5F2EB] border border-[#66717D]/10">
                     <div className="flex items-center gap-2 text-xs text-[#111820]">
-                      <span>🛡️</span>
+                      <span className="material-symbols-outlined text-[16px] text-[#536600]">shield</span>
                       <span className="font-semibold">Escrow In Custody:</span>
                     </div>
                     <span className="text-base font-bold text-[#111820]">
@@ -704,7 +707,7 @@ export function RenterDashboardView() {
                       href={`/bookings/${spotlightBooking.id}/track`}
                       className="w-full py-3 px-4 rounded-2xl bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
                     >
-                      <span>📍</span>
+                      <span className="material-symbols-outlined text-[16px]">location_on</span>
                       <span>Track Trip &amp; Live Telematics</span>
                     </Link>
                   )}
@@ -714,7 +717,7 @@ export function RenterDashboardView() {
                     onClick={() => setSelectedBookingForPass(spotlightBooking)}
                     className="w-full py-3.5 px-4 rounded-2xl bg-[#111820] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 hover:bg-[#1C2630] active:scale-[0.99] transition-all cursor-pointer shadow-xs"
                   >
-                    <span>📱</span>
+                    <span className="material-symbols-outlined text-[16px]">qr_code_2</span>
                     <span>Show Digital QR Handover Pass</span>
                   </button>
 
@@ -724,7 +727,7 @@ export function RenterDashboardView() {
                       onClick={() => setSelectedBookingForDetails(spotlightBooking)}
                       className="py-2.5 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
-                      <span>📄</span>
+                      <span className="material-symbols-outlined text-[16px]">receipt_long</span>
                       <span>Reservation Details</span>
                     </button>
 
@@ -734,7 +737,7 @@ export function RenterDashboardView() {
                         onClick={() => setBookingToCancel(spotlightBooking)}
                         className="py-2.5 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                       >
-                        <span>✕</span>
+                        <span className="material-symbols-outlined text-[16px]">close</span>
                         <span>Cancel Booking</span>
                       </button>
                     ) : (
@@ -742,7 +745,7 @@ export function RenterDashboardView() {
                         href={`/cars/${spotlightCar.id}`}
                         className="py-2.5 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] font-bold text-xs flex items-center justify-center gap-1.5 transition-colors text-center"
                       >
-                        <span>🚗</span>
+                        <span className="material-symbols-outlined text-[16px]">directions_car</span>
                         <span>View Vehicle</span>
                       </Link>
                     )}
@@ -754,7 +757,7 @@ export function RenterDashboardView() {
         ) : (
           /* Empty Spotlight State */
           <div className="p-8 rounded-3xl bg-white border border-[#66717D]/12 text-center flex flex-col items-center justify-center gap-3">
-            <span className="text-4xl">🚗</span>
+            <span className="material-symbols-outlined text-4xl text-[#66717D]">directions_car</span>
             <h3 className="text-lg font-bold text-[#111820]">No Active Trips Scheduled</h3>
             <p className="text-xs text-[#66717D] max-w-md">
               You do not have any active or upcoming reservations right now. Browse our
@@ -764,7 +767,8 @@ export function RenterDashboardView() {
               href="/cars"
               className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#111820] text-white font-bold text-xs hover:bg-[#1C2630] transition-colors"
             >
-              Explore Vehicles →
+              <span>Explore Vehicles</span>
+              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </Link>
           </div>
         )}
@@ -944,7 +948,7 @@ export function RenterDashboardView() {
                           {/* Pickup Hub */}
                           <td className="py-4 px-4 text-[#111820]">
                             <div className="flex items-center gap-1.5">
-                              <span>📍</span>
+                              <span className="material-symbols-outlined text-[14px] text-[#66717D]">location_on</span>
                               <span className="font-medium">
                                 {car?.neighbourhood || 'Bole'}
                               </span>
@@ -984,7 +988,7 @@ export function RenterDashboardView() {
                                   href={`/bookings/${b.id}/track`}
                                   className="px-3 py-1.5 rounded-full bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] font-bold text-xs transition-colors flex items-center gap-1 shadow-xs"
                                 >
-                                  <span>📍</span>
+                                  <span className="material-symbols-outlined text-[14px]">location_on</span>
                                   <span>Track</span>
                                 </Link>
                               )}
@@ -1024,14 +1028,14 @@ export function RenterDashboardView() {
                                     onClick={() => setBookingToReview(b)}
                                     className="px-3 py-1.5 rounded-full bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
                                   >
-                                    <span>★</span>
+                                    <span className="material-symbols-outlined text-[14px]">star</span>
                                     <span>Leave Review</span>
                                   </button>
                                 )}
 
                               {b.status === 'reviewed' && (
                                 <span className="px-2.5 py-1 rounded-full bg-[#D5F36A]/30 text-[#2C3800] text-[11px] font-bold inline-flex items-center gap-1">
-                                  <span>✓</span>
+                                  <span className="material-symbols-outlined text-[12px]">check</span>
                                   <span>Reviewed</span>
                                 </span>
                               )}
@@ -1044,7 +1048,7 @@ export function RenterDashboardView() {
                     <tr>
                       <td colSpan={7} className="py-12 text-center text-[#66717D]">
                         <div className="flex flex-col items-center justify-center gap-2">
-                          <span className="text-3xl">📋</span>
+                          <span className="material-symbols-outlined text-3xl text-[#66717D]">event_busy</span>
                           <span className="font-bold text-sm text-[#111820]">
                             No Bookings Found
                           </span>
@@ -1067,13 +1071,15 @@ export function RenterDashboardView() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4">
           {/* Doc 1: Driver's License */}
           <div className="p-5 rounded-2xl bg-white border border-[#66717D]/12 shadow-xs flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-[#F5F2EB] text-xl">🪪</div>
+            <div className="p-3 rounded-xl bg-[#F5F2EB] flex items-center justify-center text-[#111820]">
+              <span className="material-symbols-outlined text-2xl">badge</span>
+            </div>
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-[#111820]">
                   Ethiopian Driver&apos;s License
                 </span>
-                <span className="text-[#536600] text-xs font-bold">✓</span>
+                <span className="material-symbols-outlined text-[#536600] text-xs font-bold">check</span>
               </div>
               <span className="text-xs text-[#66717D]">
                 ID: ETH-AA-2022-77491 • Grade 3
@@ -1086,7 +1092,9 @@ export function RenterDashboardView() {
 
           {/* Doc 2: Nyala Comprehensive Coverage */}
           <div className="p-5 rounded-2xl bg-white border border-[#66717D]/12 shadow-xs flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-[#F5F2EB] text-xl">🛡️</div>
+            <div className="p-3 rounded-xl bg-[#F5F2EB] flex items-center justify-center text-[#111820]">
+              <span className="material-symbols-outlined text-2xl">verified_user</span>
+            </div>
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-[#111820]">
@@ -1107,8 +1115,8 @@ export function RenterDashboardView() {
 
           {/* Doc 3: Emergency Roadside Dispatch */}
           <div className="p-5 rounded-2xl bg-[#111820] text-white shadow-xs flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-white/10 text-xl text-[#D5F36A]">
-              📞
+            <div className="p-3 rounded-xl bg-white/10 text-[#D5F36A] flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl">support_agent</span>
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-sm font-bold text-white">
@@ -1137,7 +1145,7 @@ export function RenterDashboardView() {
           <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 flex flex-col gap-5 items-center text-center border border-[#66717D]/15">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-2">
-                <span className="text-lg" aria-hidden="true">📱</span>
+                <span className="material-symbols-outlined text-lg text-[#111820]" aria-hidden="true">qr_code_2</span>
                 <span id="qr-pass-modal-title" className="text-sm font-bold text-[#111820]">
                   Digital Handover Pass
                 </span>
@@ -1148,7 +1156,7 @@ export function RenterDashboardView() {
                 aria-label="Close dialog"
                 className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
               >
-                ✕
+                <span className="material-symbols-outlined text-[16px]">close</span>
               </button>
             </div>
 
@@ -1222,7 +1230,7 @@ export function RenterDashboardView() {
                 aria-label="Close dialog"
                 className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
               >
-                ✕
+                <span className="material-symbols-outlined text-[16px]">close</span>
               </button>
             </div>
 
@@ -1303,7 +1311,7 @@ export function RenterDashboardView() {
                   {/* TeleBirr Info */}
                   <div className="p-3.5 rounded-xl bg-[#111820] text-white flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span aria-hidden="true">📱</span>
+                      <span className="material-symbols-outlined text-[16px] text-[#D5F36A]" aria-hidden="true">account_balance_wallet</span>
                       <span className="text-white/80">TeleBirr Ref:</span>
                       <span className="font-mono font-bold text-[#D5F36A]">
                         {selectedBookingForDetails.paymentReference || 'TB-MOCK-PENDING'}
@@ -1340,7 +1348,7 @@ export function RenterDashboardView() {
                           }}
                           className="py-2.5 px-4 rounded-xl bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] font-bold text-xs transition-colors cursor-pointer flex items-center gap-1.5"
                         >
-                          <span aria-hidden="true">★</span>
+                          <span className="material-symbols-outlined text-[14px]" aria-hidden="true">star</span>
                           <span>Leave Review &amp; Rating</span>
                         </button>
                       )}
@@ -1370,7 +1378,7 @@ export function RenterDashboardView() {
         >
           <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-4 border border-[#66717D]/15">
             <div className="flex items-center gap-3 text-red-600">
-              <span className="text-3xl" aria-hidden="true">⚠️</span>
+              <span className="material-symbols-outlined text-3xl" aria-hidden="true">warning</span>
               <div>
                 <h3 id="cancel-booking-modal-title" className="text-lg font-bold text-[#111820]">
                   Confirm Cancellation
