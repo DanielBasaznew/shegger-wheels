@@ -181,7 +181,10 @@ export default function Home() {
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase">Vetted Vehicles</span>
               </div>
               <div className="flex flex-col bg-surface-container-lowest p-3 rounded-lg shadow-xs border border-outline-variant/15">
-                <span className="font-headline-sm text-headline-sm text-on-surface">4.96 ★</span>
+                <div className="flex items-center gap-1 font-headline-sm text-headline-sm text-on-surface">
+                  <span>4.96</span>
+                  <span className="material-symbols-outlined text-[18px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                </div>
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase">Avg Host Rating</span>
               </div>
               <div className="flex flex-col bg-surface-container-lowest p-3 rounded-lg shadow-xs border border-outline-variant/15">

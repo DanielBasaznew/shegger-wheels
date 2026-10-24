@@ -11,6 +11,28 @@ export function HomeSearchWidget() {
   const [endDate, setEndDate] = useState('2026-10-27');
   const [rentalMode, setRentalMode] = useState<'daily' | 'chauffeured' | 'airport'>('daily');
 
+  const calculateDays = () => {
+    try {
+      const s = new Date(startDate).getTime();
+      const e = new Date(endDate).getTime();
+      const diff = Math.round((e - s) / (1000 * 60 * 60 * 24));
+      return diff > 0 ? diff : 1;
+    } catch {
+      return 3;
+    }
+  };
+  const durationDays = calculateDays();
+
+  const formatShortDate = (dateStr: string) => {
+    if (!dateStr) return 'Select';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const [, month, day] = parts;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const mIdx = parseInt(month, 10) - 1;
+    return `${day} ${months[mIdx] || month}`;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
@@ -108,31 +130,52 @@ export function HomeSearchWidget() {
         <div className="lg:col-span-3 flex flex-col bg-surface-container-low hover:bg-surface-container p-3 rounded-xl transition-colors">
           <label
             htmlFor="home-start-date"
-            className="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center gap-1 mb-1"
+            className="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center justify-between mb-1"
           >
-            <span className="material-symbols-outlined text-[14px]">calendar_today</span>
-            <span>Pick-up &amp; Drop-off</span>
+            <span className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">calendar_today</span>
+              <span>Pick-up &amp; Drop-off</span>
+            </span>
+            <span className="text-[10px] text-secondary font-bold font-specs-tabular">
+              {durationDays} {durationDays === 1 ? 'Day' : 'Days'}
+            </span>
           </label>
-          <div className="flex items-center justify-between gap-1">
-            <input
-              type="date"
-              id="home-start-date"
-              aria-label="Pick-up start date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent font-title-md text-[13px] text-on-surface outline-hidden cursor-pointer w-28"
-            />
-            <span className="text-on-surface-variant font-specs-tabular text-sm">→</span>
-            <input
-              type="date"
-              id="home-end-date"
-              aria-label="Drop-off end date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent font-title-md text-[13px] text-on-surface outline-hidden cursor-pointer w-28"
-            />
+          <div className="grid grid-cols-2 gap-1.5 items-center">
+            <div className="relative flex items-center justify-between bg-surface-container rounded-lg px-2.5 py-1.5 border border-outline-variant/30 hover:border-outline transition-colors cursor-pointer group">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[9px] uppercase tracking-wider text-on-surface-variant font-bold leading-none">From</span>
+                <span className="font-specs-tabular text-[13px] font-bold text-on-surface truncate leading-tight mt-0.5">
+                  {formatShortDate(startDate)}
+                </span>
+              </div>
+              <span className="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-on-surface">event</span>
+              <input
+                type="date"
+                id="home-start-date"
+                aria-label="Pick-up start date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+              />
+            </div>
+            <div className="relative flex items-center justify-between bg-surface-container rounded-lg px-2.5 py-1.5 border border-outline-variant/30 hover:border-outline transition-colors cursor-pointer group">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[9px] uppercase tracking-wider text-on-surface-variant font-bold leading-none">Until</span>
+                <span className="font-specs-tabular text-[13px] font-bold text-on-surface truncate leading-tight mt-0.5">
+                  {formatShortDate(endDate)}
+                </span>
+              </div>
+              <span className="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-on-surface">event</span>
+              <input
+                type="date"
+                id="home-end-date"
+                aria-label="Drop-off end date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+              />
+            </div>
           </div>
-          <span className="font-label-caps text-[10px] text-secondary font-bold mt-1">3 Days Rental Duration</span>
         </div>
 
         {/* Vehicle Class */}

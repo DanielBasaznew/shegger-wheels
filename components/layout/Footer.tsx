@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { isOptimizableImage } from '@/lib/storage';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 
 export function Footer() {
   const addisHubs = [
@@ -13,9 +12,6 @@ export function Footer() {
     'CMC',
   ];
 
-  const logoUrl =
-    'https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA';
-
   return (
     <footer className="w-full bg-surface-container-low text-on-surface-variant mt-space-xl border-t border-outline-variant/20">
       <div className="max-w-[1360px] mx-auto px-gutter py-space-xl">
@@ -23,17 +19,7 @@ export function Footer() {
           {/* Logo & Platform Mission */}
           <div className="lg:col-span-5 flex flex-col gap-space-md">
             <div className="flex items-center gap-space-sm">
-              <Image
-                alt="Sheggar Wheels Logo"
-                className="h-7 w-auto object-contain"
-                src={logoUrl}
-                width={28}
-                height={28}
-                unoptimized={!isOptimizableImage(logoUrl)}
-              />
-              <span className="font-headline-sm text-headline-sm text-on-surface">
-                Sheggar Wheels
-              </span>
+              <BrandLogo size="md" />
             </div>
 
             <p className="font-body-md text-body-md text-on-surface-variant max-w-md">

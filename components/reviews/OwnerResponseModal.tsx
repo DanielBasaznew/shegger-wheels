@@ -95,7 +95,7 @@ export function OwnerResponseModal({
         <div className="flex items-start justify-between gap-4 border-b border-[#66717D]/12 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl" aria-hidden="true">💬</span>
+              <span className="material-symbols-outlined text-[22px] text-secondary" aria-hidden="true">chat_bubble</span>
               <h3 id="owner-response-modal-title" className="text-xl font-black text-[#111820]">
                 {review.ownerReply ? 'Edit Host Response' : 'Respond to Review'}
               </h3>
@@ -110,7 +110,7 @@ export function OwnerResponseModal({
             aria-label="Close dialog"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition cursor-pointer"
           >
-            ✕
+            <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
 
@@ -118,9 +118,14 @@ export function OwnerResponseModal({
         <div className="p-4 rounded-2xl bg-[#F5F2EB]/70 border border-[#66717D]/15 flex flex-col gap-2">
           <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-[#111820]">{renterName}</span>
-            <span className="text-amber-500 font-bold">
-              {'★'.repeat(review.rating)} ({review.rating}.0)
-            </span>
+            <div className="flex items-center gap-1 text-amber-500 font-bold">
+              <div className="flex items-center">
+                {Array.from({ length: review.rating }).map((_, i) => (
+                  <span key={i} className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                ))}
+              </div>
+              <span>({review.rating}.0)</span>
+            </div>
           </div>
           <p className="text-xs text-[#111820] italic">
             &ldquo;{review.comment}&rdquo;
@@ -183,7 +188,7 @@ export function OwnerResponseModal({
               aria-live="assertive"
               className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2"
             >
-              <span aria-hidden="true">⚠️</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">warning</span>
               <span>{error}</span>
             </div>
           )}

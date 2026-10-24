@@ -427,8 +427,8 @@ export function AdminModerationDashboardView() {
         {/* ========================================================= */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 sm:p-8 bg-white rounded-3xl border border-[#66717D]/18 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-[#111820] flex items-center justify-center text-2xl shadow-inner text-white">
-              🛡️
+            <div className="w-14 h-14 rounded-2xl bg-[#111820] flex items-center justify-center shadow-inner text-[#D5F36A]">
+              <span className="material-symbols-outlined text-[28px]">admin_panel_settings</span>
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
@@ -477,8 +477,8 @@ export function AdminModerationDashboardView() {
             }`}
           >
             <div className="flex items-start gap-2.5">
-              <span className="text-lg" aria-hidden="true">
-                {alertNotice.type === 'success' ? '✓' : '⚠️'}
+              <span className="material-symbols-outlined text-lg" aria-hidden="true">
+                {alertNotice.type === 'success' ? 'check_circle' : 'warning'}
               </span>
               <p className="text-sm font-medium">{alertNotice.message}</p>
             </div>
@@ -507,7 +507,8 @@ export function AdminModerationDashboardView() {
                 : 'bg-white text-[#44474B] border border-[#66717D]/18 hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>🚗 Vehicle Moderation Queue</span>
+            <span className="material-symbols-outlined text-[18px]">policy</span>
+            <span>Vehicle Moderation Queue</span>
             {metrics.pending > 0 && (
               <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-[#D5F36A] text-[#111820]">
                 {metrics.pending} pending
@@ -526,7 +527,8 @@ export function AdminModerationDashboardView() {
                 : 'bg-white text-[#44474B] border border-[#66717D]/18 hover:bg-[#F5F2EB]'
             }`}
           >
-            <span>⚖️ Disputes &amp; Incidents Ledger</span>
+            <span className="material-symbols-outlined text-[18px]">gavel</span>
+            <span>Disputes &amp; Incidents Ledger</span>
             {disputeMetrics.open > 0 && (
               <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-[#B9674B] text-white">
                 {disputeMetrics.open} open
@@ -642,7 +644,7 @@ export function AdminModerationDashboardView() {
               <span className="text-xs font-bold uppercase tracking-wider text-[#66717D]">
                 Total Fleet
               </span>
-              <span className="text-sm">🚗</span>
+              <span className="material-symbols-outlined text-[18px] text-[#66717D]">directions_car</span>
             </div>
             <div className="mt-4 flex items-baseline justify-between">
               <span className="text-3xl font-black">{metrics.total}</span>
@@ -670,7 +672,8 @@ export function AdminModerationDashboardView() {
                     : 'text-[#66717D] hover:text-[#111820]'
                 }`}
               >
-                <span>⚡ Pending Review</span>
+                <span className="material-symbols-outlined text-[15px]">hourglass_top</span>
+                <span>Pending Review</span>
                 {metrics.pending > 0 && (
                   <span className="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-[#D5F36A] text-[#111820]">
                     {metrics.pending}
@@ -689,7 +692,8 @@ export function AdminModerationDashboardView() {
                     : 'text-[#66717D] hover:text-[#111820]'
                 }`}
               >
-                <span>✓ Approved &amp; Live</span>
+                <span className="material-symbols-outlined text-xs">verified</span>
+                <span>Approved &amp; Live</span>
                 <span className="text-[10px] opacity-75">({metrics.approved})</span>
               </button>
 
@@ -704,7 +708,8 @@ export function AdminModerationDashboardView() {
                     : 'text-[#66717D] hover:text-[#111820]'
                 }`}
               >
-                <span>✕ Rejected</span>
+                <span className="material-symbols-outlined text-xs">cancel</span>
+                <span>Rejected</span>
                 <span className="text-[10px] opacity-75">({metrics.rejected})</span>
               </button>
 
@@ -716,7 +721,8 @@ export function AdminModerationDashboardView() {
                     : 'text-[#66717D] hover:text-[#111820]'
                 }`}
               >
-                <span>⏸ Inactive</span>
+                <span className="material-symbols-outlined text-xs">pause_circle</span>
+                <span>Inactive</span>
                 <span className="text-[10px] opacity-75">({metrics.inactive})</span>
               </button>
 
@@ -766,8 +772,8 @@ export function AdminModerationDashboardView() {
 
           {/* Search Bar */}
           <div className="relative w-full">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#66717D]">
-              🔍
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#66717D] flex items-center">
+              <span className="material-symbols-outlined text-[18px]">search</span>
             </span>
             <input
               type="text"
@@ -792,7 +798,7 @@ export function AdminModerationDashboardView() {
         {/* ========================================================= */}
         {filteredCars.length === 0 ? (
           <div className="p-12 bg-white rounded-3xl border border-[#66717D]/18 text-center flex flex-col items-center gap-3">
-            <span className="text-4xl">📋</span>
+            <span className="material-symbols-outlined text-4xl text-[#66717D]">folder_open</span>
             <h3 className="text-lg font-bold text-[#111820]">
               No vehicle listings found
             </h3>
@@ -853,7 +859,7 @@ export function AdminModerationDashboardView() {
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
-                                  🚗
+                                  <span className="material-symbols-outlined text-xl text-[#75777E]">directions_car</span>
                                 </div>
                               )}
                             </div>
@@ -876,7 +882,8 @@ export function AdminModerationDashboardView() {
                         {/* Location */}
                         <td className="py-4 px-4">
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-[#F5F2EB] text-[#111820] border border-[#66717D]/15">
-                            📍 {car.neighbourhood}
+                            <span className="material-symbols-outlined text-[13px]">location_on</span>
+                            <span>{car.neighbourhood}</span>
                           </span>
                         </td>
 
@@ -909,18 +916,21 @@ export function AdminModerationDashboardView() {
                         <td className="py-4 px-4">
                           {car.status === 'pending' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#D5F36A] text-[#111820] border border-[#111820]/15">
-                              ⚡ Pending Review
+                              <span className="material-symbols-outlined text-[13px]">hourglass_top</span>
+                              <span>Pending Review</span>
                             </span>
                           )}
                           {car.status === 'approved' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                              ✓ Approved &amp; Live
+                              <span className="material-symbols-outlined text-[13px]">verified</span>
+                              <span>Approved &amp; Live</span>
                             </span>
                           )}
                           {car.status === 'rejected' && (
                             <div className="flex flex-col gap-0.5">
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300 w-fit">
-                                ✕ Rejected
+                                <span className="material-symbols-outlined text-[13px]">cancel</span>
+                                <span>Rejected</span>
                               </span>
                               {car.rejectionReason && (
                                 <span className="text-[10px] text-rose-700 italic max-w-xs truncate" title={car.rejectionReason}>
@@ -931,7 +941,8 @@ export function AdminModerationDashboardView() {
                           )}
                           {car.status === 'inactive' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300">
-                              ⏸ Inactive
+                              <span className="material-symbols-outlined text-[13px]">pause_circle</span>
+                              <span>Inactive</span>
                             </span>
                           )}
                         </td>
@@ -1004,32 +1015,36 @@ export function AdminModerationDashboardView() {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-400">
-                            🚗
+                            <span className="material-symbols-outlined text-[24px]">directions_car</span>
                           </div>
                         )}
                         <div className="absolute top-3 left-3">
                           {car.status === 'pending' && (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#D5F36A] text-[#111820] shadow-sm">
-                              ⚡ Pending
+                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#D5F36A] text-[#111820] shadow-sm flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px]">hourglass_top</span>
+                              <span>Pending</span>
                             </span>
                           )}
                           {car.status === 'approved' && (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-sm">
-                              ✓ Approved
+                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-sm flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px]">check_circle</span>
+                              <span>Approved</span>
                             </span>
                           )}
                           {car.status === 'rejected' && (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300 shadow-sm">
-                              ✕ Rejected
+                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300 shadow-sm flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px]">cancel</span>
+                              <span>Rejected</span>
                             </span>
                           )}
                           {car.status === 'inactive' && (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300 shadow-sm">
-                              ⏸ Inactive
+                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300 shadow-sm flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px]">pause</span>
+                              <span>Inactive</span>
                             </span>
                           )}
                         </div>
-                        <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-xl bg-[#111820]/80 backdrop-blur-xs text-white text-xs font-black">
+                        <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-xl bg-[#111820]/80 backdrop-blur-xs text-white text-xs font-black font-specs-tabular">
                           {car.pricePerDay.toLocaleString()} ETB/day
                         </div>
                       </div>
@@ -1039,7 +1054,10 @@ export function AdminModerationDashboardView() {
                         {car.make} {car.model} ({car.year})
                       </h3>
                       <div className="text-xs text-[#66717D] mt-1 flex items-center gap-2 flex-wrap">
-                        <span>📍 {car.neighbourhood}</span>
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[13px]">location_on</span>
+                          <span>{car.neighbourhood}</span>
+                        </span>
                         <span>•</span>
                         <span>{car.transmission}</span>
                         <span>•</span>
@@ -1223,8 +1241,8 @@ export function AdminModerationDashboardView() {
           {/* Dispute Cards List */}
           {filteredDisputes.length === 0 ? (
             <div className="p-12 text-center bg-white rounded-3xl border border-[#66717D]/18 shadow-xs flex flex-col items-center justify-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#F5F2EB] flex items-center justify-center text-3xl mb-3">
-                ⚖️
+              <div className="w-16 h-16 rounded-2xl bg-[#F5F2EB] flex items-center justify-center mb-3">
+                <span className="material-symbols-outlined text-3xl text-secondary">gavel</span>
               </div>
               <h3 className="text-lg font-bold text-[#111820]">No Disputes Found</h3>
               <p className="text-xs text-[#66717D] mt-1 max-w-sm">
@@ -1287,8 +1305,8 @@ export function AdminModerationDashboardView() {
                             />
                           </div>
                         ) : (
-                          <div className="w-16 h-14 rounded-xl bg-[#111820] text-white flex items-center justify-center text-xl shrink-0">
-                            🚗
+                          <div className="w-16 h-14 rounded-xl bg-[#111820] text-white flex items-center justify-center shrink-0">
+                            <span className="material-symbols-outlined text-xl">directions_car</span>
                           </div>
                         )}
                         <div className="flex flex-col min-w-0">
@@ -1326,7 +1344,10 @@ export function AdminModerationDashboardView() {
                     {isResolved ? (
                       <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex flex-col gap-1 text-xs">
                         <div className="flex items-center justify-between text-emerald-950 font-bold">
-                          <span>✓ Formally Resolved &amp; Closed</span>
+                          <span className="inline-flex items-center gap-1">
+                            <span className="material-symbols-outlined text-sm">verified</span>
+                            <span>Formally Resolved &amp; Closed</span>
+                          </span>
                           <span className="text-[11px] font-normal text-emerald-800">
                             {dispute.resolvedAt && new Date(dispute.resolvedAt).toLocaleDateString()}
                           </span>
@@ -1411,7 +1432,7 @@ export function AdminModerationDashboardView() {
                 aria-label="Close vehicle inspection modal"
                 className="w-9 h-9 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition cursor-pointer"
               >
-                ✕
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
 
@@ -1464,7 +1485,7 @@ export function AdminModerationDashboardView() {
             {inspectingCar.status === 'rejected' && (
               <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 flex flex-col gap-1">
                 <div className="flex items-center gap-2 font-bold text-sm">
-                  <span>✕</span>
+                  <span className="material-symbols-outlined text-base">cancel</span>
                   <span>Listing Currently Rejected</span>
                 </div>
                 <p className="text-xs">
@@ -1522,9 +1543,10 @@ export function AdminModerationDashboardView() {
                   {inspectingCar.features.map((feat) => (
                     <span
                       key={feat}
-                      className="px-2.5 py-1 rounded-xl text-xs font-medium bg-white text-[#111820] border border-[#66717D]/18"
+                      className="px-2.5 py-1 rounded-xl text-xs font-medium bg-white text-[#111820] border border-[#66717D]/18 inline-flex items-center gap-1"
                     >
-                      ✓ {feat}
+                      <span className="material-symbols-outlined text-xs text-[#536600]">check</span>
+                      <span>{feat}</span>
                     </span>
                   ))}
                 </div>
@@ -1564,8 +1586,11 @@ export function AdminModerationDashboardView() {
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] font-bold text-[#66717D] uppercase block">Account</span>
-                    <span className={`text-xs font-bold ${owner?.status === 'suspended' ? 'text-rose-600' : 'text-emerald-700'}`}>
-                      {owner?.status === 'suspended' ? '⚠️ Suspended' : '✓ Active'}
+                    <span className={`text-xs font-bold inline-flex items-center gap-1 ${owner?.status === 'suspended' ? 'text-rose-600' : 'text-emerald-700'}`}>
+                      <span className="material-symbols-outlined text-xs">
+                        {owner?.status === 'suspended' ? 'warning' : 'verified'}
+                      </span>
+                      <span>{owner?.status === 'suspended' ? 'Suspended' : 'Active'}</span>
                     </span>
                   </div>
                 </div>
@@ -1573,8 +1598,9 @@ export function AdminModerationDashboardView() {
             })()}
 
             {/* Data Integrity Notice */}
-            <p className="text-[11px] text-[#66717D] bg-white p-3 rounded-xl border border-[#66717D]/10">
-              ℹ️ <strong>Platform Integrity Guarantee:</strong> Moderating this listing updates its public discovery status without altering vehicle ownership, existing renter reservations, or locked price snapshots in escrow.
+            <p className="text-[11px] text-[#66717D] bg-white p-3 rounded-xl border border-[#66717D]/10 flex items-start gap-1.5">
+              <span className="material-symbols-outlined text-xs text-[#66717D] shrink-0 mt-0.5">verified_user</span>
+              <span><strong>Platform Integrity Guarantee:</strong> Moderating this listing updates its public discovery status without altering vehicle ownership, existing renter reservations, or locked price snapshots in escrow.</span>
             </p>
 
             {/* Modal Actions */}
@@ -1591,9 +1617,10 @@ export function AdminModerationDashboardView() {
                   onClick={() => {
                     setCarToApprove(inspectingCar);
                   }}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition cursor-pointer shadow-xs"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition cursor-pointer shadow-xs inline-flex items-center gap-1.5"
                 >
-                  ✓ Approve &amp; Publish Listing
+                  <span className="material-symbols-outlined text-base">verified</span>
+                  <span>Approve &amp; Publish Listing</span>
                 </button>
               )}
 
@@ -1604,9 +1631,10 @@ export function AdminModerationDashboardView() {
                     setRejectionReasonText('');
                     setRejectionError('');
                   }}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#B9674B] text-white hover:bg-[#B9674B]/90 transition cursor-pointer shadow-xs"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#B9674B] text-white hover:bg-[#B9674B]/90 transition cursor-pointer shadow-xs inline-flex items-center gap-1.5"
                 >
-                  ✕ Reject Listing
+                  <span className="material-symbols-outlined text-base">block</span>
+                  <span>Reject Listing</span>
                 </button>
               )}
             </div>
@@ -1620,8 +1648,8 @@ export function AdminModerationDashboardView() {
       {carToApprove && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="approve-modal-title" className="bg-white rounded-3xl border border-[#66717D]/20 max-w-md w-full p-6 sm:p-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl" aria-hidden="true">
-              ✓
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center" aria-hidden="true">
+              <span className="material-symbols-outlined text-2xl">verified</span>
             </div>
             <div>
               <h3 id="approve-modal-title" className="text-xl font-black text-[#111820]">
@@ -1662,8 +1690,8 @@ export function AdminModerationDashboardView() {
       {carToReject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4 overflow-y-auto">
           <div role="dialog" aria-modal="true" aria-labelledby="reject-modal-title" className="bg-white rounded-3xl border border-[#66717D]/20 max-w-lg w-full p-6 sm:p-8 my-8 shadow-2xl flex flex-col gap-5 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-800 flex items-center justify-center text-2xl" aria-hidden="true">
-              ✕
+            <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-800 flex items-center justify-center" aria-hidden="true">
+              <span className="material-symbols-outlined text-2xl">block</span>
             </div>
             <div>
               <h3 id="reject-modal-title" className="text-xl font-black text-[#111820]">
@@ -1720,8 +1748,9 @@ export function AdminModerationDashboardView() {
                 <span>{rejectionReasonText.length} chars</span>
               </span>
               {rejectionError && (
-                <span id="rejection-error-msg" role="alert" className="text-xs text-rose-600 font-bold mt-1">
-                  ⚠️ {rejectionError}
+                <span id="rejection-error-msg" role="alert" className="text-xs text-rose-600 font-bold mt-1 inline-flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">warning</span>
+                  <span>{rejectionError}</span>
                 </span>
               )}
             </div>
@@ -1764,9 +1793,9 @@ export function AdminModerationDashboardView() {
                 type="button"
                 onClick={() => setSelectedDispute(null)}
                 aria-label="Close mediation modal"
-                className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center text-sm font-bold hover:bg-[#66717D]/20 transition cursor-pointer"
+                className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center hover:bg-[#66717D]/20 transition cursor-pointer"
               >
-                ✕
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
 
@@ -1795,7 +1824,10 @@ export function AdminModerationDashboardView() {
                       : 'bg-white border-[#66717D]/20 text-[#44474B] hover:bg-[#F5F2EB]'
                   }`}
                 >
-                  <div className="font-black">✓ Formally Resolve</div>
+                  <div className="font-black flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs">check_circle</span>
+                    <span>Formally Resolve</span>
+                  </div>
                   <div className="text-[10px] font-normal opacity-80 mt-0.5">
                     Close dispute, update booking status, and notify parties.
                   </div>
@@ -1810,7 +1842,10 @@ export function AdminModerationDashboardView() {
                       : 'bg-white border-[#66717D]/20 text-[#44474B] hover:bg-[#F5F2EB]'
                   }`}
                 >
-                  <div className="font-black">🔍 Under Investigation</div>
+                  <div className="font-black flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[15px]">search</span>
+                    <span>Under Investigation</span>
+                  </div>
                   <div className="text-[10px] font-normal opacity-80 mt-0.5">
                     Record evidence notes while mediation is ongoing.
                   </div>
@@ -1838,8 +1873,9 @@ export function AdminModerationDashboardView() {
                 <span>{resolutionNotesInput.length} chars</span>
               </span>
               {resolutionError && (
-                <span className="text-xs text-rose-600 font-bold mt-1">
-                  ⚠️ {resolutionError}
+                <span className="text-xs text-rose-600 font-bold mt-1 inline-flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">warning</span>
+                  <span>{resolutionError}</span>
                 </span>
               )}
             </div>

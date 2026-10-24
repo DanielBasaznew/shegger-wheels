@@ -9,6 +9,7 @@ import { User, DemoSession, UserRole } from '@/lib/types';
 import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
 
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 
 function subscribe(callback: () => void) {
   if (typeof window === 'undefined') return () => {};
@@ -136,17 +137,7 @@ export function Header() {
             id="header-brand-logo"
             aria-label="Sheggar Wheels Homepage"
           >
-            <Image
-              src="https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA"
-              alt="Sheggar Wheels Logo"
-              width={32}
-              height={32}
-              unoptimized={!isOptimizableImage('https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA')}
-              className="h-8 w-auto object-contain"
-            />
-            <span className="font-headline-sm text-headline-sm tracking-tight text-on-surface">
-              Sheggar Wheels
-            </span>
+            <BrandLogo size="md" />
           </Link>
 
           <div className="hidden sm:flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">
@@ -314,7 +305,7 @@ export function Header() {
                       className="w-full py-1.5 px-3 rounded-xl bg-[#F1EEE7] hover:bg-[#E6E2D8] text-[#44474B] font-semibold text-[11px] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                       title="Restores seed cars, bookings, reviews, and notifications"
                     >
-                      <span>🔄</span>
+                      <span className="material-symbols-outlined text-[15px]">restart_alt</span>
                       <span>Reset Demo Seed Data</span>
                     </button>
                     <button
@@ -322,7 +313,7 @@ export function Header() {
                       onClick={handleSignOut}
                       className="w-full py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <span>🚪</span>
+                      <span className="material-symbols-outlined text-[15px]">logout</span>
                       <span>Sign Out (Clear Session)</span>
                     </button>
                   </div>
@@ -418,16 +409,18 @@ export function Header() {
                 <button
                   type="button"
                   onClick={handleResetDemo}
-                  className="w-full py-2 rounded-xl bg-[#F1EEE7] text-[#44474B] font-semibold text-xs text-center mb-1.5"
+                  className="w-full py-2 rounded-xl bg-[#F1EEE7] text-[#44474B] font-semibold text-xs flex items-center justify-center gap-1.5 mb-1.5 cursor-pointer"
                 >
-                  🔄 Reset Demo Seed Data
+                  <span className="material-symbols-outlined text-[16px]">restart_alt</span>
+                  <span>Reset Demo Seed Data</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="w-full py-2 rounded-xl bg-red-50 text-red-700 font-bold text-xs text-center"
+                  className="w-full py-2 rounded-xl bg-red-50 text-red-700 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  Sign Out
+                  <span className="material-symbols-outlined text-[16px]">logout</span>
+                  <span>Sign Out</span>
                 </button>
               </div>
             ) : (

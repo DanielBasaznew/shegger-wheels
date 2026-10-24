@@ -439,7 +439,7 @@ export function SignInView() {
                     </span>
                   </div>
                   <div className="flex items-center rounded-2xl bg-[#F6F3EC] px-3 py-2.5 border border-[#66717D]/20">
-                    <span className="text-[#66717D] mr-2 text-xs">🔒</span>
+                    <span className="material-symbols-outlined text-[16px] text-[#66717D] mr-2">lock</span>
                     <input
                       type="password"
                       readOnly

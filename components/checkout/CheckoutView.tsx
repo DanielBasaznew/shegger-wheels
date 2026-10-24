@@ -269,7 +269,7 @@ export function CheckoutView() {
       <div className="w-full min-h-[60vh] flex items-center justify-center bg-[#F5F2EB] py-16">
         <Container>
           <div className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm text-center flex flex-col items-center">
-            <span className="text-4xl mb-3">🔒</span>
+            <span className="material-symbols-outlined text-4xl text-[#66717D] mb-3">lock</span>
             <Badge variant="terracotta" className="mb-2">
               Authentication Required
             </Badge>
@@ -295,7 +295,7 @@ export function CheckoutView() {
       <div className="w-full min-h-[60vh] flex items-center justify-center bg-[#F5F2EB] py-16">
         <Container>
           <div className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm text-center flex flex-col items-center">
-            <span className="text-4xl mb-3">🚗</span>
+            <span className="material-symbols-outlined text-4xl text-[#66717D] mb-3">directions_car</span>
             <Badge variant="terracotta" className="mb-2">
               Vehicle Missing
             </Badge>
@@ -879,7 +879,7 @@ export function CheckoutView() {
                   <div className="p-6 rounded-3xl bg-[#F5F2EB] space-y-4 border border-[#536600]/20">
                     <div className="flex items-center justify-between pb-2 border-b border-[#66717D]/15">
                       <div className="flex items-center gap-2 text-[#536600]">
-                        <span className="text-xl">✅</span>
+                        <span className="material-symbols-outlined text-xl">check_circle</span>
                         <span className="text-base font-bold">
                           Escrow Successfully Vaulted!
                         </span>
@@ -946,16 +946,16 @@ export function CheckoutView() {
 
               {/* Trust & Security Micro-Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[#66717D]/12">
-                <div className="flex items-center gap-2 text-[#66717D]">
-                  <span className="text-xs">🔒</span>
+                <div className="flex items-center gap-1.5 text-[#66717D]">
+                  <span className="material-symbols-outlined text-[15px]">lock</span>
                   <span className="text-xs font-semibold">256-bit Simulated SSL</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#66717D]">
-                  <span className="text-xs">💬</span>
+                <div className="flex items-center gap-1.5 text-[#66717D]">
+                  <span className="material-symbols-outlined text-[15px]">sms</span>
                   <span className="text-xs font-semibold">Instant SMS Dispatch</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#66717D]">
-                  <span className="text-xs">🔄</span>
+                <div className="flex items-center gap-1.5 text-[#66717D]">
+                  <span className="material-symbols-outlined text-[15px]">published_with_changes</span>
                   <span className="text-xs font-semibold">100% Handover Refund</span>
                 </div>
               </div>
@@ -994,13 +994,16 @@ export function CheckoutView() {
                     {selectedCar.year} {selectedCar.make} {selectedCar.model}
                   </h3>
                   <div className="flex items-center gap-1 text-[#66717D] text-xs mt-1">
-                    <span>📍</span>
+                    <span className="material-symbols-outlined text-[14px]">location_on</span>
                     <span className="truncate">
                       {selectedCar.neighbourhood}, Addis Ababa
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-1 text-xs">
-                    <span className="text-amber-500 font-bold">★ 4.96</span>
+                    <div className="flex items-center gap-0.5 text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span>4.96</span>
+                    </div>
                     <span className="text-[#66717D]">• Host: {host.name}</span>
                   </div>
                 </div>
@@ -1110,7 +1113,7 @@ export function CheckoutView() {
 
               {/* Renter Guarantee Banner (Terracotta / Clay) */}
               <div className="rounded-2xl bg-[#B9674B]/10 p-4 flex items-start gap-3 border border-[#B9674B]/20">
-                <span className="text-lg text-[#B9674B] shrink-0">🛡️</span>
+                <span className="material-symbols-outlined text-[20px] text-[#B9674B] shrink-0">verified_user</span>
                 <div>
                   <span className="text-xs font-bold text-[#111820] block mb-0.5">
                     Sheggar Handover Guarantee
@@ -1128,7 +1131,10 @@ export function CheckoutView() {
 
               {/* Host Communication Preview */}
               <div className="mt-4 pt-3 border-t border-[#66717D]/12 flex items-center justify-between text-xs text-[#66717D]">
-                <span>💬 Host responds in ~4 mins</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[15px]">chat</span>
+                  <span>Host responds in ~4 mins</span>
+                </span>
                 <span className="font-semibold text-[#111820]">
                   {selectedCar.neighbourhood}, Addis Ababa
                 </span>
@@ -1138,7 +1144,8 @@ export function CheckoutView() {
             {/* TeleBirr Watermark */}
             <div className="px-5 py-3 rounded-2xl bg-white border border-[#66717D]/12 flex items-center justify-between text-xs text-[#66717D]">
               <span className="flex items-center gap-1.5 font-semibold">
-                <span>🛡️</span> Secure Escrow Protocol AA-2025
+                <span className="material-symbols-outlined text-[15px]">security</span>
+                <span>Secure Escrow Protocol AA-2025</span>
               </span>
               <span className="font-bold text-[#111820]">No Surcharge</span>
             </div>
@@ -1149,7 +1156,7 @@ export function CheckoutView() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-6 rounded-3xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-xl">📱</span>
+              <span className="material-symbols-outlined text-[20px] text-secondary">qr_code_scanner</span>
               <h4 className="text-sm font-bold text-[#111820]">Dual QR Scan Handoff</h4>
             </div>
             <p className="text-xs text-[#66717D] leading-relaxed">
@@ -1161,7 +1168,7 @@ export function CheckoutView() {
 
           <div className="p-6 rounded-3xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-xl">🚗</span>
+              <span className="material-symbols-outlined text-[20px] text-secondary">shield</span>
               <h4 className="text-sm font-bold text-[#111820]">
                 Zero-Deductible Nyala Cover
               </h4>
@@ -1174,7 +1181,7 @@ export function CheckoutView() {
 
           <div className="p-6 rounded-3xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-xl">💰</span>
+              <span className="material-symbols-outlined text-[20px] text-secondary">currency_exchange</span>
               <h4 className="text-sm font-bold text-[#111820]">
                 Guaranteed Cancellation Refund
               </h4>

@@ -335,7 +335,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
       <div className="w-full py-20 bg-[#F5F2EB]">
         <Container>
           <div className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm flex flex-col items-center text-center">
-            <span className="text-5xl mb-4">🚗💨</span>
+            <div className="w-16 h-16 rounded-2xl bg-[#111820] text-[#D5F36A] flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-4xl">directions_car</span>
+            </div>
             <Badge variant="terracotta" className="mb-2">
               404 — Record Missing
             </Badge>
@@ -843,8 +845,15 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 <div className="flex items-center justify-between pb-1 border-b border-[#66717D]/12">
                   <div className="flex items-center gap-2">
                     <h2 className="text-lg font-bold text-[#111820]">Renter Experiences</h2>
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#111820] text-white font-specs-tabular text-xs font-bold">
-                      {ratingSummary.totalReviews > 0 ? `★ ${ratingSummary.averageRating.toFixed(1)}` : 'New'}
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#111820] text-white font-specs-tabular text-xs font-bold inline-flex items-center gap-1">
+                      {ratingSummary.totalReviews > 0 ? (
+                        <>
+                          <span className="material-symbols-outlined text-xs text-[#D5F36A]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span>{ratingSummary.averageRating.toFixed(1)}</span>
+                        </>
+                      ) : (
+                        'New'
+                      )}
                     </span>
                   </div>
                   <span className="text-xs text-[#66717D]">
@@ -854,8 +863,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
                 {reviews.length === 0 ? (
                   <div className="p-8 rounded-2xl bg-white border border-[#66717D]/12 shadow-xs flex flex-col items-center justify-center text-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-[#F5F2EB] flex items-center justify-center text-xl text-[#66717D]">
-                      ⭐
+                    <div className="w-12 h-12 rounded-full bg-[#F5F2EB] flex items-center justify-center text-[#66717D]">
+                      <span className="material-symbols-outlined text-2xl">rate_review</span>
                     </div>
                     <div className="flex flex-col gap-1">
                       <h3 className="font-bold text-sm text-[#111820]">No Reviews Yet</h3>
@@ -899,9 +908,11 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                                 </span>
                               </div>
                             </div>
-                            <div className="flex items-center text-[#536600] text-xs">
-                              {'★'.repeat(rev.rating)}
-                              <span className="text-[#66717D]/40 ml-1 text-[11px] font-specs-tabular">
+                            <div className="flex items-center text-amber-500 text-xs">
+                              {Array.from({ length: rev.rating }).map((_, i) => (
+                                <span key={i} className="material-symbols-outlined text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                              ))}
+                              <span className="text-[#66717D] ml-1 text-[11px] font-specs-tabular">
                                 {rev.rating}.0
                               </span>
                             </div>
@@ -913,7 +924,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                             <div className="mt-2.5 p-3 rounded-xl bg-[#F5F2EB] border border-[#66717D]/10 flex flex-col gap-1">
                               <div className="flex items-center justify-between text-xs">
                                 <div className="flex items-center gap-1.5 font-bold text-[#111820]">
-                                  <span className="text-[#536600]">💬</span>
+                                  <span className="material-symbols-outlined text-[16px] text-secondary">forum</span>
                                   <span>Response from Host ({host.name})</span>
                                 </div>
                                 {rev.ownerReplyAt && (
@@ -1297,9 +1308,9 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 type="button"
                 onClick={() => setIsContactModalOpen(false)}
                 aria-label="Close dialog"
-                className="w-8 h-8 rounded-full bg-[#F1EEE7] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
+                className="w-8 h-8 rounded-full bg-[#F1EEE7] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center cursor-pointer"
               >
-                ✕
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
 
@@ -1371,9 +1382,10 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               type="button"
               onClick={() => setIsGalleryModalOpen(false)}
               aria-label="Close photo gallery"
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer"
+              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer inline-flex items-center gap-1.5 text-xs font-bold transition"
             >
-              ✕ Close
+              <span className="material-symbols-outlined text-sm">close</span>
+              <span>Close</span>
             </button>
           </div>
 

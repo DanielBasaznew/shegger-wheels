@@ -506,7 +506,7 @@ export function HostFleetDashboardView() {
         <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex flex-col gap-2 max-w-2xl">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xl">🚘</span>
+              <span className="material-symbols-outlined text-[24px] text-secondary">garage</span>
               <Badge variant="obsidian">Host Partner Portal</Badge>
               <Badge variant="citron">Addis Ababa P2P</Badge>
               {currentUser?.roles.includes('renter') && (
@@ -557,7 +557,7 @@ export function HostFleetDashboardView() {
         {pendingRequestsCount > 0 && activeTab !== 'reservations' && (
           <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-3">
-              <span className="text-2xl animate-bounce">🔔</span>
+              <span className="material-symbols-outlined text-2xl text-amber-600 animate-bounce">notifications_active</span>
               <div>
                 <span className="font-extrabold text-sm block">
                   {pendingRequestsCount === 1
@@ -596,16 +596,18 @@ export function HostFleetDashboardView() {
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <span aria-hidden="true">{feedback.type === 'success' ? '✅' : feedback.type === 'error' ? '⚠️' : 'ℹ️'}</span>
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
+                {feedback.type === 'success' ? 'check_circle' : feedback.type === 'error' ? 'warning' : 'info'}
+              </span>
               <span>{feedback.message}</span>
             </div>
             <button
               type="button"
               onClick={() => setFeedback(null)}
               aria-label="Dismiss feedback message"
-              className="text-xs font-bold opacity-60 hover:opacity-100 cursor-pointer"
+              className="text-xs font-bold opacity-60 hover:opacity-100 cursor-pointer flex items-center"
             >
-              ✕
+              <span className="material-symbols-outlined text-[16px]">close</span>
             </button>
           </div>
         )}
@@ -625,7 +627,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span aria-hidden="true">🚗</span>
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">directions_car</span>
             <span>My Fleet</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] ${
@@ -647,7 +649,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span aria-hidden="true">📋</span>
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">calendar_month</span>
             <span>Reservations</span>
             {pendingRequestsCount > 0 ? (
               <span className="px-2 py-0.5 rounded-full bg-amber-400 text-amber-950 font-extrabold text-[10px] animate-pulse">
@@ -675,7 +677,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span aria-hidden="true">💰</span>
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">payments</span>
             <span>Earnings</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-specs-tabular ${
@@ -697,7 +699,7 @@ export function HostFleetDashboardView() {
                 : 'text-[#66717D] hover:text-[#111820] hover:bg-[#F5F2EB]'
             }`}
           >
-            <span aria-hidden="true">⭐</span>
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
             <span>Guest Reviews</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] ${
@@ -719,7 +721,7 @@ export function HostFleetDashboardView() {
               <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#66717D]/15 shadow-xs flex flex-col justify-between">
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Total Fleet</span>
-                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-sm">🚗</span>
+                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-[#111820]"><span className="material-symbols-outlined text-[18px]">directions_car</span></span>
                 </div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-[#111820]">
                   {fleetMetrics.total}
@@ -733,7 +735,7 @@ export function HostFleetDashboardView() {
                 <div className="absolute top-0 right-0 w-2 h-full bg-[#D5F36A]" />
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Active / Live</span>
-                  <span className="p-1.5 rounded-xl bg-[#D5F36A]/20 text-[#111820] text-sm">🟢</span>
+                  <span className="p-1.5 rounded-xl bg-[#D5F36A]/20 text-[#111820]"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse block"></span></span>
                 </div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-[#111820]">
                   {fleetMetrics.approved}
@@ -747,7 +749,7 @@ export function HostFleetDashboardView() {
                 <div className="absolute top-0 right-0 w-2 h-full bg-amber-400" />
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Pending Review</span>
-                  <span className="p-1.5 rounded-xl bg-amber-100 text-amber-900 text-sm">⏳</span>
+                  <span className="p-1.5 rounded-xl bg-amber-100 text-amber-900"><span className="material-symbols-outlined text-[18px]">hourglass_top</span></span>
                 </div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-[#111820]">
                   {fleetMetrics.pending}
@@ -760,7 +762,7 @@ export function HostFleetDashboardView() {
               <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#66717D]/15 shadow-xs flex flex-col justify-between">
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Paused / Inactive</span>
-                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-[#66717D] text-sm">⏸️</span>
+                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-[#66717D]"><span className="material-symbols-outlined text-[18px]">pause_circle</span></span>
                 </div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-[#111820]">
                   {fleetMetrics.inactive}
@@ -841,14 +843,16 @@ export function HostFleetDashboardView() {
                   onChange={(e) => setCarSearchQuery(e.target.value)}
                   className="w-full py-2.5 pl-9 pr-4 rounded-2xl bg-white border border-[#66717D]/18 text-xs text-[#111820] placeholder-[#66717D]/60 focus:outline-hidden focus:ring-2 focus:ring-[#111820]"
                 />
-                <span className="absolute left-3 top-3 text-xs text-[#66717D]">🔍</span>
+                <span className="absolute left-3 top-3 text-[#66717D] flex items-center">
+                  <span className="material-symbols-outlined text-[16px]">search</span>
+                </span>
                 {carSearchQuery && (
                   <button
                     type="button"
                     onClick={() => setCarSearchQuery('')}
-                    className="absolute right-3 top-2.5 text-xs text-[#66717D] hover:text-[#111820] cursor-pointer"
+                    className="absolute right-3 top-2.5 text-xs text-[#66717D] hover:text-[#111820] cursor-pointer flex items-center"
                   >
-                    ✕
+                    <span className="material-symbols-outlined text-[16px]">close</span>
                   </button>
                 )}
               </div>
@@ -857,8 +861,8 @@ export function HostFleetDashboardView() {
             {/* VEHICLES GRID */}
             {ownerCars.length === 0 ? (
               <div className="p-12 sm:p-16 rounded-3xl bg-white border border-[#66717D]/15 text-center flex flex-col items-center max-w-xl mx-auto my-6 shadow-sm">
-                <div className="w-20 h-20 rounded-3xl bg-[#F5F2EB] flex items-center justify-center text-4xl mb-4">
-                  🚗
+                <div className="w-20 h-20 rounded-3xl bg-[#F5F2EB] flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-4xl text-[#66717D]">directions_car</span>
                 </div>
                 <Badge variant="obsidian" className="mb-2">
                   Ready to Host
@@ -881,7 +885,7 @@ export function HostFleetDashboardView() {
               </div>
             ) : filteredCars.length === 0 ? (
               <div className="p-10 rounded-3xl bg-white border border-[#66717D]/15 text-center flex flex-col items-center gap-3">
-                <span className="text-3xl">🔍</span>
+                <span className="material-symbols-outlined text-3xl text-[#66717D]">search_off</span>
                 <h3 className="text-lg font-bold text-[#111820]">No vehicles match your filter</h3>
                 <p className="text-xs text-[#66717D]">
                   Try resetting your search query or switching to another status tab.
@@ -934,12 +938,14 @@ export function HostFleetDashboardView() {
                           )}
                           {car.status === 'inactive' && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111820]/80 text-[#D5F36A] text-xs font-bold backdrop-blur-xs shadow-sm">
-                              <span>⏸️ Paused</span>
+                              <span className="material-symbols-outlined text-[13px]">pause</span>
+                              <span>Paused</span>
                             </span>
                           )}
                           {car.status === 'rejected' && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9674B]/90 text-white text-xs font-bold backdrop-blur-xs shadow-sm">
-                              <span>✕ Rejected</span>
+                              <span className="material-symbols-outlined text-[13px]">cancel</span>
+                              <span>Rejected</span>
                             </span>
                           )}
 
@@ -951,7 +957,7 @@ export function HostFleetDashboardView() {
                         {/* Bottom Area Pill */}
                         <div className="absolute bottom-3 left-3">
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/60 text-white text-[11px] font-semibold backdrop-blur-xs">
-                            <span>📍</span>
+                            <span className="material-symbols-outlined text-[13px]">location_on</span>
                             <span>{car.neighbourhood}, Addis Ababa</span>
                           </span>
                         </div>
@@ -993,16 +999,18 @@ export function HostFleetDashboardView() {
                             <button
                               type="button"
                               onClick={() => setEditingCar(car)}
-                              className="flex-1 py-2 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] text-xs font-bold transition-colors cursor-pointer text-center"
+                              className="flex-1 py-2 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                             >
-                              ✏️ Edit Details
+                              <span className="material-symbols-outlined text-[15px]">edit</span>
+                              <span>Edit Details</span>
                             </button>
                             <button
                               type="button"
                               onClick={() => setBlackoutCar(car)}
-                              className="flex-1 py-2 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] text-xs font-bold transition-colors cursor-pointer text-center"
+                              className="flex-1 py-2 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                             >
-                              📅 Blackout Dates
+                              <span className="material-symbols-outlined text-[15px]">event_busy</span>
+                              <span>Blackout Dates</span>
                             </button>
                           </div>
 
@@ -1011,9 +1019,10 @@ export function HostFleetDashboardView() {
                               <button
                                 type="button"
                                 onClick={() => handleToggleActive(car)}
-                                className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer"
+                                className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                               >
-                                ⏸️ Pause Listing
+                                <span className="material-symbols-outlined text-[15px]">pause_circle</span>
+                                <span>Pause Listing</span>
                               </button>
                             )}
                             {car.status === 'inactive' && (
@@ -1137,14 +1146,16 @@ export function HostFleetDashboardView() {
                   onChange={(e) => setResSearchQuery(e.target.value)}
                   className="w-full py-2.5 pl-9 pr-4 rounded-2xl bg-white border border-[#66717D]/18 text-xs text-[#111820] placeholder-[#66717D]/60 focus:outline-hidden focus:ring-2 focus:ring-[#111820]"
                 />
-                <span className="absolute left-3 top-3 text-xs text-[#66717D]">🔍</span>
+                <span className="absolute left-3 top-3 text-[#66717D] flex items-center">
+                  <span className="material-symbols-outlined text-[16px]">search</span>
+                </span>
                 {resSearchQuery && (
                   <button
                     type="button"
                     onClick={() => setResSearchQuery('')}
-                    className="absolute right-3 top-2.5 text-xs text-[#66717D] hover:text-[#111820] cursor-pointer"
+                    className="absolute right-3 top-2.5 text-xs text-[#66717D] hover:text-[#111820] cursor-pointer flex items-center"
                   >
-                    ✕
+                    <span className="material-symbols-outlined text-[16px]">close</span>
                   </button>
                 )}
               </div>
@@ -1153,7 +1164,7 @@ export function HostFleetDashboardView() {
             {/* RESERVATIONS LIST */}
             {ownerBookings.length === 0 ? (
               <div className="p-12 rounded-3xl bg-white border border-[#66717D]/15 text-center flex flex-col items-center max-w-lg mx-auto shadow-xs">
-                <span className="text-4xl mb-3">📅</span>
+                <span className="material-symbols-outlined text-4xl text-[#66717D] mb-3">calendar_month</span>
                 <h3 className="text-xl font-extrabold text-[#111820] mb-2">No Reservations Yet</h3>
                 <p className="text-xs text-[#66717D] leading-relaxed mb-4">
                   Once your vehicles are approved, renters across Addis Ababa can discover and request bookings.
@@ -1165,7 +1176,7 @@ export function HostFleetDashboardView() {
               </div>
             ) : filteredBookings.length === 0 ? (
               <div className="p-10 rounded-3xl bg-white border border-[#66717D]/15 text-center flex flex-col items-center gap-3">
-                <span className="text-3xl">🔍</span>
+                <span className="material-symbols-outlined text-3xl text-[#66717D]">search_off</span>
                 <h3 className="text-lg font-bold text-[#111820]">No reservations match your filter</h3>
                 <p className="text-xs text-[#66717D]">
                   Try selecting another status tab or clearing your search query.
@@ -1217,7 +1228,8 @@ export function HostFleetDashboardView() {
                           )}
                           {b.status === 'confirmed' && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D5F36A]/40 text-[#111820] text-xs font-bold border border-[#B6D24D]">
-                              <span>✓ Confirmed • Ready for Handover</span>
+                              <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                              <span>Confirmed • Ready for Handover</span>
                             </span>
                           )}
                           {b.status === 'in_progress' && (
@@ -1228,22 +1240,26 @@ export function HostFleetDashboardView() {
                           )}
                           {(b.status === 'completed' || b.status === 'reviewed') && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-bold">
-                              <span>✓ Completed</span>
+                              <span className="material-symbols-outlined text-[14px]">task_alt</span>
+                              <span>Completed</span>
                             </span>
                           )}
                           {b.status === 'declined' && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-900 text-xs font-bold">
-                              <span>✕ Declined by Host</span>
+                              <span className="material-symbols-outlined text-[14px]">cancel</span>
+                              <span>Declined by Host</span>
                             </span>
                           )}
                           {b.status === 'cancelled' && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[#66717D] text-xs font-bold">
-                              <span>✕ Cancelled</span>
+                              <span className="material-symbols-outlined text-[14px]">block</span>
+                              <span>Cancelled</span>
                             </span>
                           )}
                           {b.status === 'disputed' && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9674B]/20 text-[#76331B] text-xs font-bold">
-                              <span>⚠️ Dispute Under Review</span>
+                              <span className="material-symbols-outlined text-[14px]">warning</span>
+                              <span>Dispute Under Review</span>
                             </span>
                           )}
 
@@ -1284,8 +1300,9 @@ export function HostFleetDashboardView() {
                             <span className="text-xs font-bold text-[#111820] truncate">
                               {car ? `${car.year} ${car.make} ${car.model}` : 'Vehicle'}
                             </span>
-                            <span className="text-[11px] text-[#66717D]">
-                              📍 {car?.neighbourhood || 'Bole'} • {b.pricePerDay.toLocaleString()} ETB/day
+                            <span className="text-[11px] text-[#66717D] flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px]">location_on</span>
+                              <span>{car?.neighbourhood || 'Bole'} • {b.pricePerDay.toLocaleString()} ETB/day</span>
                             </span>
                           </div>
                         </div>
@@ -1307,8 +1324,9 @@ export function HostFleetDashboardView() {
 
                         {/* 3. Dates & Duration */}
                         <div className="flex flex-col justify-center">
-                          <div className="flex items-center gap-2 text-xs font-bold text-[#111820]">
-                            <span>🗓️ {formatDisplayDate(b.startDate)}</span>
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#111820]">
+                            <span className="material-symbols-outlined text-[15px] text-[#66717D]">calendar_today</span>
+                            <span>{formatDisplayDate(b.startDate)}</span>
                             <span className="text-[#66717D]">→</span>
                             <span>{formatDisplayDate(b.endDate)}</span>
                           </div>
@@ -1383,9 +1401,10 @@ export function HostFleetDashboardView() {
                               <button
                                 type="button"
                                 onClick={() => setBookingToConfirm(b)}
-                                className="py-2 px-4 rounded-xl bg-[#D5F36A] hover:bg-[#CEEC64] text-[#111820] text-xs font-bold transition-all cursor-pointer shadow-xs"
+                                className="py-2 px-4 rounded-xl bg-[#D5F36A] hover:bg-[#CEEC64] text-[#111820] text-xs font-bold transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
                               >
-                                ✓ Approve &amp; Confirm Request
+                                <span className="material-symbols-outlined text-[15px]">check</span>
+                                <span>Approve &amp; Confirm Request</span>
                               </button>
                               <button
                                 type="button"
@@ -1393,9 +1412,10 @@ export function HostFleetDashboardView() {
                                   setBookingToDecline(b);
                                   setDeclineReasonInput('');
                                 }}
-                                className="py-2 px-3.5 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-bold transition-all cursor-pointer"
+                                className="py-2 px-3.5 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
                               >
-                                ✕ Decline Request
+                                <span className="material-symbols-outlined text-[15px]">close</span>
+                                <span>Decline Request</span>
                               </button>
                             </>
                           )}
@@ -1404,9 +1424,9 @@ export function HostFleetDashboardView() {
                           {(b.status === 'confirmed' || b.status === 'in_progress') && (
                             <Link
                               href={`/bookings/${b.id}/track`}
-                              className="py-2 px-3 rounded-xl bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] text-xs font-bold transition-all shadow-xs flex items-center gap-1"
+                              className="py-2 px-3 rounded-xl bg-[#D5F36A] hover:bg-[#c4e357] text-[#111820] text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
                             >
-                              <span>📍</span>
+                              <span className="material-symbols-outlined text-[15px]">near_me</span>
                               <span>Live Tracking</span>
                             </Link>
                           )}
@@ -1416,9 +1436,10 @@ export function HostFleetDashboardView() {
                             <button
                               type="button"
                               onClick={() => setBookingToStart(b)}
-                              className="py-2 px-4 rounded-xl bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] text-xs font-bold transition-all cursor-pointer shadow-xs"
+                              className="py-2 px-4 rounded-xl bg-[#111820] hover:bg-[#1C2630] text-[#D5F36A] text-xs font-bold transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
                             >
-                              🔑 Key Handover (Start Trip)
+                              <span className="material-symbols-outlined text-[15px]">key</span>
+                              <span>Key Handover (Start Trip)</span>
                             </button>
                           )}
 
@@ -1428,9 +1449,10 @@ export function HostFleetDashboardView() {
                               <button
                                 type="button"
                                 onClick={() => setBookingToComplete(b)}
-                                className="py-2 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                                className="py-2 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
                               >
-                                🏁 Complete Rental &amp; Disburse Payout
+                                <span className="material-symbols-outlined text-[15px]">flag</span>
+                                <span>Complete Rental &amp; Disburse Payout</span>
                               </button>
                               <button
                                 type="button"
@@ -1438,9 +1460,10 @@ export function HostFleetDashboardView() {
                                   setBookingToDispute(b);
                                   setDisputeReasonInput('');
                                 }}
-                                className="py-2 px-3 rounded-xl border border-[#B9674B]/40 text-[#76331B] hover:bg-red-50 text-xs font-bold transition-all cursor-pointer"
+                                className="py-2 px-3 rounded-xl border border-[#B9674B]/40 text-[#76331B] hover:bg-red-50 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
                               >
-                                ⚠️ Report Issue
+                                <span className="material-symbols-outlined text-[15px]">report_problem</span>
+                                <span>Report Issue</span>
                               </button>
                             </>
                           )}
@@ -1485,7 +1508,7 @@ export function HostFleetDashboardView() {
             {/* SIMULATED FINANCIAL NOTICE */}
             <div className="p-4 rounded-2xl bg-[#111820] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-sm">
               <div className="flex items-center gap-3">
-                <span className="text-xl">💳</span>
+                <span className="material-symbols-outlined text-[24px] text-[#D5F36A]">account_balance_wallet</span>
                 <div>
                   <span className="font-bold text-[#D5F36A] block">
                     Simulated TeleBirr Payout Rail
@@ -1507,7 +1530,7 @@ export function HostFleetDashboardView() {
                 <div className="absolute top-0 right-0 w-2 h-full bg-[#D5F36A]" />
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Completed Payouts</span>
-                  <span className="p-1.5 rounded-xl bg-[#D5F36A]/20 text-[#111820] text-sm">💵</span>
+                  <span className="p-1.5 rounded-xl bg-[#D5F36A]/20 text-[#111820]"><span className="material-symbols-outlined text-[16px]">payments</span></span>
                 </div>
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#111820] font-specs-tabular">
                   {earningsSummary.totalCompletedEarnings.toLocaleString()}{' '}
@@ -1523,7 +1546,7 @@ export function HostFleetDashboardView() {
                 <div className="absolute top-0 right-0 w-2 h-full bg-blue-500" />
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Escrow in Transit</span>
-                  <span className="p-1.5 rounded-xl bg-blue-50 text-blue-900 text-sm">🔒</span>
+                  <span className="p-1.5 rounded-xl bg-blue-50 text-blue-900"><span className="material-symbols-outlined text-[16px]">lock</span></span>
                 </div>
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#111820] font-specs-tabular">
                   {earningsSummary.heldEscrowAmount.toLocaleString()}{' '}
@@ -1538,7 +1561,7 @@ export function HostFleetDashboardView() {
               <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#66717D]/15 shadow-xs flex flex-col justify-between">
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Days Booked</span>
-                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-sm">📅</span>
+                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-[#111820]"><span className="material-symbols-outlined text-[16px]">calendar_month</span></span>
                 </div>
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#111820] font-specs-tabular">
                   {earningsSummary.vehicleBreakdown.reduce((sum, v) => sum + v.daysRented, 0)}{' '}
@@ -1553,7 +1576,7 @@ export function HostFleetDashboardView() {
               <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#66717D]/15 shadow-xs flex flex-col justify-between">
                 <div className="flex items-center justify-between text-xs text-[#66717D] font-bold uppercase tracking-wider mb-2">
                   <span>Completed Trips</span>
-                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-sm">🏁</span>
+                  <span className="p-1.5 rounded-xl bg-[#F5F2EB] text-[#111820]"><span className="material-symbols-outlined text-[16px]">task_alt</span></span>
                 </div>
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#111820] font-specs-tabular">
                   {earningsSummary.bookingsCount.completed}
@@ -1832,15 +1855,17 @@ export function HostFleetDashboardView() {
                           {car && (
                             <Link
                               href={`/cars/${car.id}`}
-                              className="text-xs font-bold text-[#111820] hover:underline flex items-center gap-1"
+                              className="text-xs font-bold text-[#111820] hover:underline flex items-center gap-1.5"
                             >
-                              <span>🚗</span>
+                              <span className="material-symbols-outlined text-[15px]">directions_car</span>
                               <span>{car.year} {car.make} {car.model}</span>
                             </Link>
                           )}
-                          <div className="flex items-center text-[#536600] text-sm">
-                            {'★'.repeat(rev.rating)}
-                            <span className="text-[#66717D]/50 text-xs ml-1 font-specs-tabular">
+                          <div className="flex items-center text-amber-500 text-xs">
+                            {Array.from({ length: rev.rating }).map((_, i) => (
+                              <span key={i} className="material-symbols-outlined text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                            ))}
+                            <span className="text-[#66717D] text-xs ml-1 font-specs-tabular">
                               {rev.rating}.0
                             </span>
                           </div>
@@ -1856,7 +1881,7 @@ export function HostFleetDashboardView() {
                         <div className="mt-2 p-4 rounded-2xl bg-[#F5F2EB] border border-[#66717D]/12 flex flex-col gap-2">
                           <div className="flex items-center justify-between text-xs">
                             <span className="font-bold text-[#111820] flex items-center gap-1.5">
-                              <span>💬</span>
+                              <span className="material-symbols-outlined text-[16px]">forum</span>
                               <span>Your Public Host Response:</span>
                             </span>
                             {rev.ownerReplyAt && (
@@ -1874,7 +1899,7 @@ export function HostFleetDashboardView() {
                               onClick={() => setReviewToRespond(rev)}
                               className="text-xs font-bold text-[#111820] hover:underline cursor-pointer flex items-center gap-1"
                             >
-                              <span>✏️</span>
+                              <span className="material-symbols-outlined text-[14px]">edit</span>
                               <span>Edit Response</span>
                             </button>
                           </div>
@@ -1887,7 +1912,7 @@ export function HostFleetDashboardView() {
                             onClick={() => setReviewToRespond(rev)}
                             className="flex items-center gap-1.5"
                           >
-                            <span>💬</span>
+                            <span className="material-symbols-outlined text-[16px]">reply</span>
                             <span>Respond to Review</span>
                           </Button>
                         </div>
@@ -1964,7 +1989,9 @@ export function HostFleetDashboardView() {
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-[#D5F36A] text-2xl" aria-hidden="true">✓</span>
+              <span className="p-2 rounded-2xl bg-[#D5F36A] flex items-center justify-center text-[#111820]" aria-hidden="true">
+                <span className="material-symbols-outlined text-[24px]">task_alt</span>
+              </span>
               <div>
                 <h3 id="confirm-modal-title" className="text-lg font-extrabold text-[#111820]">Confirm Reservation</h3>
                 <span className="text-xs text-[#66717D]">
@@ -2012,7 +2039,9 @@ export function HostFleetDashboardView() {
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="decline-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-red-100 text-2xl text-red-700" aria-hidden="true">✕</span>
+              <span className="p-2 rounded-2xl bg-red-100 flex items-center justify-center text-red-700" aria-hidden="true">
+                <span className="material-symbols-outlined text-[24px]">cancel</span>
+              </span>
               <div>
                 <h3 id="decline-modal-title" className="text-lg font-extrabold text-[#111820]">Decline Reservation</h3>
                 <span className="text-xs text-[#66717D]">
@@ -2068,7 +2097,9 @@ export function HostFleetDashboardView() {
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="handover-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-[#111820] text-[#D5F36A] text-2xl font-bold" aria-hidden="true">🔑</span>
+              <span className="p-2 rounded-2xl bg-[#111820] flex items-center justify-center text-[#D5F36A]" aria-hidden="true">
+                <span className="material-symbols-outlined text-[24px]">key</span>
+              </span>
               <div>
                 <h3 id="handover-modal-title" className="text-lg font-extrabold text-[#111820]">Confirm Key Handover</h3>
                 <span className="text-xs text-[#66717D]">
@@ -2125,7 +2156,9 @@ export function HostFleetDashboardView() {
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="complete-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-emerald-100 text-2xl text-emerald-800" aria-hidden="true">🏁</span>
+              <span className="p-2 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-800" aria-hidden="true">
+                <span className="material-symbols-outlined text-[24px]">verified</span>
+              </span>
               <div>
                 <h3 id="complete-modal-title" className="text-lg font-extrabold text-[#111820]">Complete Rental Return</h3>
                 <span className="text-xs text-[#66717D]">
@@ -2187,7 +2220,9 @@ export function HostFleetDashboardView() {
         <div className="fixed inset-0 z-50 bg-[#111820]/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="dispute-modal-title" className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 flex flex-col gap-5 border border-[#66717D]/18">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-amber-100 text-2xl text-amber-900" aria-hidden="true">⚠️</span>
+              <span className="p-2 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-900" aria-hidden="true">
+                <span className="material-symbols-outlined text-[24px]">report_problem</span>
+              </span>
               <div>
                 <h3 id="dispute-modal-title" className="text-lg font-extrabold text-[#111820]">Report Issue / Dispute</h3>
                 <span className="text-xs text-[#66717D]">
@@ -2252,9 +2287,9 @@ export function HostFleetDashboardView() {
                 type="button"
                 onClick={() => setSelectedBookingDetails(null)}
                 aria-label="Close reservation record"
-                className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
+                className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center cursor-pointer"
               >
-                ✕
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
 
@@ -2330,7 +2365,7 @@ export function HostFleetDashboardView() {
                   {/* TeleBirr Rail */}
                   <div className="p-3.5 rounded-xl bg-[#111820] text-white flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span>📱</span>
+                      <span className="material-symbols-outlined text-[16px] text-[#D5F36A]">smartphone</span>
                       <span className="text-white/80">TeleBirr Ref:</span>
                       <span className="font-mono font-bold text-[#D5F36A]">
                         {selectedBookingDetails.paymentReference || 'TB-MOCK-ESCROW'}
@@ -2544,13 +2579,13 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
             aria-label="Close vehicle form"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
           >
-            ✕
+            <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
 
         {serverError && (
           <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-900 text-xs font-semibold flex items-center gap-2">
-            <span>⚠️</span>
+            <span className="material-symbols-outlined text-[16px]">warning</span>
             <span>{serverError}</span>
           </div>
         )}
@@ -2728,8 +2763,10 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
                         : 'bg-[#F5F2EB] text-[#66717D] hover:bg-[#EBE8E1]'
                     }`}
                   >
-                    {isSelected ? '✓ ' : '+ '}
-                    {feat}
+                    <span className="material-symbols-outlined text-xs inline-block align-middle mr-1">
+                      {isSelected ? 'check' : 'add'}
+                    </span>
+                    <span>{feat}</span>
                   </button>
                 );
               })}
@@ -2798,7 +2835,7 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
           </div>
 
           <div className="p-3 rounded-2xl bg-[#F6F3EC] border border-[#66717D]/15 text-[11px] text-[#66717D] flex items-center gap-2">
-            <span>🛡️</span>
+            <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
             <span>
               <strong>Security Protocol:</strong> Listing ownership is strictly bound to your
               verified account ({actor.userId}). Unapproved self-elevations are rejected by the
@@ -2943,7 +2980,7 @@ function BlackoutDatesModal({
             aria-label="Close blackout dates dialog"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] flex items-center justify-center text-sm font-bold cursor-pointer"
           >
-            ✕
+            <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
 
@@ -2953,8 +2990,9 @@ function BlackoutDatesModal({
         </div>
 
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs font-semibold">
-            ⚠️ {errorMsg}
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs font-semibold flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[15px]">warning</span>
+            <span>{errorMsg}</span>
           </div>
         )}
 
@@ -3036,7 +3074,7 @@ function BlackoutDatesModal({
                   className="p-2.5 rounded-xl bg-[#F5F2EB] flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">🗓️</span>
+                    <span className="material-symbols-outlined text-[15px] text-[#66717D]">event</span>
                     <span className="font-bold text-[#111820] font-specs-tabular">{d}</span>
                     <span className="text-[#66717D] text-[11px]">
                       ({formatDisplayDate(d)})
@@ -3045,9 +3083,10 @@ function BlackoutDatesModal({
                   <button
                     type="button"
                     onClick={() => handleRemoveDate(d)}
-                    className="p-1 rounded-lg text-red-600 hover:bg-red-50 text-xs font-bold transition-colors cursor-pointer"
+                    className="p-1 rounded-lg text-red-600 hover:bg-red-50 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
                   >
-                    Remove ✕
+                    <span>Remove</span>
+                    <span className="material-symbols-outlined text-[14px]">close</span>
                   </button>
                 </div>
               ))}

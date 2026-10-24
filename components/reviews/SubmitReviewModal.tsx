@@ -94,7 +94,7 @@ export function SubmitReviewModal({
         <div className="flex items-start justify-between gap-4 border-b border-[#66717D]/12 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl" aria-hidden="true">⭐</span>
+              <span className="material-symbols-outlined text-[22px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }} aria-hidden="true">star</span>
               <h3 id="submit-review-modal-title" className="text-xl font-black text-[#111820]">
                 Review Your Trip
               </h3>
@@ -109,7 +109,7 @@ export function SubmitReviewModal({
             aria-label="Close dialog"
             className="w-8 h-8 rounded-full bg-[#F5F2EB] text-[#111820] flex items-center justify-center font-bold hover:bg-[#111820] hover:text-white transition cursor-pointer"
           >
-            ✕
+            <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
 
@@ -141,13 +141,14 @@ export function SubmitReviewModal({
                 >
                   <span
                     aria-hidden="true"
-                    className={
+                    className={`material-symbols-outlined text-3xl sm:text-4xl transition-colors ${
                       star <= activeRating
                         ? 'text-amber-400 drop-shadow-xs'
                         : 'text-slate-300'
-                    }
+                    }`}
+                    style={{ fontVariationSettings: star <= activeRating ? "'FILL' 1" : "'FILL' 0" }}
                   >
-                    ★
+                    star
                   </span>
                 </button>
               ))}
@@ -189,15 +190,18 @@ export function SubmitReviewModal({
               aria-live="assertive"
               className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2"
             >
-              <span aria-hidden="true">⚠️</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">warning</span>
               <span>{error}</span>
             </div>
           )}
 
           {/* Notice */}
-          <p className="text-[11px] text-[#66717D] bg-[#F5F2EB]/50 p-3 rounded-xl">
-            ℹ️ <strong>Community Trust Policy:</strong> Your review will be published publicly on the vehicle listing page to assist fellow Addis Ababa travelers. The vehicle host will be invited to reply.
-          </p>
+          <div className="text-[11px] text-[#66717D] bg-[#F5F2EB]/50 p-3 rounded-xl flex items-start gap-1.5">
+            <span className="material-symbols-outlined text-[15px] text-secondary shrink-0 mt-0.5">verified_user</span>
+            <p>
+              <strong>Community Trust Policy:</strong> Your review will be published publicly on the vehicle listing page to assist fellow Addis Ababa travelers. The vehicle host will be invited to reply.
+            </p>
+          </div>
 
           {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 pt-2 border-t border-[#66717D]/12">

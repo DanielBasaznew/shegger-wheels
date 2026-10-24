@@ -69,8 +69,8 @@ export function ProtectedRoute({
       <div className="w-full py-20 bg-[#F5F2EB]">
         <Container>
           <div className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/18 shadow-sm flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-2xl bg-[#111820] text-[#D5F36A] flex items-center justify-center text-2xl mb-4 font-bold shadow-sm">
-              🔒
+            <div className="w-16 h-16 rounded-2xl bg-[#111820] text-[#D5F36A] flex items-center justify-center mb-4 shadow-sm">
+              <span className="material-symbols-outlined text-[32px]">lock</span>
             </div>
             <Badge variant="obsidian" className="mb-2 uppercase">
               Authentication Required
@@ -104,8 +104,8 @@ export function ProtectedRoute({
       <div className="w-full py-20 bg-[#F5F2EB]">
         <Container>
           <div className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-red-200 shadow-sm flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-2xl bg-red-100 text-red-900 flex items-center justify-center text-2xl mb-4 font-bold">
-              🚫
+            <div className="w-16 h-16 rounded-2xl bg-red-100 text-red-900 flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-[32px]">block</span>
             </div>
             <Badge variant="terracotta" className="mb-2 uppercase">
               Account Suspended
@@ -140,8 +140,8 @@ export function ProtectedRoute({
       <div className="w-full py-20 bg-[#F5F2EB]">
         <Container>
           <div className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-[#B9674B]/25 shadow-sm flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-2xl mb-4 font-bold">
-              🛡️
+            <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-[32px]">shield_person</span>
             </div>
             <Badge variant="terracotta" className="mb-2 uppercase">
               Role Access Restricted

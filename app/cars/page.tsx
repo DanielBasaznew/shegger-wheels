@@ -454,9 +454,9 @@ function CatalogueContent() {
                     type="button"
                     onClick={() => setMobileFilterOpen(false)}
                     aria-label="Close vehicle filters"
-                    className="lg:hidden p-1.5 rounded-lg text-[#66717D] hover:text-[#111820] hover:bg-[#F1EEE7] transition-colors"
+                    className="lg:hidden p-1.5 rounded-lg text-[#66717D] hover:text-[#111820] hover:bg-[#F1EEE7] transition-colors flex items-center justify-center"
                   >
-                    ✕
+                    <span className="material-symbols-outlined text-lg">close</span>
                   </button>
                 </div>
               </div>

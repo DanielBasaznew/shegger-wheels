@@ -389,9 +389,9 @@ export function NotificationBell() {
                           type="button"
                           onClick={(e) => handleDismiss(e, notif.id)}
                           aria-label={`Dismiss notification: ${notif.title}`}
-                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#66717D] hover:text-[#111820] text-xs transition-opacity p-1 rounded-sm cursor-pointer"
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#66717D] hover:text-[#111820] transition-opacity p-1 rounded-sm cursor-pointer flex items-center justify-center"
                         >
-                          ✕
+                          <span className="material-symbols-outlined text-[15px]">close</span>
                         </button>
                       </div>
                     </div>
