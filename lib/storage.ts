@@ -697,5 +697,9 @@ export function clearCheckoutDraft(): void {
  */
 export function isOptimizableImage(url?: string | null): boolean {
   if (!url || typeof url !== 'string') return false;
-  return url.startsWith('/') || url.includes('images.unsplash.com');
+  return (
+    url.startsWith('/') ||
+    url.includes('images.unsplash.com') ||
+    url.includes('lh3.googleusercontent.com')
+  );
 }

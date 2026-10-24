@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { isOptimizableImage } from '@/lib/storage';
 
 export function Footer() {
   const addisHubs = [
@@ -11,53 +13,51 @@ export function Footer() {
     'CMC',
   ];
 
+  const logoUrl =
+    'https://lh3.googleusercontent.com/aida/AEtjO1Wjf8m02Rb-cwPHgm5cnVZC1CVpL1LFethHyJYd7Th9j3PK34Q9mjRpVzQ8XdKtRKURQWEcNSDvuAsR4KO3b2dFJcQSgdgHB703UShGYlQwineuyfjCBdQY4ATMt4l7E4C7iN6gGxVzg49y05qvpcvJpFPEYrc60X1w46B9s2os5w78rgIqGfOBsIYIS9G-BKP_6P5OoBBtkYEHZ8AbXnb3YlR-WfvBqgsl9mKS8W0tJ9SjYa9cKeUvSA';
+
   return (
-    <footer className="w-full bg-[#F6F3EC] text-[#44474B] border-t border-[#66717D]/20 mt-16 sm:mt-24">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-12 mb-12">
-          {/* Brand & Mission */}
-          <div className="lg:col-span-5 flex flex-col gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#111820] flex items-center justify-center text-[#D5F36A]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                </svg>
-              </div>
-              <span className="font-bold text-lg text-[#111820] tracking-tight">
-                Shegger Wheels
+    <footer className="w-full bg-surface-container-low text-on-surface-variant mt-space-xl border-t border-outline-variant/20">
+      <div className="max-w-[1360px] mx-auto px-gutter py-space-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl">
+          {/* Logo & Platform Mission */}
+          <div className="lg:col-span-5 flex flex-col gap-space-md">
+            <div className="flex items-center gap-space-sm">
+              <Image
+                alt="Sheggar Wheels Logo"
+                className="h-7 w-auto object-contain"
+                src={logoUrl}
+                width={28}
+                height={28}
+                unoptimized={!isOptimizableImage(logoUrl)}
+              />
+              <span className="font-headline-sm text-headline-sm text-on-surface">
+                Sheggar Wheels
               </span>
             </div>
 
-            <p className="text-sm leading-relaxed text-[#44474B] max-w-md">
-              Next-generation peer-to-peer automotive mobility across Addis Ababa. Direct, verified car sharing built for effortless metropolitan transit, diaspora visits, and weekend journeys without traditional car rental friction.
+            <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
+              Next-generation peer-to-peer automotive mobility in Addis Ababa. Direct, verified car sharing built for effortless metropolitan transit and diaspora expeditions without traditional car rental friction.
             </p>
 
-            <div className="flex items-center gap-2 pt-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBE8E1] text-[#111820] text-xs font-semibold">
-                <span className="w-2 h-2 rounded-full bg-[#536600]" />
-                <span>100% Verified Hosts & TeleBirr Escrow</span>
+            <div className="flex items-center gap-space-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-specs-tabular text-specs-tabular">
+                <span className="material-symbols-outlined text-secondary text-[18px]">verified_user</span>
+                <span>100% Verified Hosts &amp; TeleBirr Escrow</span>
               </div>
             </div>
           </div>
 
           {/* Active Hubs in Addis */}
-          <div className="lg:col-span-3 flex flex-col gap-3">
-            <span className="font-label-caps text-[11px] text-[#111820] uppercase tracking-wider">
+          <div className="lg:col-span-3 flex flex-col gap-space-sm">
+            <span className="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">
               Active Hubs in Addis
             </span>
             <ul className="flex flex-wrap gap-2">
               {addisHubs.map((hub) => (
                 <li
                   key={hub}
-                  className="px-3 py-1 rounded-lg bg-[#EBE8E1] text-xs font-medium text-[#111820]"
+                  className="px-2.5 py-1 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface"
                 >
                   {hub}
                 </li>
@@ -65,59 +65,50 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Platform Navigation */}
-          <div className="lg:col-span-2 flex flex-col gap-3">
-            <span className="font-label-caps text-[11px] text-[#111820] uppercase tracking-wider">
+          {/* Platform Links */}
+          <div className="lg:col-span-2 flex flex-col gap-space-sm">
+            <span className="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">
               Platform
             </span>
-            <div className="flex flex-col gap-2.5 text-sm">
-              <Link href="/cars" className="text-[#44474B] hover:text-[#111820] transition-colors">
+            <div className="flex flex-col gap-2 font-body-md text-body-md">
+              <Link className="text-on-surface-variant hover:text-on-surface transition-colors" href="/cars">
                 Fleet Inventory
               </Link>
-              <Link href="/#how-it-works" className="text-[#44474B] hover:text-[#111820] transition-colors">
-                Protection & Terms
+              <Link className="text-on-surface-variant hover:text-on-surface transition-colors" href="/#how-it-works">
+                Protection &amp; Terms
               </Link>
-              <Link href="/signin?role=owner" className="text-[#44474B] hover:text-[#111820] transition-colors">
+              <Link className="text-on-surface-variant hover:text-on-surface transition-colors" href="/signin?role=owner">
                 List Your Car
               </Link>
-              <Link href="/dashboard" className="text-[#44474B] hover:text-[#111820] transition-colors">
+              <Link className="text-on-surface-variant hover:text-on-surface transition-colors" href="/dashboard">
                 Fleet Portal
               </Link>
             </div>
           </div>
 
-          {/* Verification & Tech */}
-          <div className="lg:col-span-2 flex flex-col gap-3">
-            <span className="font-label-caps text-[11px] text-[#111820] uppercase tracking-wider">
+          {/* Verification */}
+          <div className="lg:col-span-2 flex flex-col gap-space-sm">
+            <span className="font-label-caps text-label-caps text-on-surface uppercase tracking-wider">
               Verification
             </span>
-            <div className="flex flex-col gap-2.5 text-xs text-[#66717D]">
-              <span>Addis Ababa Transport Bureau Sync</span>
-              <span>Chapa & TeleBirr Rails</span>
-              <span>24/7 Roadside Assistance</span>
-              <span>Sub-city Key Handover Protocol</span>
+            <div className="flex flex-col gap-2 font-body-md text-body-md">
+              <span className="text-on-surface-variant">Addis Ababa Transport Bureau Sync</span>
+              <span className="text-on-surface-variant">Chapa &amp; TeleBirr Rails</span>
+              <span className="text-on-surface-variant">24/7 Roadside Assistance</span>
             </div>
           </div>
         </div>
 
         {/* Prototype Disclaimer Bar */}
-        <div className="pt-6 border-t border-[#66717D]/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <div className="pt-space-md bg-surface-container-high/40 rounded-xl px-space-md py-space-sm flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left">
           <div className="flex items-center gap-2">
-            <svg
-              className="w-4 h-4 text-[#536600]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-xs font-specs-tabular text-[#111820]">
-              Simulated Frontend Prototype • Stored in Browser Storage
+            <span className="material-symbols-outlined text-secondary text-[20px]">info</span>
+            <span className="font-specs-tabular text-specs-tabular text-on-surface">
+              Simulated Prototype for Demonstration Purposes
             </span>
           </div>
-
-          <span className="text-xs text-[#66717D]">
-            © 2025 Shegger Wheels P2P. Addis Ababa, Ethiopia. All rights reserved.
+          <span className="font-body-sm text-body-sm text-on-surface-variant">
+            © 2025 Sheggar Wheels P2P Inc. Addis Ababa, Ethiopia. All rights reserved.
           </span>
         </div>
       </div>
