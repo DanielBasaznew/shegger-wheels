@@ -1,4 +1,6 @@
 import { ImageResponse } from 'next/og';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export const alt = 'Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa';
 export const size = {
@@ -7,10 +9,18 @@ export const size = {
 };
 export const contentType = 'image/png';
 
-const HERO_IMAGE_URL =
-  'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80';
-
 export default async function OpenGraphImage() {
+  let heroSrc = '';
+  try {
+    const heroFilePath = path.join(process.cwd(), 'public', 'hero', 'hero-luxury-suv.jpg');
+    if (fs.existsSync(heroFilePath)) {
+      const buffer = fs.readFileSync(heroFilePath);
+      heroSrc = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+    }
+  } catch {
+    heroSrc = '';
+  }
+
   return new ImageResponse(
     (
       <div
@@ -29,18 +39,20 @@ export default async function OpenGraphImage() {
       >
         {/* Hero Background Image */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={HERO_IMAGE_URL}
-          alt="Shegger Wheels Hero Luxury SUV"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
+        {heroSrc ? (
+          <img
+            src={heroSrc}
+            alt="Shegger Wheels Hero Luxury SUV"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        ) : null}
 
         {/* Cinematic Dark Gradient Overlay */}
         <div

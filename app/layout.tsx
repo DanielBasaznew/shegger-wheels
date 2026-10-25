@@ -21,8 +21,7 @@ const siteUrl =
 
 const baseUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`;
 
-const HERO_IMAGE_URL =
-  'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80';
+const HERO_IMAGE_URL = '/hero/hero-luxury-suv.jpg';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

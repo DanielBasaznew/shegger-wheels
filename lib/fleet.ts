@@ -125,36 +125,60 @@ export const VEHICLE_FEATURE_OPTIONS = [
 // Curated Demo Photo Presets for Quick Selection
 export const DEMO_PHOTO_PRESETS = [
   {
-    label: 'Toyota Land Cruiser Prado TXL (Graphite Grey)',
-    url: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80',
+    label: 'Toyota Land Cruiser 300 VXR (Addis Luxury SUV)',
+    url: '/cars/toyota-landcruiser-300.jpg',
+  },
+  {
+    label: 'Toyota Land Cruiser Prado TX (Graphite)',
+    url: '/cars/toyota-landcruiser-prado.jpg',
   },
   {
     label: 'Toyota RAV4 Hybrid (Silver Metallic)',
-    url: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80',
+    url: '/cars/toyota-rav4-hybrid.jpg',
   },
   {
-    label: 'Hyundai Tucson Limited (Silver)',
-    url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
+    label: 'Hyundai Tucson Executive (Executive Gray)',
+    url: '/cars/hyundai-tucson.jpg',
   },
   {
     label: 'Suzuki Dzire GLX Sedan (White)',
-    url: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80',
+    url: '/cars/suzuki-dzire.jpg',
   },
   {
-    label: 'Volkswagen ID.4 Pro EV (Electric Blue)',
-    url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80',
+    label: 'Volkswagen ID.4 Pro EV (Electric)',
+    url: '/cars/volkswagen-id4.jpg',
   },
   {
-    label: 'Toyota Corolla Prestige (Charcoal)',
-    url: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
+    label: 'Toyota Corolla Prestige (Silver)',
+    url: '/cars/toyota-corolla.jpg',
+  },
+  {
+    label: 'Mercedes-Benz C200 Avantgarde (Obsidian)',
+    url: '/cars/mercedes-c200.jpg',
+  },
+  {
+    label: 'Land Rover Defender 110 SE (Adventure)',
+    url: '/cars/defender-110.jpg',
+  },
+  {
+    label: 'Toyota Hilux Double Cab 4x4 (White)',
+    url: '/cars/toyota-hilux.jpg',
+  },
+  {
+    label: 'BYD Atto 3 Extended Range (Blue)',
+    url: '/cars/byd-atto3.jpg',
+  },
+  {
+    label: 'Peugeot 3008 Allure (Metallic)',
+    url: '/cars/peugeot-3008.jpg',
   },
   {
     label: 'Mitsubishi Pajero Sport 4WD (Black)',
-    url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
+    url: '/cars/mitsubishi-pajero.jpg',
   },
   {
-    label: 'Hyundai Elantra GLS (Pearl Red)',
-    url: 'https://images.unsplash.com/photo-1619682817481-e994891cd1f5?auto=format&fit=crop&w=1200&q=80',
+    label: 'Hyundai Elantra GLS (Quartz White)',
+    url: '/cars/hyundai-elantra.jpg',
   },
 ];
 

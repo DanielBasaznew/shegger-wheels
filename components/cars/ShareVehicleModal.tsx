@@ -69,7 +69,7 @@ export function ShareVehicleModal({ isOpen, onClose, car }: ShareVehicleModalPro
     car.photos && car.photos[0]
       ? car.photos[0]
       : car.featuredImage ||
-        'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80';
+        '/cars/toyota-landcruiser-300.jpg';
 
   const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`;
   const whatsAppUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareTitle} — ${shareUrl}`)}`;

@@ -56,7 +56,26 @@ function writeJsonFile<T>(filename: string, data: T): void {
 // ==========================================
 
 export function getServerCars(): Car[] {
-  return readJsonFile<Car[]>('cars.json', SEED_CARS);
+  const cars = readJsonFile<Car[]>('cars.json', SEED_CARS);
+  const seedMap = new Map(SEED_CARS.map((s) => [s.id, s]));
+  let updated = false;
+  const migrated = cars.map((car) => {
+    const seed = seedMap.get(car.id);
+    if (seed && (car.featuredImage?.includes('images.unsplash.com') || car.photos?.some((p) => p.includes('images.unsplash.com')))) {
+      updated = true;
+      return {
+        ...car,
+        featuredImage: seed.featuredImage,
+        photos: seed.photos,
+      };
+    }
+    return car;
+  });
+  if (updated) {
+    saveServerCars(migrated);
+    return migrated;
+  }
+  return cars;
 }
 
 export function saveServerCars(cars: Car[]): void {

@@ -424,12 +424,28 @@ export function getCars(): Car[] {
     (v): v is Car[] => isArrayWithItems(v, isCar)
   );
 
-  // Auto-merge newly added baseline seed vehicles into existing client storage
   if (isBrowser() && loaded.length > 0) {
     const existingIds = new Set(loaded.map((c) => c.id));
     const missingSeeds = SEED_CARS.filter((c) => !existingIds.has(c.id));
-    if (missingSeeds.length > 0) {
-      const merged = [...loaded, ...missingSeeds];
+    
+    // Auto-migrate legacy unsplash image URLs in stored seed cars to new local assets
+    const seedMap = new Map(SEED_CARS.map((s) => [s.id, s]));
+    let migratedImages = false;
+    const refreshed = loaded.map((car) => {
+      const seed = seedMap.get(car.id);
+      if (seed && (car.featuredImage?.includes('images.unsplash.com') || car.photos?.some((p) => p.includes('images.unsplash.com')))) {
+        migratedImages = true;
+        return {
+          ...car,
+          featuredImage: seed.featuredImage,
+          photos: seed.photos,
+        };
+      }
+      return car;
+    });
+
+    if (missingSeeds.length > 0 || migratedImages) {
+      const merged = missingSeeds.length > 0 ? [...refreshed, ...missingSeeds] : refreshed;
       writeStorage(STORAGE_KEYS.CARS, merged);
       return merged;
     }

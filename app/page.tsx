@@ -26,7 +26,7 @@ export default function Home() {
       tagClass = 'bg-secondary-fixed text-on-secondary-fixed';
     }
 
-    const firstPhoto = car.photos && car.photos[0] ? car.photos[0] : (car.featuredImage || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80');
+    const firstPhoto = car.photos && car.photos[0] ? car.photos[0] : (car.featuredImage || '/cars/toyota-rav4-hybrid.jpg');
 
     return {
       id: car.id,
@@ -102,8 +102,7 @@ export default function Home() {
     },
   ];
 
-  const heroBlackSUV =
-    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80';
+  const heroBlackSUV = '/hero/hero-luxury-suv.jpg';
 
   return (
     <div className="flex flex-col w-full">

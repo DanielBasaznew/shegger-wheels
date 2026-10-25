@@ -26,7 +26,7 @@ export function VehicleCard({
   const hostInitials = owner ? (owner.name.split(' ')[0]?.[0] || 'H') + (owner.name.split(' ')[1]?.[0] || '') : 'ET';
 
   // Fallback image if car.photos is empty or first photo is missing
-  const photoUrl = car.featuredImage || car.photos[0] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80';
+  const photoUrl = car.featuredImage || car.photos[0] || '/cars/toyota-landcruiser-300.jpg';
 
   // Compute category label
   const categoryLabel = car.seats >= 7 ? 'Executive 4x4' : car.transmission === 'Manual' ? 'Compact Sedan' : 'Midsize Urban SUV';

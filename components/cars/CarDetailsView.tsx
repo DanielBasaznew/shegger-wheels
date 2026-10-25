@@ -209,14 +209,14 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
     // Supplement with contextual vehicle perspectives to fulfill the 4-tile Stitch gallery
     if (list.length === 1) {
       list.push(
-        'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80'
+        '/cars/toyota-rav4-hybrid.jpg',
+        '/cars/hyundai-tucson.jpg',
+        '/hero/hero-luxury-suv.jpg'
       );
     } else if (list.length === 2) {
       list.push(
-        'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80'
+        '/cars/toyota-rav4-hybrid.jpg',
+        '/hero/hero-luxury-suv.jpg'
       );
     }
     return list;

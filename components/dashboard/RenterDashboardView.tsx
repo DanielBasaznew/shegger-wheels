@@ -825,11 +825,11 @@ export function RenterDashboardView() {
                                   src={
                                     car?.featuredImage ||
                                     car?.photos[0] ||
-                                    'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=200&q=80'
+                                    '/cars/toyota-rav4-hybrid.jpg'
                                   }
                                   alt={car ? `${car.make} ${car.model}` : 'Vehicle'}
                                   fill
-                                  unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos[0] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=200&q=80')}
+                                  unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos[0] || '/cars/toyota-rav4-hybrid.jpg')}
                                   className="object-cover"
                                   sizes="48px"
                                 />
@@ -1159,11 +1159,11 @@ export function RenterDashboardView() {
                         src={
                           car?.featuredImage ||
                           car?.photos[0] ||
-                          'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=200&q=80'
+                          '/cars/toyota-rav4-hybrid.jpg'
                         }
                         alt="Vehicle"
                         fill
-                        unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos[0] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=200&q=80')}
+                        unoptimized={!isOptimizableImage(car?.featuredImage || car?.photos[0] || '/cars/toyota-rav4-hybrid.jpg')}
                         className="object-cover"
                         sizes="56px"
                       />
