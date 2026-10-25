@@ -48,9 +48,9 @@ export function VehicleCard({
           alt={`${car.make} ${car.model}`}
           fill
           priority={priority}
-          quality={70}
+          quality={65}
           unoptimized={!isOptimizableImage(photoUrl)}
-          sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 48vw, 380px"
+          sizes="(max-width: 640px) 384px, (max-width: 1024px) 48vw, 380px"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
 

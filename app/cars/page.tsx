@@ -1,18 +1,17 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { VehicleCard } from '@/components/cars/VehicleCard';
 import { useCars } from '@/lib/swr';
 
 function CatalogueContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Load cars with reactive SWR and 1-hour cache validation
-  const { approvedCars: allCars } = useCars();
+  // Load cars with reactive SWR and 1-hour cache validation (revalidateOnMount false to eliminate duplicate fetch)
+  const { approvedCars: allCars } = useCars({ revalidateOnMount: false });
 
   // Filter States initialized from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
@@ -85,8 +84,15 @@ function CatalogueContent() {
     setCurrentPage(1);
   };
 
-  // Sync state to URL searchParams without page reloads
+  const isInitialMount = useRef(true);
+
+  // Sync state to URL searchParams without page reloads or App Router re-navigation
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('q', searchQuery.trim());
     if (selectedNeighbourhoods.length > 0) params.set('neighbourhood', selectedNeighbourhoods.join(','));
@@ -98,8 +104,10 @@ function CatalogueContent() {
 
     const queryString = params.toString();
     const targetUrl = queryString ? `/cars?${queryString}` : '/cars';
-    router.replace(targetUrl, { scroll: false });
-  }, [searchQuery, selectedNeighbourhoods, maxPrice, selectedGearbox, selectedCategory, selectedSeats, sortBy, router]);
+    if (typeof window !== 'undefined' && window.location.search !== (queryString ? `?${queryString}` : '')) {
+      window.history.replaceState(null, '', targetUrl);
+    }
+  }, [searchQuery, selectedNeighbourhoods, maxPrice, selectedGearbox, selectedCategory, selectedSeats, sortBy]);
 
   // Handle neighbourhood checkbox toggle
   const toggleNeighbourhood = (nId: string) => {
@@ -583,7 +591,7 @@ function CatalogueContent() {
               {paginatedCars.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {paginatedCars.map((car, index) => (
-                    <VehicleCard key={car.id} car={car} priority={index < 2} />
+                    <VehicleCard key={car.id} car={car} priority={index === 0} />
                   ))}
                 </div>
               ) : (

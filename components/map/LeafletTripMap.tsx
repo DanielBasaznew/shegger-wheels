@@ -11,8 +11,6 @@ import {
   useMap,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Booking, Car } from '@/lib/types';
-
 import { ADDIS_COORDINATES, TRIP_WAYPOINTS, LeafletTripMapProps } from './map-constants';
 
 // Helper to construct custom Leaflet DivIcons matching Addis Eats design
@@ -103,7 +101,6 @@ export default function LeafletTripMap({
   booking,
   car,
   activeWaypointIndex,
-  isSimulating,
   onSelectWaypoint,
 }: LeafletTripMapProps) {
   const originNeighbourhood = car?.neighbourhood || 'Bole';
@@ -125,11 +122,6 @@ export default function LeafletTripMap({
 
   // Handover Destination
   const destinationCoords: [number, number] = TRIP_WAYPOINTS[TRIP_WAYPOINTS.length - 1].coords;
-
-  // Polyline corridor points connecting the 6 Addis Ababa waypoints
-  const fullCorridorPolyline = useMemo(() => {
-    return TRIP_WAYPOINTS.map((wp) => wp.coords);
-  }, []);
 
   const completedPolyline = useMemo(() => {
     if (!isOnRoad && !isTripFinished) return [originCoords];
