@@ -21,6 +21,7 @@ import {
 } from '@/lib/bookings';
 
 import { useCars, useUsers, useSession, useDisputes, useBookings, triggerSheggerRevalidation } from '@/lib/swr';
+import { moderateCarListingAction, resolveDisputeAction } from '@/app/actions';
 
 // Preset administrative rejection reasons
 const PRESET_REJECTION_REASONS = [
@@ -176,13 +177,14 @@ export function AdminModerationDashboardView() {
     });
   }, [cars, users, statusFilter, neighbourhoodFilter, searchQuery, sortBy]);
 
-  // Execute approval
-  const handleApprove = (car: Car) => {
+  // Execute approval via client fleet mutation and Next.js Server Action path revalidation
+  const handleApprove = async (car: Car) => {
     if (!session) {
       setAlertNotice({ type: 'error', message: 'You must be signed in as an administrator.' });
       return;
     }
 
+    // 1. Perform client fleet moderation & local storage sync
     const res = moderateCarListing(
       car.id,
       { userId: session.userId, role: 'admin' },
@@ -190,6 +192,13 @@ export function AdminModerationDashboardView() {
     );
 
     if (res.success && res.car) {
+      // 2. Invoke Next.js Server Action for server route revalidation
+      await moderateCarListingAction(
+        car.id,
+        { action: 'approve' },
+        session
+      );
+
       triggerSheggerRevalidation('cars');
       mutateCars();
       setAlertNotice({
@@ -208,8 +217,8 @@ export function AdminModerationDashboardView() {
     }
   };
 
-  // Execute rejection
-  const handleReject = () => {
+  // Execute rejection via client fleet mutation and Next.js Server Action path revalidation
+  const handleReject = async () => {
     if (!carToReject) return;
     if (!session) {
       setRejectionError('Administrator session required.');
@@ -221,6 +230,7 @@ export function AdminModerationDashboardView() {
       return;
     }
 
+    // 1. Perform client fleet moderation & local storage sync
     const res = moderateCarListing(
       carToReject.id,
       { userId: session.userId, role: 'admin' },
@@ -228,6 +238,13 @@ export function AdminModerationDashboardView() {
     );
 
     if (res.success && res.car) {
+      // 2. Invoke Next.js Server Action for server route revalidation
+      await moderateCarListingAction(
+        carToReject.id,
+        { action: 'reject', reason: rejectionReasonText.trim() },
+        session
+      );
+
       triggerSheggerRevalidation('cars');
       mutateCars();
       setAlertNotice({
@@ -254,6 +271,10 @@ export function AdminModerationDashboardView() {
     }
 
     if (resolutionAction === 'resolve') {
+      // 1. Invoke Next.js Server Action
+      resolveDisputeAction(selectedDispute.id, resolutionNotesInput.trim(), session).catch(() => {});
+
+      // 2. Perform client resolution
       const res = resolveDisputeByAdmin(
         selectedDispute.id,
         { userId: session.userId, role: 'admin' },

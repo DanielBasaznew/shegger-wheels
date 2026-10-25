@@ -89,10 +89,18 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
   const [activeWaypointIndex, setActiveWaypointIndex] = useState(0);
   const [isSimulating, setIsSimulating] = useState(true);
 
-  // Poll active trip data with SWR every 5s during active tracking (matching Day 41 pattern)
+  // SWR Real-Time Polling: Polls trip telemetry every 5s while active.
+  // Polling automatically and permanently stops when the trip reaches a terminal state (completed/declined) matching the Addis Eats pattern.
   const { booking: polledBooking } = useBooking(bookingId, {
-    refreshInterval: isSimulating ? 5000 : 0,
+    refreshInterval: (latest) => {
+      if (!isSimulating) return 0;
+      if (latest?.status === 'completed' || latest?.status === 'declined') return 0;
+      return 5000;
+    },
+    revalidateOnFocus: true,
+    dedupingInterval: 2000,
   });
+
   const { bookings: allBookings } = useBookings();
   const { cars: allCars } = useCars();
   const { session } = useSession();

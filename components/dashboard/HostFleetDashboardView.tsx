@@ -40,6 +40,7 @@ import { switchActiveRole } from '@/lib/auth';
 import { SEED_USERS } from '@/lib/seeds';
 import { OwnerResponseModal } from '@/components/reviews/OwnerResponseModal';
 import { useCars, useBookings, useReviews, useSession, triggerSheggerRevalidation } from '@/lib/swr';
+import { toggleCarListingActiveAction, transitionBookingStatusAction } from '@/app/actions';
 
 export type HostMainTab = 'fleet' | 'reservations' | 'earnings' | 'reviews';
 
@@ -222,16 +223,20 @@ export function HostFleetDashboardView() {
     });
   }, [ownerBookings, resStatusFilter, resSearchQuery, allCars]);
 
-  // Toggle active / paused listing
-  const handleToggleActive = (car: Car) => {
+  // Toggle active / paused listing via client storage and Server Action revalidatePath
+  const handleToggleActive = async (car: Car) => {
     if (!session || !currentUser) return;
 
+    // 1. Perform client toggle & storage sync
     const res = toggleCarListingActive(car.id, {
       userId: session.userId,
       role: session.activeRole,
     });
 
     if (res.success && res.car) {
+      // 2. Invoke Next.js Server Action for server route revalidation
+      await toggleCarListingActiveAction(car.id, session);
+
       triggerSheggerRevalidation('cars');
       mutateCars();
       setFeedback({
@@ -248,15 +253,20 @@ export function HostFleetDashboardView() {
     }
   };
 
-  // Execution: Owner confirms requested booking
-  const handleExecuteConfirm = (booking: Booking) => {
+  // Execution: Owner confirms requested booking via client mutation and Server Action revalidation
+  const handleExecuteConfirm = async (booking: Booking) => {
     if (!session) return;
+
+    // 1. Perform client confirmation
     const res = confirmBookingByOwner(booking.id, {
       userId: session.userId,
       role: session.activeRole,
     });
 
     if (res.success && res.booking) {
+      // 2. Invoke Next.js Server Action for route revalidation
+      await transitionBookingStatusAction(booking.id, 'confirmed', undefined, session);
+
       setFeedback({
         type: 'success',
         message: `Reservation #${booking.id.toUpperCase()} confirmed! The vehicle is locked for the renter and mock escrow remains held in safety.`,
