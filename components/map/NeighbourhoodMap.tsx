@@ -47,8 +47,14 @@ export default function NeighbourhoodMap({
   neighbourhood,
   carName,
 }: NeighbourhoodMapProps) {
-  const coords: [number, number] =
-    ADDIS_COORDINATES[neighbourhood] || ADDIS_COORDINATES.Bole;
+  const coords: [number, number] = useMemo(() => {
+    if (!neighbourhood) return ADDIS_COORDINATES.Bole;
+    if (ADDIS_COORDINATES[neighbourhood]) return ADDIS_COORDINATES[neighbourhood];
+    const match = Object.entries(ADDIS_COORDINATES).find(
+      ([k]) => k.toLowerCase() === neighbourhood.toLowerCase() || neighbourhood.toLowerCase().includes(k.toLowerCase())
+    );
+    return match ? match[1] : ADDIS_COORDINATES.Bole;
+  }, [neighbourhood]);
 
   const pinIcon = useMemo(() => createHubPin(), []);
 

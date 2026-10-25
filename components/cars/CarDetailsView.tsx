@@ -61,7 +61,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
   const searchParams = useSearchParams();
 
   // Load cars with reactive SWR and 1-hour cache validation
-  const { cars: allCars } = useCars();
+  const { cars: allCars, isLoading } = useCars();
   const car = useMemo(() => {
     const normalizedParam = cleanSlug(id);
     return (
@@ -78,10 +78,14 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
   // Seamlessly synchronize browser address bar to canonical slug when accessed via car ID
   useEffect(() => {
     if (typeof window !== 'undefined' && car) {
-      const canonicalSlug = getCarSlug(car);
-      const currentPath = window.location.pathname;
-      if (currentPath.toLowerCase() === `/cars/${car.id.toLowerCase()}`) {
-        window.history.replaceState(null, '', `/cars/${canonicalSlug}${window.location.search}`);
+      try {
+        const canonicalSlug = getCarSlug(car);
+        const currentPath = window.location.pathname;
+        if (currentPath.toLowerCase() === `/cars/${car.id.toLowerCase()}`) {
+          window.history.replaceState(null, '', `/cars/${canonicalSlug}${window.location.search}`);
+        }
+      } catch {
+        // Tolerate environments where history modification is restricted
       }
     }
   }, [car]);
@@ -295,8 +299,26 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isGalleryModalOpen, photosList.length]);
 
-  // 1. Not Found State
+  // 1. Loading & Not Found States
   if (!car) {
+    if (isLoading) {
+      return (
+        <div className="w-full py-20 bg-[#F5F2EB]">
+          <Container>
+            <div className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-[#66717D]/15 shadow-sm flex flex-col items-center text-center animate-pulse">
+              <div className="w-16 h-16 rounded-2xl bg-[#EBE8E1] flex items-center justify-center mb-4">
+                <div className="w-8 h-8 rounded-full border-3 border-[#111820] border-t-[#D5F36A] animate-spin" />
+              </div>
+              <h2 className="text-xl font-bold text-[#111820] mb-2">Loading Vehicle Details...</h2>
+              <p className="text-[#66717D] text-xs leading-relaxed">
+                Retrieving verified vehicle specifications, host certification, and live Addis Ababa telematics.
+              </p>
+            </div>
+          </Container>
+        </div>
+      );
+    }
+
     return (
       <div className="w-full py-20 bg-[#F5F2EB]">
         <Container>
@@ -353,7 +375,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
   // 3. Approved Car Details View
   return (
-    <div className="w-full pb-20">
+    <div className="w-full pb-28 lg:pb-20">
       {/* Subtle Ambient Light Accents */}
       <div className="relative w-full overflow-hidden">
         <div className="absolute -top-32 right-12 w-96 h-96 rounded-full bg-[#D5F36A]/15 blur-3xl pointer-events-none -z-10" />
@@ -1228,7 +1250,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
       </div>
 
       {/* Mobile Sticky Booking Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#66717D]/18 p-3 px-4 flex items-center justify-between shadow-lg">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#66717D]/18 p-3 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center justify-between shadow-lg">
         <div className="flex flex-col">
           <span className="font-specs-tabular text-base font-extrabold text-[#111820]">
             {car.pricePerDay.toLocaleString()} ETB <span className="text-xs font-normal text-[#66717D]">/ day</span>
@@ -1243,7 +1265,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
               card.scrollIntoView({ behavior: 'smooth' });
             }
           }}
-          className="px-5 py-2.5 rounded-full bg-[#D5F36A] hover:bg-[#C8E85B] text-[#111820] font-bold text-xs shadow-xs"
+          className="px-5 py-2.5 rounded-full bg-[#D5F36A] hover:bg-[#C8E85B] text-[#111820] font-bold text-xs shadow-xs active:scale-95 transition-transform cursor-pointer"
         >
           Reserve Vehicle
         </button>

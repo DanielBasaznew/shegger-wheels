@@ -1,7 +1,55 @@
 'use client';
 
-import React from 'react';
+import React, { Component, ReactNode } from 'react';
 import dynamic from 'next/dynamic';
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  neighbourhood?: string;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class MapErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Neighbourhood Map render error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          role="status"
+          className="flex h-[280px] sm:h-[340px] w-full items-center justify-center rounded-2xl border border-dashed border-[#66717D]/30 bg-white p-6 text-center text-xs text-[#66717D]"
+        >
+          <div className="flex flex-col items-center max-w-sm">
+            <span className="material-symbols-outlined text-3xl mb-2 text-[#66717D]">
+              map_off
+            </span>
+            <p className="font-bold text-sm text-[#111820] mb-1">
+              {this.props.neighbourhood || 'Addis Ababa'} Hub Map Offline
+            </p>
+            <p className="text-xs text-[#66717D] leading-relaxed">
+              Standard vehicle handover is available at the verified host station. Coordinates and check-in instructions are delivered upon reservation.
+            </p>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const NeighbourhoodMap = dynamic(() => import('./NeighbourhoodMap'), {
   ssr: false,
@@ -26,5 +74,10 @@ export default function NeighbourhoodMapPanel({
   neighbourhood: string;
   carName: string;
 }) {
-  return <NeighbourhoodMap neighbourhood={neighbourhood} carName={carName} />;
+  return (
+    <MapErrorBoundary neighbourhood={neighbourhood}>
+      <NeighbourhoodMap neighbourhood={neighbourhood} carName={carName} />
+    </MapErrorBoundary>
+  );
 }
+
