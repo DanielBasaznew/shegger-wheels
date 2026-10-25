@@ -3,14 +3,24 @@
 /**
  * Shegger Wheels — Next.js Server Actions
  *
- * Server actions handling path revalidations (revalidatePath),
- * session cookie persistence, and server-side role validation.
+ * Server actions handling persistent cross-browser updates (backed by server-store),
+ * path revalidations (revalidatePath), and session cookie management.
  */
 
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { DemoSession, UserRole, BookingStatus } from '@/lib/types';
+import { DemoSession, UserRole, BookingStatus, Review } from '@/lib/types';
 import { SEED_USERS } from '@/lib/seeds';
+import {
+  getServerCars,
+  saveServerCars,
+  getServerBookings,
+  saveServerBookings,
+  getServerDisputes,
+  saveServerDisputes,
+  getServerReviews,
+  saveServerReviews,
+} from '@/lib/server-store';
 
 // ==========================================
 // 1. Session & Cookie Actions
@@ -85,6 +95,19 @@ export async function moderateCarListingAction(
     return { success: false, error: 'Unauthorized: Platform administrator role required.' };
   }
 
+  const action = input?.action || 'approve';
+  const cars = getServerCars();
+  const car = cars.find((c) => c.id === carId);
+  if (car) {
+    const now = new Date().toISOString();
+    car.status = action === 'approve' ? 'approved' : 'rejected';
+    car.rejectionReason = action === 'reject' ? (input?.reason?.trim() || 'Rejected by platform administrator.') : undefined;
+    car.moderatedAt = now;
+    car.moderatedBy = session?.userId || 'user_admin_01';
+    car.updatedAt = now;
+    saveServerCars(cars);
+  }
+
   try {
     revalidatePath('/dashboard/admin');
     revalidatePath('/dashboard/host');
@@ -93,9 +116,9 @@ export async function moderateCarListingAction(
     revalidatePath('/', 'layout');
   } catch {}
 
-  const action = input?.action || 'approve';
   return {
     success: true,
+    car,
     message: action === 'approve'
       ? 'Vehicle listing approved and published to the public catalogue.'
       : 'Vehicle listing rejected.',
@@ -110,6 +133,14 @@ export async function toggleCarListingActiveAction(
     return { success: false, error: 'Unauthorized: Fleet owner role required.' };
   }
 
+  const cars = getServerCars();
+  const car = cars.find((c) => c.id === carId);
+  if (car) {
+    car.status = car.status === 'approved' ? 'inactive' : 'approved';
+    car.updatedAt = new Date().toISOString();
+    saveServerCars(cars);
+  }
+
   try {
     revalidatePath('/dashboard/host');
     revalidatePath('/dashboard/admin');
@@ -118,7 +149,7 @@ export async function toggleCarListingActiveAction(
     revalidatePath('/', 'layout');
   } catch {}
 
-  return { success: true };
+  return { success: true, car };
 }
 
 export async function updateCarBlackoutDatesAction(
@@ -130,8 +161,14 @@ export async function updateCarBlackoutDatesAction(
     return { success: false, error: 'Authentication required.' };
   }
 
-  if (dates && !Array.isArray(dates)) {
-    return { success: false, error: 'Dates must be an array of strings.' };
+  if (dates && Array.isArray(dates)) {
+    const cars = getServerCars();
+    const car = cars.find((c) => c.id === carId);
+    if (car) {
+      car.unavailableDates = Array.from(new Set(dates)).sort();
+      car.updatedAt = new Date().toISOString();
+      saveServerCars(cars);
+    }
   }
 
   try {
@@ -157,8 +194,17 @@ export async function transitionBookingStatusAction(
     return { success: false, error: 'Authentication required.' };
   }
 
-  if (targetStatus === 'declined' && reason) {
-    // Audit log reason server-side
+  if (targetStatus) {
+    const bookings = getServerBookings();
+    const b = bookings.find((item) => item.id === bookingId);
+    if (b) {
+      b.status = targetStatus;
+      if (reason) {
+        b.cancellationReason = reason;
+      }
+      b.updatedAt = new Date().toISOString();
+      saveServerBookings(bookings);
+    }
   }
 
   try {
@@ -181,8 +227,14 @@ export async function resolveDisputeAction(
     return { success: false, error: 'Unauthorized: Admin role required.' };
   }
 
-  if (resolutionNotes) {
-    // Record resolution notes
+  const disputes = getServerDisputes();
+  const d = disputes.find((item) => item.id === disputeId);
+  if (d) {
+    d.status = 'resolved';
+    d.resolvedAt = new Date().toISOString();
+    d.resolvedBy = session?.userId || 'user_admin_01';
+    d.resolutionNotes = resolutionNotes || 'Resolved by administrator.';
+    saveServerDisputes(disputes);
   }
 
   try {
@@ -203,8 +255,10 @@ export async function createReviewAction(
     return { success: false, error: 'Authentication required.' };
   }
 
-  if (!review) {
-    return { success: false, error: 'Review payload required.' };
+  if (review && typeof review === 'object') {
+    const reviews = getServerReviews();
+    reviews.push(review as Review);
+    saveServerReviews(reviews);
   }
 
   try {

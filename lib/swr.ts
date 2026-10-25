@@ -71,11 +71,11 @@ export const DEFAULT_SWR_OPTIONS: SWRConfiguration = {
 
 function syncEntityToCache(entity?: string) {
   if (!entity || entity === 'all') {
-    mutate('shegger:cars', getCars(), { revalidate: true });
-    mutate('shegger:bookings', getBookings(), { revalidate: true });
-    mutate('shegger:reviews', getReviews(), { revalidate: true });
-    mutate('shegger:disputes', getDisputes(), { revalidate: true });
-    mutate('shegger:notifications', getNotifications(), { revalidate: true });
+    mutate('shegger:cars', undefined, { revalidate: true });
+    mutate('shegger:bookings', undefined, { revalidate: true });
+    mutate('shegger:reviews', undefined, { revalidate: true });
+    mutate('shegger:disputes', undefined, { revalidate: true });
+    mutate('shegger:notifications', undefined, { revalidate: true });
     mutate('shegger:session', getCurrentSession(), { revalidate: true });
     mutate('shegger:users', getUsers(), { revalidate: true });
     mutate(() => true, undefined, { revalidate: true });
@@ -83,19 +83,19 @@ function syncEntityToCache(entity?: string) {
   }
 
   if (entity === 'cars') {
-    mutate('shegger:cars', getCars(), { revalidate: true });
+    mutate('shegger:cars', undefined, { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'), undefined, { revalidate: true });
   } else if (entity === 'bookings') {
-    mutate('shegger:bookings', getBookings(), { revalidate: true });
+    mutate('shegger:bookings', undefined, { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'), undefined, { revalidate: true });
   } else if (entity === 'reviews') {
-    mutate('shegger:reviews', getReviews(), { revalidate: true });
+    mutate('shegger:reviews', undefined, { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'), undefined, { revalidate: true });
   } else if (entity === 'disputes') {
-    mutate('shegger:disputes', getDisputes(), { revalidate: true });
+    mutate('shegger:disputes', undefined, { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'), undefined, { revalidate: true });
   } else if (entity === 'notifications') {
-    mutate('shegger:notifications', getNotifications(), { revalidate: true });
+    mutate('shegger:notifications', undefined, { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'), undefined, { revalidate: true });
   } else if (entity === 'session') {
     mutate('shegger:session', getCurrentSession(), { revalidate: true });
@@ -169,13 +169,117 @@ export function triggerSheggerRevalidation(entity?: string) {
 }
 
 // ==========================================
+// API & Storage Sync Fetchers
+// ==========================================
+
+async function fetchCarsFromApi(): Promise<Car[]> {
+  if (isBrowser()) {
+    try {
+      const res = await fetch('/api/cars', { cache: 'no-store' });
+      if (res.ok) {
+        const live = await res.json();
+        if (Array.isArray(live) && live.length > 0) {
+          try {
+            window.localStorage.setItem(STORAGE_KEYS.CARS, JSON.stringify(live));
+          } catch {}
+          return live;
+        }
+      }
+    } catch {
+      // Fallback to storage
+    }
+  }
+  return getCars();
+}
+
+async function fetchBookingsFromApi(): Promise<Booking[]> {
+  if (isBrowser()) {
+    try {
+      const res = await fetch('/api/bookings', { cache: 'no-store' });
+      if (res.ok) {
+        const live = await res.json();
+        if (Array.isArray(live) && live.length > 0) {
+          try {
+            window.localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(live));
+          } catch {}
+          return live;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+  return getBookings();
+}
+
+async function fetchReviewsFromApi(): Promise<Review[]> {
+  if (isBrowser()) {
+    try {
+      const res = await fetch('/api/reviews', { cache: 'no-store' });
+      if (res.ok) {
+        const live = await res.json();
+        if (Array.isArray(live)) {
+          try {
+            window.localStorage.setItem(STORAGE_KEYS.REVIEWS, JSON.stringify(live));
+          } catch {}
+          return live;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+  return getReviews();
+}
+
+async function fetchDisputesFromApi(): Promise<Dispute[]> {
+  if (isBrowser()) {
+    try {
+      const res = await fetch('/api/disputes', { cache: 'no-store' });
+      if (res.ok) {
+        const live = await res.json();
+        if (Array.isArray(live)) {
+          try {
+            window.localStorage.setItem(STORAGE_KEYS.DISPUTES, JSON.stringify(live));
+          } catch {}
+          return live;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+  return getDisputes();
+}
+
+async function fetchNotificationsFromApi(): Promise<Notification[]> {
+  if (isBrowser()) {
+    try {
+      const res = await fetch('/api/notifications', { cache: 'no-store' });
+      if (res.ok) {
+        const live = await res.json();
+        if (Array.isArray(live)) {
+          try {
+            window.localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(live));
+          } catch {}
+          return live;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+  return getNotifications();
+}
+
+// ==========================================
 // Hook: Cars & Fleet
 // ==========================================
 
 export function useCars(config?: Partial<SWRConfiguration>) {
   const { data, error, isLoading, mutate: mutateCars } = useSWR<Car[]>(
     'shegger:cars',
-    () => getCars(),
+    () => fetchCarsFromApi(),
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: SEED_CARS,
@@ -198,7 +302,11 @@ export function useCars(config?: Partial<SWRConfiguration>) {
 export function useCar(carId: string | null | undefined, config?: Partial<SWRConfiguration>) {
   const { data, error, isLoading, mutate: mutateCar } = useSWR<Car | undefined>(
     carId ? `shegger:car:${carId}` : null,
-    () => (carId ? getCarById(carId) : undefined),
+    async () => {
+      if (!carId) return undefined;
+      const all = await fetchCarsFromApi();
+      return all.find((c) => c.id === carId);
+    },
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: carId ? SEED_CARS.find((c) => c.id === carId) : undefined,
@@ -221,7 +329,7 @@ export function useCar(carId: string | null | undefined, config?: Partial<SWRCon
 export function useBookings(config?: Partial<SWRConfiguration>) {
   const { data, error, isLoading, mutate: mutateBookings } = useSWR<Booking[]>(
     'shegger:bookings',
-    () => getBookings(),
+    () => fetchBookingsFromApi(),
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: SEED_BOOKINGS,
@@ -242,7 +350,11 @@ export function useBookings(config?: Partial<SWRConfiguration>) {
 export function useBooking(bookingId: string | null | undefined, config?: Partial<SWRConfiguration>) {
   const { data, error, isLoading, mutate: mutateBooking } = useSWR<Booking | undefined>(
     bookingId ? `shegger:booking:${bookingId}` : null,
-    () => (bookingId ? getBookingById(bookingId) : undefined),
+    async () => {
+      if (!bookingId) return undefined;
+      const all = await fetchBookingsFromApi();
+      return all.find((b) => b.id === bookingId);
+    },
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: bookingId ? SEED_BOOKINGS.find((b) => b.id === bookingId) : undefined,
@@ -265,7 +377,7 @@ export function useBooking(bookingId: string | null | undefined, config?: Partia
 export function useReviews() {
   const { data, error, isLoading, mutate: mutateReviews } = useSWR<Review[]>(
     'shegger:reviews',
-    () => getReviews(),
+    () => fetchReviewsFromApi(),
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: SEED_REVIEWS,
@@ -285,7 +397,11 @@ export function useReviews() {
 export function useCarReviews(carId: string | null | undefined) {
   const { data, error, isLoading, mutate: mutateReviews } = useSWR<Review[]>(
     carId ? `shegger:reviews:${carId}` : null,
-    () => (carId ? getReviewsForCar(carId) : []),
+    async () => {
+      if (!carId) return [];
+      const all = await fetchReviewsFromApi();
+      return all.filter((r) => r.carId === carId);
+    },
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: carId ? SEED_REVIEWS.filter((r) => r.carId === carId) : [],
@@ -309,7 +425,7 @@ export function useCarReviews(carId: string | null | undefined) {
 export function useDisputes() {
   const { data, error, isLoading, mutate: mutateDisputes } = useSWR<Dispute[]>(
     'shegger:disputes',
-    () => getDisputes(),
+    () => fetchDisputesFromApi(),
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: SEED_DISPUTES,
@@ -329,7 +445,11 @@ export function useDisputes() {
 export function useDispute(disputeId: string | null | undefined) {
   const { data, error, isLoading, mutate: mutateDispute } = useSWR<Dispute | undefined>(
     disputeId ? `shegger:dispute:${disputeId}` : null,
-    () => (disputeId ? getDisputeById(disputeId) : undefined),
+    async () => {
+      if (!disputeId) return undefined;
+      const all = await fetchDisputesFromApi();
+      return all.find((d) => d.id === disputeId);
+    },
     {
       ...DEFAULT_SWR_OPTIONS,
       fallbackData: disputeId ? SEED_DISPUTES.find((d) => d.id === disputeId) : undefined,
@@ -348,15 +468,17 @@ export function useDispute(disputeId: string | null | undefined) {
 // Hook: Notifications
 // ==========================================
 
-export function useNotifications(userId?: string | null) {
-  const { data, error, isLoading, mutate: mutateNotifs } = useSWR<Notification[]>(
-    userId ? `shegger:notifications:${userId}` : 'shegger:notifications',
-    () => (userId ? getNotificationsForUser(userId) : getNotifications()),
+export function useNotifications(userId: string | null | undefined) {
+  const { data, error, isLoading, mutate: mutateNotifications } = useSWR<Notification[]>(
+    userId ? `shegger:notifications:${userId}` : null,
+    async () => {
+      if (!userId) return [];
+      const all = await fetchNotificationsFromApi();
+      return all.filter((n) => n.recipientId === userId);
+    },
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: userId
-        ? SEED_NOTIFICATIONS.filter((n) => n.recipientId === userId)
-        : SEED_NOTIFICATIONS,
+      fallbackData: userId ? SEED_NOTIFICATIONS.filter((n) => n.recipientId === userId) : [],
     }
   );
 
@@ -368,9 +490,10 @@ export function useNotifications(userId?: string | null) {
     unreadCount,
     isLoading: isLoading && notifications.length === 0,
     isError: !!error,
-    mutate: mutateNotifs,
+    mutate: mutateNotifications,
   };
 }
+
 
 // ==========================================
 // Hydration-Safe Client Mount Tracker
