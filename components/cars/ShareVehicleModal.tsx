@@ -215,9 +215,14 @@ export function ShareVehicleModal({ isOpen, onClose, car }: ShareVehicleModalPro
                 href={telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-2xl bg-[#0088cc]/10 hover:bg-[#0088cc]/15 text-[#0088cc] border border-[#0088cc]/25 font-bold text-xs flex flex-col items-center justify-center gap-1 transition-colors text-center no-underline"
+                className="p-3 rounded-2xl bg-[#0088cc]/10 hover:bg-[#0088cc]/18 text-[#0088cc] border border-[#0088cc]/25 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition-all text-center no-underline hover:scale-[1.02]"
+                aria-label="Share listing via Telegram"
               >
-                <span className="text-base">✈️</span>
+                <div className="w-8 h-8 rounded-full bg-[#0088cc] text-white flex items-center justify-center shadow-xs">
+                  <svg className="w-4 h-4 fill-white translate-x-[-0.5px]" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                  </svg>
+                </div>
                 <span>Telegram</span>
               </a>
 
@@ -225,9 +230,14 @@ export function ShareVehicleModal({ isOpen, onClose, car }: ShareVehicleModalPro
                 href={whatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-2xl bg-[#25D366]/10 hover:bg-[#25D366]/15 text-[#128C7E] border border-[#25D366]/25 font-bold text-xs flex flex-col items-center justify-center gap-1 transition-colors text-center no-underline"
+                className="p-3 rounded-2xl bg-[#25D366]/10 hover:bg-[#25D366]/18 text-[#128C7E] border border-[#25D366]/25 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition-all text-center no-underline hover:scale-[1.02]"
+                aria-label="Share listing via WhatsApp"
               >
-                <span className="text-base">💬</span>
+                <div className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-xs">
+                  <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.54 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.83a8.188 8.188 0 0 1-5.83 2.41c-1.46 0-2.88-.39-4.13-1.12l-.3-.18-3.07.81.82-2.99-.19-.31a8.18 8.18 0 0 1-1.26-4.45c0-4.54 3.7-8.24 8.24-8.24zm-3.6 3.55c-.2 0-.44.07-.66.32-.23.25-.88.86-.88 2.09 0 1.23.9 2.42 1.02 2.59.13.16 1.75 2.68 4.24 3.76 2.07.9 2.49.72 2.94.68.45-.04 1.45-.59 1.66-1.16.2-.57.2-1.07.14-1.17-.06-.1-.23-.16-.49-.29s-1.52-.75-1.75-.84c-.23-.08-.4-.13-.57.13-.17.26-.66.84-.81 1.01-.15.17-.3.19-.56.06-.26-.13-1.11-.41-2.12-1.31-.78-.7-1.31-1.56-1.46-1.83-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.45.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.07-.13-.57-1.38-.79-1.89-.21-.49-.42-.43-.57-.44-.15-.01-.32-.01-.52-.01z" />
+                  </svg>
+                </div>
                 <span>WhatsApp</span>
               </a>
 
@@ -235,9 +245,14 @@ export function ShareVehicleModal({ isOpen, onClose, car }: ShareVehicleModalPro
                 href={twitterUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-2xl bg-[#111820]/10 hover:bg-[#111820]/15 text-[#111820] border border-[#111820]/25 font-bold text-xs flex flex-col items-center justify-center gap-1 transition-colors text-center no-underline"
+                className="p-3 rounded-2xl bg-[#111820]/10 hover:bg-[#111820]/18 text-[#111820] border border-[#111820]/25 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition-all text-center no-underline hover:scale-[1.02]"
+                aria-label="Share listing via X (Twitter)"
               >
-                <span className="text-base">𝕏</span>
+                <div className="w-8 h-8 rounded-full bg-[#111820] text-white flex items-center justify-center shadow-xs">
+                  <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </div>
                 <span>X / Twitter</span>
               </a>
             </div>
