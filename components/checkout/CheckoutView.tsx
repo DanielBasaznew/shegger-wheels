@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
-import { Car, User, Booking } from '@/lib/types';
+import { User, Booking } from '@/lib/types';
 import {
   getUserById,
   getCheckoutDraft,

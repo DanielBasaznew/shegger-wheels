@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { VehicleCard } from '@/components/cars/VehicleCard';
-import { Car } from '@/lib/types';
 import { useCars } from '@/lib/swr';
 
 function CatalogueContent() {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { resetDemoData, isOptimizableImage } from '@/lib/storage';
-import { User, DemoSession, UserRole } from '@/lib/types';
+import { UserRole } from '@/lib/types';
 import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
 import { useSession } from '@/lib/swr';
 

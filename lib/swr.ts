@@ -9,7 +9,7 @@
  */
 
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import {
   Car,
   Booking,
@@ -51,15 +51,16 @@ import {
 } from './seeds';
 
 // ==========================================
-// 1-Hour Validation Cache Configuration
+// Cache & Revalidation Configuration
 // ==========================================
 
-export const ONE_HOUR_MS = 60 * 60 * 1000; // 3,600,000 ms = 1 hour cache validation
+export const ONE_HOUR_MS = 60 * 60 * 1000; // 3,600,000 ms cache lifetime baseline
 
 export const DEFAULT_SWR_OPTIONS: SWRConfiguration = {
-  dedupingInterval: ONE_HOUR_MS, // 1 hour validation deduping
+  dedupingInterval: 2000, // 2s dedupe window prevents duplicate fetches without blocking state transitions
   revalidateOnFocus: true,
   revalidateOnReconnect: true,
+  revalidateIfStale: true,
   keepPreviousData: true,
 };
 
@@ -67,44 +68,65 @@ export const DEFAULT_SWR_OPTIONS: SWRConfiguration = {
 // Cross-Tab & Same-Tab Reactive Synchronizer
 // ==========================================
 
+function syncEntityToCache(entity?: string) {
+  if (!entity || entity === 'all') {
+    mutate('shegger:cars', getCars(), { revalidate: false });
+    mutate('shegger:bookings', getBookings(), { revalidate: false });
+    mutate('shegger:reviews', getReviews(), { revalidate: false });
+    mutate('shegger:disputes', getDisputes(), { revalidate: false });
+    mutate('shegger:notifications', getNotifications(), { revalidate: false });
+    mutate('shegger:session', getCurrentSession(), { revalidate: false });
+    mutate('shegger:users', getUsers(), { revalidate: false });
+    mutate(() => true, undefined, { revalidate: true });
+    return;
+  }
+
+  if (entity === 'cars') {
+    mutate('shegger:cars', getCars(), { revalidate: false });
+    mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'), undefined, { revalidate: true });
+  } else if (entity === 'bookings') {
+    mutate('shegger:bookings', getBookings(), { revalidate: false });
+    mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'), undefined, { revalidate: true });
+  } else if (entity === 'reviews') {
+    mutate('shegger:reviews', getReviews(), { revalidate: false });
+    mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'), undefined, { revalidate: true });
+  } else if (entity === 'disputes') {
+    mutate('shegger:disputes', getDisputes(), { revalidate: false });
+    mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'), undefined, { revalidate: true });
+  } else if (entity === 'notifications') {
+    mutate('shegger:notifications', getNotifications(), { revalidate: false });
+    mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'), undefined, { revalidate: true });
+  } else if (entity === 'session') {
+    mutate('shegger:session', getCurrentSession(), { revalidate: false });
+  } else if (entity === 'users') {
+    mutate('shegger:users', getUsers(), { revalidate: false });
+  } else {
+    mutate(`shegger:${entity}`);
+  }
+}
+
 if (typeof window !== 'undefined') {
   // Listen to same-window storage mutation events dispatched by storage.ts
   window.addEventListener('shegger-storage-change', ((e: CustomEvent<{ key?: string; entity?: string }>) => {
-    const entity = e.detail?.entity;
-    if (entity) {
-      mutate(`shegger:${entity}`);
-      if (entity === 'cars') mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'));
-      if (entity === 'bookings') mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'));
-      if (entity === 'reviews') mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'));
-      if (entity === 'disputes') mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'));
-      if (entity === 'notifications') mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'));
-      if (entity === 'session') mutate('shegger:session');
-    } else {
-      mutate(() => true);
-    }
+    syncEntityToCache(e.detail?.entity);
   }) as EventListener);
 
   // Listen to cross-tab storage mutation events from other windows
   window.addEventListener('storage', (e: StorageEvent) => {
     if (!e.key) {
-      mutate(() => true);
+      syncEntityToCache('all');
       return;
     }
     if (e.key === STORAGE_KEYS.CARS) {
-      mutate('shegger:cars');
-      mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'));
+      syncEntityToCache('cars');
     } else if (e.key === STORAGE_KEYS.BOOKINGS) {
-      mutate('shegger:bookings');
-      mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'));
+      syncEntityToCache('bookings');
     } else if (e.key === STORAGE_KEYS.REVIEWS) {
-      mutate('shegger:reviews');
-      mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'));
+      syncEntityToCache('reviews');
     } else if (e.key === STORAGE_KEYS.DISPUTES) {
-      mutate('shegger:disputes');
-      mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'));
+      syncEntityToCache('disputes');
     } else if (e.key === STORAGE_KEYS.NOTIFICATIONS) {
-      mutate('shegger:notifications');
-      mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'));
+      syncEntityToCache('notifications');
     } else if (e.key === STORAGE_KEYS.SESSION) {
       const fromLocal = readStorage<DemoSession | null>(STORAGE_KEYS.SESSION, null, isDemoSession);
       if (fromLocal) {
@@ -112,7 +134,7 @@ if (typeof window !== 'undefined') {
       } else {
         removeSession(SESSION_KEYS.SESSION);
       }
-      mutate('shegger:session');
+      syncEntityToCache('session');
     }
   });
 
@@ -122,46 +144,27 @@ if (typeof window !== 'undefined') {
       const channel = new BroadcastChannel('shegger_wheels_sync');
       channel.onmessage = (event) => {
         const entity = event.data?.entity;
-        if (entity) {
-          if (entity === 'session') {
-            const fromLocal = readStorage<DemoSession | null>(STORAGE_KEYS.SESSION, null, isDemoSession);
-            if (fromLocal) {
-              writeSession(SESSION_KEYS.SESSION, fromLocal);
-            } else {
-              removeSession(SESSION_KEYS.SESSION);
-            }
+        if (entity === 'session') {
+          const fromLocal = readStorage<DemoSession | null>(STORAGE_KEYS.SESSION, null, isDemoSession);
+          if (fromLocal) {
+            writeSession(SESSION_KEYS.SESSION, fromLocal);
+          } else {
+            removeSession(SESSION_KEYS.SESSION);
           }
-          mutate(`shegger:${entity}`);
-          if (entity === 'cars') mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'));
-          if (entity === 'bookings') mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'));
-          if (entity === 'reviews') mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'));
-          if (entity === 'disputes') mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'));
-          if (entity === 'notifications') mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'));
-          if (entity === 'session') mutate('shegger:session');
-        } else {
-          mutate(() => true);
         }
+        syncEntityToCache(entity);
       };
     } catch {
-      // Ignore
+      // Ignore in restricted environments
     }
   }
 }
 
 /**
- * Manually trigger revalidation for a specific entity or all cached keys
+ * Manually trigger revalidation for a specific entity or all cached keys with immediate cache injection
  */
 export function triggerSheggerRevalidation(entity?: string) {
-  if (entity) {
-    mutate(`shegger:${entity}`);
-    if (entity === 'cars') mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'));
-    if (entity === 'bookings') mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'));
-    if (entity === 'reviews') mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'));
-    if (entity === 'disputes') mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'));
-    if (entity === 'notifications') mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'));
-  } else {
-    mutate(() => true);
-  }
+  syncEntityToCache(entity);
 }
 
 // ==========================================
@@ -392,15 +395,9 @@ export function useSession() {
     }
   );
 
-  const [user, setUser] = useState<User | undefined>(undefined);
-
-  useEffect(() => {
-    if (session?.userId) {
-      setUser(getUserById(session.userId));
-    } else {
-      setUser(undefined);
-    }
-  }, [session?.userId]);
+  const user = useMemo(() => {
+    return session?.userId ? getUserById(session.userId) : undefined;
+  }, [session]);
 
   return {
     session: session || null,

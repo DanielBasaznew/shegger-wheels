@@ -6,10 +6,8 @@ import Link from 'next/link';
 import {
   Car,
   CarStatus,
-  User,
   Dispute,
   DisputeStatus,
-  Booking,
 } from '@/lib/types';
 import { getUserById, isOptimizableImage } from '@/lib/storage';
 import {
@@ -22,7 +20,7 @@ import {
   updateDisputeStatusByAdmin,
 } from '@/lib/bookings';
 
-import { useCars, useUsers, useSession, useDisputes, useBookings } from '@/lib/swr';
+import { useCars, useUsers, useSession, useDisputes, useBookings, triggerSheggerRevalidation } from '@/lib/swr';
 
 // Preset administrative rejection reasons
 const PRESET_REJECTION_REASONS = [
@@ -34,7 +32,7 @@ const PRESET_REJECTION_REASONS = [
 ];
 
 export function AdminModerationDashboardView() {
-  const { cars } = useCars();
+  const { cars, mutate: mutateCars } = useCars();
   const { users } = useUsers();
   const { session } = useSession();
   const { disputes } = useDisputes();
@@ -192,6 +190,8 @@ export function AdminModerationDashboardView() {
     );
 
     if (res.success && res.car) {
+      triggerSheggerRevalidation('cars');
+      mutateCars();
       setAlertNotice({
         type: 'success',
         message: `Listing for ${res.car.make} ${res.car.model} (${res.car.year}) approved and published to the public catalogue!`,
@@ -199,9 +199,6 @@ export function AdminModerationDashboardView() {
       setCarToApprove(null);
       if (inspectingCar?.id === car.id) {
         setInspectingCar(res.car);
-      }
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('storage'));
       }
     } else {
       setAlertNotice({
@@ -231,6 +228,8 @@ export function AdminModerationDashboardView() {
     );
 
     if (res.success && res.car) {
+      triggerSheggerRevalidation('cars');
+      mutateCars();
       setAlertNotice({
         type: 'success',
         message: `Listing for ${res.car.make} ${res.car.model} rejected. The owner will see your feedback, and the vehicle is hidden from the catalogue.`,
@@ -240,9 +239,6 @@ export function AdminModerationDashboardView() {
       setRejectionError('');
       if (inspectingCar?.id === carToReject.id) {
         setInspectingCar(res.car);
-      }
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('storage'));
       }
     } else {
       setRejectionError(res.error || 'Failed to reject vehicle listing.');

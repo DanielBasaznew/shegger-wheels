@@ -11,7 +11,6 @@ import {
   CarStatus,
   User,
   UserRole,
-  DemoSession,
   Booking,
   BookingStatus,
   Review,
@@ -40,13 +39,13 @@ import {
 import { switchActiveRole } from '@/lib/auth';
 import { SEED_USERS } from '@/lib/seeds';
 import { OwnerResponseModal } from '@/components/reviews/OwnerResponseModal';
-import { useCars, useBookings, useReviews, useSession } from '@/lib/swr';
+import { useCars, useBookings, useReviews, useSession, triggerSheggerRevalidation } from '@/lib/swr';
 
 export type HostMainTab = 'fleet' | 'reservations' | 'earnings' | 'reviews';
 
 export function HostFleetDashboardView() {
   // Live reactive data from SWR cache with 1-hour validation and multi-tab synchronization
-  const { cars: allCars } = useCars();
+  const { cars: allCars, mutate: mutateCars } = useCars();
   const { bookings: allBookings } = useBookings();
   const { reviews: allReviews } = useReviews();
   const { session } = useSession();
@@ -233,6 +232,8 @@ export function HostFleetDashboardView() {
     });
 
     if (res.success && res.car) {
+      triggerSheggerRevalidation('cars');
+      mutateCars();
       setFeedback({
         type: 'success',
         message: `Listing "${car.make} ${car.model}" is now ${
@@ -1821,6 +1822,8 @@ export function HostFleetDashboardView() {
           actor={{ userId: session.userId, role: session.activeRole }}
           onClose={() => setIsAddModalOpen(false)}
           onSuccess={(car) => {
+            triggerSheggerRevalidation('cars');
+            mutateCars();
             setIsAddModalOpen(false);
             setFeedback({
               type: 'success',
@@ -1840,6 +1843,8 @@ export function HostFleetDashboardView() {
           actor={{ userId: session.userId, role: session.activeRole }}
           onClose={() => setEditingCar(null)}
           onSuccess={(car) => {
+            triggerSheggerRevalidation('cars');
+            mutateCars();
             setEditingCar(null);
             setFeedback({
               type: 'success',
@@ -1859,6 +1864,8 @@ export function HostFleetDashboardView() {
           todayStr={todayStr}
           onClose={() => setBlackoutCar(null)}
           onSuccess={(updatedCar) => {
+            triggerSheggerRevalidation('cars');
+            mutateCars();
             setBlackoutCar(null);
             setFeedback({
               type: 'success',

@@ -8,14 +8,14 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { VehicleCard } from '@/components/cars/VehicleCard';
-import { Car, User, Review } from '@/lib/types';
+import { User, Review } from '@/lib/types';
 import {
   getUserById,
   getCurrentSession,
   setCheckoutDraft,
   isOptimizableImage,
 } from '@/lib/storage';
-import { SEED_CARS, SEED_USERS, SEED_REVIEWS } from '@/lib/seeds';
+import { SEED_USERS } from '@/lib/seeds';
 import { getCarRatingSummary } from '@/lib/reviews';
 import { useCars, useReviews } from '@/lib/swr';
 
