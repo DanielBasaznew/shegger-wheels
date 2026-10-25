@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerCars } from '@/lib/server-store';
+import { revalidatePath } from 'next/cache';
+import { getServerCars, updateServerCar } from '@/lib/server-store';
+import { Car } from '@/lib/types';
 
 export async function GET() {
   const cars = getServerCars();
@@ -9,3 +11,22 @@ export async function GET() {
     },
   });
 }
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    if (body && typeof body === 'object' && body.id) {
+      updateServerCar(body as Car);
+      try {
+        revalidatePath('/cars');
+        revalidatePath('/dashboard/admin');
+        revalidatePath('/dashboard/host');
+      } catch {}
+      return NextResponse.json({ success: true, car: body });
+    }
+    return NextResponse.json({ success: false, error: 'Invalid car payload' }, { status: 400 });
+  } catch {
+    return NextResponse.json({ success: false, error: 'Malformed request' }, { status: 400 });
+  }
+}
+

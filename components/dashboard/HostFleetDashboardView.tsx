@@ -40,7 +40,13 @@ import { switchActiveRole } from '@/lib/auth';
 import { SEED_USERS } from '@/lib/seeds';
 import { OwnerResponseModal } from '@/components/reviews/OwnerResponseModal';
 import { useCars, useBookings, useReviews, useSession, triggerSheggerRevalidation } from '@/lib/swr';
-import { toggleCarListingActiveAction, transitionBookingStatusAction } from '@/app/actions';
+import {
+  toggleCarListingActiveAction,
+  transitionBookingStatusAction,
+  createCarListingAction,
+  updateCarListingAction,
+  disputeBookingAction,
+} from '@/app/actions';
 
 export type HostMainTab = 'fleet' | 'reservations' | 'earnings' | 'reviews';
 
@@ -282,7 +288,7 @@ export function HostFleetDashboardView() {
   };
 
   // Execution: Owner declines requested booking
-  const handleExecuteDecline = () => {
+  const handleExecuteDecline = async () => {
     if (!bookingToDecline || !session) return;
     const res = declineBookingByOwner(
       bookingToDecline.id,
@@ -294,6 +300,12 @@ export function HostFleetDashboardView() {
     );
 
     if (res.success) {
+      await transitionBookingStatusAction(
+        bookingToDecline.id,
+        'declined',
+        declineReasonInput || 'Schedule conflict',
+        session
+      );
       setFeedback({
         type: 'info',
         message: `Reservation #${bookingToDecline.id.toUpperCase()} declined. The renter's held TeleBirr escrow has been automatically refunded.`,
@@ -310,7 +322,7 @@ export function HostFleetDashboardView() {
   };
 
   // Execution: Owner starts trip (Handover)
-  const handleExecuteStartTrip = (booking: Booking) => {
+  const handleExecuteStartTrip = async (booking: Booking) => {
     if (!session) return;
     const res = startTripByOwner(booking.id, {
       userId: session.userId,
@@ -318,6 +330,7 @@ export function HostFleetDashboardView() {
     });
 
     if (res.success) {
+      await transitionBookingStatusAction(booking.id, 'in_progress', undefined, session);
       setFeedback({
         type: 'success',
         message: `Trip #${booking.id.toUpperCase()} is now ACTIVE! Vehicle handover complete.`,
@@ -333,7 +346,7 @@ export function HostFleetDashboardView() {
   };
 
   // Execution: Owner completes trip (Return & Payout release)
-  const handleExecuteCompleteTrip = (booking: Booking) => {
+  const handleExecuteCompleteTrip = async (booking: Booking) => {
     if (!session) return;
     const res = completeTripByOwner(booking.id, {
       userId: session.userId,
@@ -341,6 +354,7 @@ export function HostFleetDashboardView() {
     });
 
     if (res.success) {
+      await transitionBookingStatusAction(booking.id, 'completed', undefined, session);
       setFeedback({
         type: 'success',
         message: `Rental #${booking.id.toUpperCase()} completed! Simulated TeleBirr escrow (${booking.subtotal.toLocaleString()} ETB) has been disbursed to your host balance.`,
@@ -356,7 +370,7 @@ export function HostFleetDashboardView() {
   };
 
   // Execution: Owner opens dispute
-  const handleExecuteDispute = () => {
+  const handleExecuteDispute = async () => {
     if (!bookingToDispute || !session) return;
     if (!disputeReasonInput.trim()) {
       setFeedback({
@@ -376,6 +390,12 @@ export function HostFleetDashboardView() {
     );
 
     if (res.success) {
+      await transitionBookingStatusAction(
+        bookingToDispute.id,
+        'disputed',
+        disputeReasonInput,
+        session
+      );
       setFeedback({
         type: 'info',
         message: `Dispute opened for #${bookingToDispute.id.toUpperCase()}. Platform administration has been notified and escrow is held.`,
@@ -2370,7 +2390,7 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
 
   const activePhoto = customPhotoUrl.trim() || selectedPhotoPreset;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setServerError(null);
@@ -2426,6 +2446,11 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
 
         const res = createCarListing(actor, input);
         if (res.success && res.car) {
+          await createCarListingAction(res.car, {
+            userId: actor.userId,
+            activeRole: actor.role,
+            signedInAt: new Date().toISOString(),
+          });
           onSuccess(res.car);
         } else {
           setServerError(res.error || 'Failed to create listing.');
@@ -2447,6 +2472,11 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
         });
 
         if (res.success && res.car) {
+          await updateCarListingAction(res.car, {
+            userId: actor.userId,
+            activeRole: actor.role,
+            signedInAt: new Date().toISOString(),
+          });
           onSuccess(res.car);
         } else {
           setServerError(res.error || 'Failed to update listing.');

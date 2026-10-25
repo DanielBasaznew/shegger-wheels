@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Review, DemoSession } from '@/lib/types';
 import { respondToReview } from '@/lib/reviews';
+import { respondToReviewAction } from '@/app/actions';
 
 interface OwnerResponseModalProps {
   review: Review;
@@ -55,7 +56,7 @@ export function OwnerResponseModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -72,12 +73,13 @@ export function OwnerResponseModal({
       replyText.trim()
     );
 
-    setIsSubmitting(false);
-
     if (result.success) {
+      await respondToReviewAction(review.id, replyText.trim(), session);
+      setIsSubmitting(false);
       if (onSuccess) onSuccess();
       onClose();
     } else {
+      setIsSubmitting(false);
       setError(result.error || 'Failed to submit response. Please try again.');
     }
   };

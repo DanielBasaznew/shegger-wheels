@@ -18,6 +18,7 @@ import { getSafeReturnUrl } from '@/lib/auth';
 import { SubmitReviewModal } from '@/components/reviews/SubmitReviewModal';
 import { isBookingReviewable } from '@/lib/reviews';
 import { useCars, useBookings, useSession } from '@/lib/swr';
+import { transitionBookingStatusAction } from '@/app/actions';
 
 interface BookingDetailViewProps {
   bookingId: string;
@@ -142,7 +143,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
   }
 
   // Cancellation Execution
-  const handleCancelBooking = () => {
+  const handleCancelBooking = async () => {
     if (!isCurrentRenter) return;
 
     const res = cancelBookingByRenter(
@@ -152,6 +153,12 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
     );
 
     if (res.success) {
+      await transitionBookingStatusAction(
+        booking.id,
+        'cancelled',
+        cancellationReason || 'Cancelled from receipt page',
+        session
+      );
       setActionFeedback({
         type: 'success',
         message: 'Your reservation has been cancelled. TeleBirr escrow hold refunded.',

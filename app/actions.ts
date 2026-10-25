@@ -9,7 +9,16 @@
 
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { DemoSession, UserRole, BookingStatus, Review } from '@/lib/types';
+import {
+  DemoSession,
+  UserRole,
+  BookingStatus,
+  Review,
+  Car,
+  Booking,
+  Dispute,
+  DisputeStatus,
+} from '@/lib/types';
 import { SEED_USERS } from '@/lib/seeds';
 import {
   getServerCars,
@@ -20,6 +29,8 @@ import {
   saveServerDisputes,
   getServerReviews,
   saveServerReviews,
+  updateServerCar,
+  updateServerBooking,
 } from '@/lib/server-store';
 
 // ==========================================
@@ -85,6 +96,48 @@ export async function signOutAction() {
 // ==========================================
 // 2. Fleet Revalidation Server Actions
 // ==========================================
+
+export async function createCarListingAction(
+  car: Car,
+  session?: DemoSession | null
+) {
+  if (session && session.activeRole !== 'owner' && session.activeRole !== 'admin') {
+    return { success: false, error: 'Unauthorized: Fleet owner role required.' };
+  }
+
+  updateServerCar(car);
+
+  try {
+    revalidatePath('/dashboard/host');
+    revalidatePath('/dashboard/admin');
+    revalidatePath('/cars');
+    revalidatePath(`/cars/${car.id}`);
+    revalidatePath('/', 'layout');
+  } catch {}
+
+  return { success: true, car };
+}
+
+export async function updateCarListingAction(
+  car: Car,
+  session?: DemoSession | null
+) {
+  if (session && session.activeRole !== 'owner' && session.activeRole !== 'admin') {
+    return { success: false, error: 'Unauthorized: Fleet owner role required.' };
+  }
+
+  updateServerCar(car);
+
+  try {
+    revalidatePath('/dashboard/host');
+    revalidatePath('/dashboard/admin');
+    revalidatePath('/cars');
+    revalidatePath(`/cars/${car.id}`);
+    revalidatePath('/', 'layout');
+  } catch {}
+
+  return { success: true, car };
+}
 
 export async function moderateCarListingAction(
   carId: string,
@@ -184,6 +237,27 @@ export async function updateCarBlackoutDatesAction(
 // 3. Booking & Disputes Revalidation Actions
 // ==========================================
 
+export async function createBookingAction(
+  booking: Booking,
+  session?: DemoSession | null
+) {
+  if (session && !session.userId) {
+    return { success: false, error: 'Authentication required.' };
+  }
+
+  updateServerBooking(booking);
+
+  try {
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/host');
+    revalidatePath('/dashboard/admin');
+    revalidatePath(`/bookings/${booking.id}`);
+    revalidatePath(`/bookings/${booking.id}/track`);
+  } catch {}
+
+  return { success: true, booking };
+}
+
 export async function transitionBookingStatusAction(
   bookingId: string,
   targetStatus?: BookingStatus,
@@ -218,9 +292,48 @@ export async function transitionBookingStatusAction(
   return { success: true };
 }
 
+export async function disputeBookingAction(
+  dispute: Dispute,
+  bookingStatus?: BookingStatus,
+  session?: DemoSession | null
+) {
+  if (session && !session.userId) {
+    return { success: false, error: 'Authentication required.' };
+  }
+
+  const disputes = getServerDisputes();
+  const idx = disputes.findIndex((d) => d.id === dispute.id);
+  if (idx >= 0) {
+    disputes[idx] = dispute;
+  } else {
+    disputes.unshift(dispute);
+  }
+  saveServerDisputes(disputes);
+
+  if (bookingStatus) {
+    const bookings = getServerBookings();
+    const b = bookings.find((item) => item.id === dispute.bookingId);
+    if (b) {
+      b.status = bookingStatus;
+      b.updatedAt = new Date().toISOString();
+      saveServerBookings(bookings);
+    }
+  }
+
+  try {
+    revalidatePath('/dashboard/admin');
+    revalidatePath('/dashboard/host');
+    revalidatePath('/dashboard');
+    revalidatePath(`/bookings/${dispute.bookingId}`);
+  } catch {}
+
+  return { success: true, dispute };
+}
+
 export async function resolveDisputeAction(
   disputeId: string,
   resolutionNotes?: string,
+  status?: DisputeStatus,
   session?: DemoSession | null
 ) {
   if (session && session.activeRole !== 'admin') {
@@ -230,10 +343,12 @@ export async function resolveDisputeAction(
   const disputes = getServerDisputes();
   const d = disputes.find((item) => item.id === disputeId);
   if (d) {
-    d.status = 'resolved';
-    d.resolvedAt = new Date().toISOString();
-    d.resolvedBy = session?.userId || 'user_admin_01';
-    d.resolutionNotes = resolutionNotes || 'Resolved by administrator.';
+    d.status = status || 'resolved';
+    if (d.status === 'resolved') {
+      d.resolvedAt = new Date().toISOString();
+      d.resolvedBy = session?.userId || 'user_admin_01';
+      d.resolutionNotes = resolutionNotes || 'Resolved by administrator.';
+    }
     saveServerDisputes(disputes);
   }
 
@@ -266,6 +381,31 @@ export async function createReviewAction(
     revalidatePath('/dashboard/host');
     revalidatePath('/dashboard');
     revalidatePath(`/bookings/${bookingId}`);
+  } catch {}
+
+  return { success: true };
+}
+
+export async function respondToReviewAction(
+  reviewId: string,
+  replyText: string,
+  session?: DemoSession | null
+) {
+  if (session && !session.userId) {
+    return { success: false, error: 'Authentication required.' };
+  }
+
+  const reviews = getServerReviews();
+  const rev = reviews.find((r) => r.id === reviewId);
+  if (rev) {
+    rev.ownerReply = replyText;
+    rev.ownerReplyAt = new Date().toISOString();
+    saveServerReviews(reviews);
+  }
+
+  try {
+    revalidatePath('/cars');
+    revalidatePath('/dashboard/host');
   } catch {}
 
   return { success: true };

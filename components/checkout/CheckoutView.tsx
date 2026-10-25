@@ -24,6 +24,7 @@ import {
 import { getSafeReturnUrl } from '@/lib/auth';
 import { SEED_USERS } from '@/lib/seeds';
 import { useCars, useSession } from '@/lib/swr';
+import { createBookingAction } from '@/app/actions';
 
 // Client hydration subscription
 function subscribeClient() {
@@ -168,7 +169,7 @@ export function CheckoutView() {
     setSimState('processing');
 
     // Simulate multi-sig TeleBirr escrow processing latency (1.2 seconds)
-    setTimeout(() => {
+    setTimeout(async () => {
       const result = createBooking({
         carId: selectedCar.id,
         startDate,
@@ -177,15 +178,15 @@ export function CheckoutView() {
         paymentMethod: 'TeleBirr',
       });
 
-      setIsSubmitting(false);
-
       if (result.success && result.booking) {
+        await createBookingAction(result.booking, session);
         setCreatedBooking(result.booking);
         setSimState('receipt');
       } else {
         setSimState('ready');
         setSubmissionError(result.error || 'Failed to complete booking submission.');
       }
+      setIsSubmitting(false);
     }, 1200);
   };
 

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Booking, Car, DemoSession } from '@/lib/types';
 import { createReview } from '@/lib/reviews';
+import { createReviewAction } from '@/app/actions';
 
 interface SubmitReviewModalProps {
   booking: Booking;
@@ -51,7 +52,7 @@ export function SubmitReviewModal({
 
   const activeRating = hoverRating || rating;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -71,12 +72,13 @@ export function SubmitReviewModal({
       }
     );
 
-    setIsSubmitting(false);
-
-    if (result.success) {
+    if (result.success && result.review) {
+      await createReviewAction(booking.id, result.review, session);
+      setIsSubmitting(false);
       if (onSuccess) onSuccess();
       onClose();
     } else {
+      setIsSubmitting(false);
       setError(result.error || 'Failed to submit review. Please try again.');
     }
   };

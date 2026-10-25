@@ -272,7 +272,7 @@ export function AdminModerationDashboardView() {
 
     if (resolutionAction === 'resolve') {
       // 1. Invoke Next.js Server Action
-      resolveDisputeAction(selectedDispute.id, resolutionNotesInput.trim(), session).catch(() => {});
+      resolveDisputeAction(selectedDispute.id, resolutionNotesInput.trim(), 'resolved', session).catch(() => {});
 
       // 2. Perform client resolution
       const res = resolveDisputeByAdmin(
@@ -293,6 +293,7 @@ export function AdminModerationDashboardView() {
         setResolutionError(res.error || 'Failed to persist dispute resolution.');
       }
     } else {
+      resolveDisputeAction(selectedDispute.id, resolutionNotesInput.trim(), 'investigating', session).catch(() => {});
       const res = updateDisputeStatusByAdmin(
         selectedDispute.id,
         { userId: session.userId, role: 'admin' },
