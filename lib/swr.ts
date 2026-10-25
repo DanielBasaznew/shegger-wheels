@@ -9,7 +9,7 @@
  */
 
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useMemo } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import {
   Car,
   Booking,
@@ -60,6 +60,7 @@ export const DEFAULT_SWR_OPTIONS: SWRConfiguration = {
   dedupingInterval: 2000, // 2s dedupe window prevents duplicate fetches without blocking state transitions
   revalidateOnFocus: true,
   revalidateOnReconnect: true,
+  revalidateOnMount: true,
   revalidateIfStale: true,
   keepPreviousData: true,
 };
@@ -70,38 +71,38 @@ export const DEFAULT_SWR_OPTIONS: SWRConfiguration = {
 
 function syncEntityToCache(entity?: string) {
   if (!entity || entity === 'all') {
-    mutate('shegger:cars', getCars(), { revalidate: false });
-    mutate('shegger:bookings', getBookings(), { revalidate: false });
-    mutate('shegger:reviews', getReviews(), { revalidate: false });
-    mutate('shegger:disputes', getDisputes(), { revalidate: false });
-    mutate('shegger:notifications', getNotifications(), { revalidate: false });
-    mutate('shegger:session', getCurrentSession(), { revalidate: false });
-    mutate('shegger:users', getUsers(), { revalidate: false });
+    mutate('shegger:cars', getCars(), { revalidate: true });
+    mutate('shegger:bookings', getBookings(), { revalidate: true });
+    mutate('shegger:reviews', getReviews(), { revalidate: true });
+    mutate('shegger:disputes', getDisputes(), { revalidate: true });
+    mutate('shegger:notifications', getNotifications(), { revalidate: true });
+    mutate('shegger:session', getCurrentSession(), { revalidate: true });
+    mutate('shegger:users', getUsers(), { revalidate: true });
     mutate(() => true, undefined, { revalidate: true });
     return;
   }
 
   if (entity === 'cars') {
-    mutate('shegger:cars', getCars(), { revalidate: false });
+    mutate('shegger:cars', getCars(), { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:car'), undefined, { revalidate: true });
   } else if (entity === 'bookings') {
-    mutate('shegger:bookings', getBookings(), { revalidate: false });
+    mutate('shegger:bookings', getBookings(), { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:booking'), undefined, { revalidate: true });
   } else if (entity === 'reviews') {
-    mutate('shegger:reviews', getReviews(), { revalidate: false });
+    mutate('shegger:reviews', getReviews(), { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:reviews'), undefined, { revalidate: true });
   } else if (entity === 'disputes') {
-    mutate('shegger:disputes', getDisputes(), { revalidate: false });
+    mutate('shegger:disputes', getDisputes(), { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:dispute'), undefined, { revalidate: true });
   } else if (entity === 'notifications') {
-    mutate('shegger:notifications', getNotifications(), { revalidate: false });
+    mutate('shegger:notifications', getNotifications(), { revalidate: true });
     mutate((k) => typeof k === 'string' && k.startsWith('shegger:notification'), undefined, { revalidate: true });
   } else if (entity === 'session') {
-    mutate('shegger:session', getCurrentSession(), { revalidate: false });
+    mutate('shegger:session', getCurrentSession(), { revalidate: true });
   } else if (entity === 'users') {
-    mutate('shegger:users', getUsers(), { revalidate: false });
+    mutate('shegger:users', getUsers(), { revalidate: true });
   } else {
-    mutate(`shegger:${entity}`);
+    mutate(`shegger:${entity}`, undefined, { revalidate: true });
   }
 }
 
@@ -177,7 +178,7 @@ export function useCars(config?: Partial<SWRConfiguration>) {
     () => getCars(),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: isBrowser() ? getCars() : SEED_CARS,
+      fallbackData: SEED_CARS,
       ...config,
     }
   );
@@ -200,11 +201,7 @@ export function useCar(carId: string | null | undefined, config?: Partial<SWRCon
     () => (carId ? getCarById(carId) : undefined),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: carId
-        ? isBrowser()
-          ? getCarById(carId) || SEED_CARS.find((c) => c.id === carId)
-          : SEED_CARS.find((c) => c.id === carId)
-        : undefined,
+      fallbackData: carId ? SEED_CARS.find((c) => c.id === carId) : undefined,
       ...config,
     }
   );
@@ -227,7 +224,7 @@ export function useBookings(config?: Partial<SWRConfiguration>) {
     () => getBookings(),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: isBrowser() ? getBookings() : SEED_BOOKINGS,
+      fallbackData: SEED_BOOKINGS,
       ...config,
     }
   );
@@ -248,11 +245,7 @@ export function useBooking(bookingId: string | null | undefined, config?: Partia
     () => (bookingId ? getBookingById(bookingId) : undefined),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: bookingId
-        ? isBrowser()
-          ? getBookingById(bookingId) || SEED_BOOKINGS.find((b) => b.id === bookingId)
-          : SEED_BOOKINGS.find((b) => b.id === bookingId)
-        : undefined,
+      fallbackData: bookingId ? SEED_BOOKINGS.find((b) => b.id === bookingId) : undefined,
       ...config,
     }
   );
@@ -275,7 +268,7 @@ export function useReviews() {
     () => getReviews(),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: isBrowser() ? getReviews() : SEED_REVIEWS,
+      fallbackData: SEED_REVIEWS,
     }
   );
 
@@ -319,7 +312,7 @@ export function useDisputes() {
     () => getDisputes(),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: isBrowser() ? getDisputes() : SEED_DISPUTES,
+      fallbackData: SEED_DISPUTES,
     }
   );
 
@@ -361,10 +354,8 @@ export function useNotifications(userId?: string | null) {
     () => (userId ? getNotificationsForUser(userId) : getNotifications()),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: isBrowser()
-        ? userId
-          ? getNotificationsForUser(userId)
-          : getNotifications()
+      fallbackData: userId
+        ? SEED_NOTIFICATIONS.filter((n) => n.recipientId === userId)
         : SEED_NOTIFICATIONS,
     }
   );
@@ -382,28 +373,45 @@ export function useNotifications(userId?: string | null) {
 }
 
 // ==========================================
+// Hydration-Safe Client Mount Tracker
+// ==========================================
+
+const emptySubscribe = () => () => {};
+
+export function useIsClientMounted(): boolean {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+}
+
+// ==========================================
 // Hook: User Session & Active Role
 // ==========================================
 
 export function useSession() {
+  const isMounted = useIsClientMounted();
   const { data: session, mutate: mutateSession } = useSWR<DemoSession | null>(
     'shegger:session',
     () => getCurrentSession(),
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: isBrowser() ? getCurrentSession() : null,
+      fallbackData: null, // Always null on initial render to prevent SSR/client hydration mismatch
     }
   );
 
+  const activeSession = isMounted ? (session ?? (isBrowser() ? getCurrentSession() : null)) : null;
   const user = useMemo(() => {
-    return session?.userId ? getUserById(session.userId) : undefined;
-  }, [session]);
+    return activeSession?.userId ? getUserById(activeSession.userId) : undefined;
+  }, [activeSession]);
 
   return {
-    session: session || null,
+    session: activeSession,
     user,
-    activeRole: session?.activeRole || null,
-    isSignedIn: !!session?.userId,
+    activeRole: activeSession?.activeRole || null,
+    isSignedIn: !!activeSession?.userId,
+    isMounted,
     mutate: mutateSession,
   };
 }

@@ -64,6 +64,20 @@ const KEY_ENTITY_MAP: Record<string, string> = {
   [STORAGE_KEYS.SESSION]: 'session',
 };
 
+let globalSyncChannel: BroadcastChannel | null = null;
+
+function getGlobalSyncChannel(): BroadcastChannel | null {
+  if (!isBrowser() || typeof BroadcastChannel === 'undefined') return null;
+  if (!globalSyncChannel) {
+    try {
+      globalSyncChannel = new BroadcastChannel('shegger_wheels_sync');
+    } catch {
+      return null;
+    }
+  }
+  return globalSyncChannel;
+}
+
 /**
  * Broadcasts data changes both within the current window and across browser tabs.
  */
@@ -75,11 +89,10 @@ export function broadcastStorageChange(key: string): void {
   } catch {
     window.dispatchEvent(new Event('shegger-storage-change'));
   }
-  if ('BroadcastChannel' in window) {
+  const channel = getGlobalSyncChannel();
+  if (channel) {
     try {
-      const channel = new BroadcastChannel('shegger_wheels_sync');
       channel.postMessage({ key, entity, timestamp: Date.now() });
-      channel.close();
     } catch {
       // Ignore in restricted environments
     }

@@ -39,3 +39,11 @@ console.log('5. Signed in as Dawit Tadesse:', authOwner.success, getCurrentSessi
 const dawitCars = getCars().filter(c => c.ownerId === 'user_owner_01');
 const elantra = dawitCars.find(c => c.id === 'car_07');
 console.log('6. Dawit Elantra status:', elantra?.status);
+
+if (elantra?.status === 'approved') {
+  console.log('✅ TEST PASSED: Approval flow succeeded!');
+  process.exit(0);
+} else {
+  console.error('❌ TEST FAILED: Status is not approved');
+  process.exit(1);
+}

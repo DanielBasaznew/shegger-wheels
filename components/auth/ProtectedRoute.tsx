@@ -22,11 +22,20 @@ export function ProtectedRoute({
   areaTitle = 'Protected Dashboard Area',
 }: ProtectedRouteProps) {
   const pathname = usePathname();
-  const { session } = useSession();
+  const { session, isMounted } = useSession();
 
   let currentUser: User | null = null;
   if (session?.userId) {
     currentUser = getUserById(session.userId) || null;
+  }
+
+  // 0. Wait for client mounting to safely read localStorage demo session without SSR hydration mismatch
+  if (!isMounted) {
+    return (
+      <div className="w-full py-28 flex items-center justify-center bg-[#F5F2EB]">
+        <div className="w-8 h-8 rounded-full border-2 border-[#111820] border-t-transparent animate-spin" />
+      </div>
+    );
   }
 
   // 1. Signed Out Barrier

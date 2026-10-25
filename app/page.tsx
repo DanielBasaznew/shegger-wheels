@@ -116,7 +116,10 @@ export default function Home() {
             </span>
           </div>
           <div className="flex items-center gap-space-md">
-            <span className="hidden sm:inline font-specs-tabular text-specs-tabular text-on-surface-variant">
+            <span
+              className="hidden sm:inline font-specs-tabular text-specs-tabular text-on-surface-variant"
+              suppressHydrationWarning
+            >
               Live Fleet Availability: {fleetCount} Cars
             </span>
             <Link
