@@ -44,7 +44,7 @@ export function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const baseClass = `inline-flex items-center justify-center font-sans transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
+  const baseClass = `inline-flex items-center justify-center font-sans transition-colors duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
 
   const content = (
     <>

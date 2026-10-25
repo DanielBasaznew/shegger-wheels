@@ -121,7 +121,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-full font-title-md text-title-md transition-all duration-150 ${
+                className={`px-4 py-2 rounded-full font-title-md text-title-md transition-colors duration-150 ${
                   isActive
                     ? 'bg-primary-container text-on-primary shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'

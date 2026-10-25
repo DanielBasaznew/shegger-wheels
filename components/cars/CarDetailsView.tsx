@@ -112,7 +112,6 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
   const [startDate, setStartDate] = useState(defaultStartStr);
   const [endDate, setEndDate] = useState(defaultEndStr);
   const [handoverOption, setHandoverOption] = useState<'pickup' | 'delivery'>('pickup');
-  const [isCopied, setIsCopied] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -469,11 +468,6 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                 className="relative p-2.5 rounded-full bg-white hover:bg-[#F1EEE7] border border-[#66717D]/20 text-[#111820] transition-colors shadow-xs cursor-pointer flex items-center justify-center"
               >
                 <span className="material-symbols-outlined text-[20px]">share</span>
-                {isCopied && (
-                  <span className="absolute -bottom-8 right-0 bg-[#111820] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md whitespace-nowrap animate-fade-in">
-                    Link copied!
-                  </span>
-                )}
               </button>
               <button
                 type="button"

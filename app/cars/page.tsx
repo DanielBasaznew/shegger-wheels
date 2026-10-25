@@ -287,11 +287,12 @@ function CatalogueContent() {
 
             {/* Sort Dropdown */}
             <div className="md:col-span-4 flex items-center gap-2">
-              <label htmlFor="sort-select" className="text-xs font-semibold text-[#66717D] shrink-0 hidden sm:inline">
+              <label htmlFor="sort-select" className="sr-only sm:not-sr-only text-xs font-semibold text-[#66717D] shrink-0">
                 Sort by:
               </label>
               <select
                 id="sort-select"
+                aria-label="Sort vehicle inventory by"
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
                 className="w-full h-12 px-4 rounded-2xl bg-white border border-[#66717D]/25 text-sm font-semibold text-[#111820] outline-none cursor-pointer shadow-xs"
@@ -581,8 +582,8 @@ function CatalogueContent() {
               {/* Cars Grid */}
               {paginatedCars.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {paginatedCars.map((car) => (
-                    <VehicleCard key={car.id} car={car} />
+                  {paginatedCars.map((car, index) => (
+                    <VehicleCard key={car.id} car={car} priority={index < 2} />
                   ))}
                 </div>
               ) : (

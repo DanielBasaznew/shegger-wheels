@@ -64,7 +64,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Material Symbols Outlined Web Font Support */
+/* Self-Hosted Material Symbols Outlined Web Font Support */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;

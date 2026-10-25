@@ -13,13 +13,9 @@ interface ShareVehicleModalProps {
 
 export function ShareVehicleModal({ isOpen, onClose, car }: ShareVehicleModalProps) {
   const [isCopied, setIsCopied] = useState(false);
-  const [hasNativeShare, setHasNativeShare] = useState(false);
+  const [hasNativeShare] = useState(() => typeof window !== 'undefined' && typeof navigator.share === 'function');
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && typeof navigator.share === 'function') {
-      setHasNativeShare(true);
-    }
-  }, []);
+
 
   // Keyboard accessibility
   useEffect(() => {

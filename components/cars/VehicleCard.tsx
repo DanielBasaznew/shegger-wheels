@@ -12,6 +12,7 @@ export interface VehicleCardProps {
   rating?: number;
   tripsCount?: number;
   className?: string;
+  priority?: boolean;
 }
 
 export function VehicleCard({
@@ -20,6 +21,7 @@ export function VehicleCard({
   rating = 4.95,
   tripsCount = 28,
   className = '',
+  priority = false,
 }: VehicleCardProps) {
   const owner = getUserById(car.ownerId);
   const hostName = owner ? owner.name.split(' ')[0] + ' ' + (owner.name.split(' ')[1]?.[0] || '') + '.' : 'Host';
@@ -36,7 +38,7 @@ export function VehicleCard({
 
   return (
     <article
-      className={`group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 border border-outline-variant/15 ${className}`}
+      className={`group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-shadow duration-300 border border-outline-variant/15 ${className}`}
       id={`car-card-${car.id}`}
     >
       {/* 16:10 Photo Showcase */}
@@ -45,8 +47,10 @@ export function VehicleCard({
           src={photoUrl}
           alt={`${car.make} ${car.model}`}
           fill
+          priority={priority}
+          quality={70}
           unoptimized={!isOptimizableImage(photoUrl)}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 48vw, 380px"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
 

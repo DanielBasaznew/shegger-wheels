@@ -69,20 +69,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.variable} h-full scroll-smooth antialiased`}
     >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+          rel="preload"
+          href="/fonts/material-symbols-outlined.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
         />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
 
       <body className="min-h-full flex flex-col bg-[#F5F2EB] text-[#111820] font-sans selection:bg-[#D5F36A] selection:text-[#111820]">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-[#111820] focus:text-[#D5F36A] focus:font-bold focus:shadow-xl focus:ring-2 focus:ring-[#D5F36A] transition-all"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-[#111820] focus:text-[#D5F36A] focus:font-bold focus:shadow-xl focus:ring-2 focus:ring-[#D5F36A] transition-colors"
         >
           Skip to main content
         </a>
