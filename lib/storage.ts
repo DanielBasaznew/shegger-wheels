@@ -416,17 +416,6 @@ export function getUserById(id: string): User | undefined {
   return getUsers().find((u) => u.id === id);
 }
 
-export function saveUser(user: User): boolean {
-  const users = getUsers();
-  const index = users.findIndex((u) => u.id === user.id);
-  if (index >= 0) {
-    users[index] = { ...user, updatedAt: new Date().toISOString() };
-  } else {
-    users.push(user);
-  }
-  return writeStorage(STORAGE_KEYS.USERS, users);
-}
-
 // Cars
 export function getCars(): Car[] {
   const loaded = readStorage<Car[]>(

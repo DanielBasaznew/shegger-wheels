@@ -1,5 +1,4 @@
 import React from 'react';
-import { BookingStatus, CarStatus } from '@/lib/types';
 
 export type BadgeVariant = 'citron' | 'obsidian' | 'terracotta' | 'neutral' | 'white' | 'success';
 
@@ -47,43 +46,4 @@ export function Badge({
       {children}
     </span>
   );
-}
-
-export function BookingStatusBadge({ status }: { status: BookingStatus }) {
-  switch (status) {
-    case 'requested':
-      return <Badge variant="neutral" dot>Requested</Badge>;
-    case 'confirmed':
-      return <Badge variant="citron" dot>Confirmed</Badge>;
-    case 'in_progress':
-      return <Badge variant="citron" dot>In Progress</Badge>;
-    case 'completed':
-    case 'reviewed':
-      return <Badge variant="success" dot>Completed</Badge>;
-    case 'declined':
-    case 'cancelled':
-      return <Badge variant="terracotta">Cancelled</Badge>;
-    case 'disputed':
-      return <Badge variant="terracotta" dot>Disputed</Badge>;
-    case 'resolved':
-      return <Badge variant="neutral">Resolved</Badge>;
-    default:
-      return <Badge variant="neutral">{status}</Badge>;
-  }
-}
-
-export function CarStatusBadge({ status }: { status: CarStatus }) {
-  switch (status) {
-    case 'approved':
-      return <Badge variant="success" dot>Active</Badge>;
-    case 'pending':
-      return <Badge variant="neutral" dot>Pending Review</Badge>;
-    case 'draft':
-      return <Badge variant="white">Draft</Badge>;
-    case 'inactive':
-    case 'rejected':
-      return <Badge variant="terracotta">Inactive</Badge>;
-    default:
-      return <Badge variant="neutral">{status}</Badge>;
-  }
 }

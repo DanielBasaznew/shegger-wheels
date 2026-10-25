@@ -1046,18 +1046,6 @@ export function getOwnerEarningsAnalytics(
 }
 
 // ==========================================
-// Booking Query Helpers
-// ==========================================
-
-export function getBookingsForRenter(renterId: string): Booking[] {
-  return getBookings().filter((b) => b.renterId === renterId);
-}
-
-export function getBookingsForOwner(ownerId: string): Booking[] {
-  return getBookings().filter((b) => b.ownerId === ownerId);
-}
-
-// ==========================================
 // Renter-Specific & Dispute Domain Operations
 // ==========================================
 

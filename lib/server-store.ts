@@ -1,14 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { Car, Booking, Review, Dispute, Notification, User } from './types';
+import { Car, Booking, Review, Dispute, Notification } from './types';
 import {
   SEED_CARS,
   SEED_BOOKINGS,
   SEED_REVIEWS,
   SEED_DISPUTES,
   SEED_NOTIFICATIONS,
-  SEED_USERS,
 } from './seeds';
 
 const DATA_DIR = path.join(os.tmpdir(), 'shegger_wheels_data');
@@ -64,10 +63,6 @@ export function saveServerCars(cars: Car[]): void {
   writeJsonFile('cars.json', cars);
 }
 
-export function getServerCarById(id: string): Car | undefined {
-  return getServerCars().find((c) => c.id === id);
-}
-
 export function updateServerCar(car: Car): void {
   const cars = getServerCars();
   const idx = cars.findIndex((c) => c.id === car.id);
@@ -89,10 +84,6 @@ export function getServerBookings(): Booking[] {
 
 export function saveServerBookings(bookings: Booking[]): void {
   writeJsonFile('bookings.json', bookings);
-}
-
-export function getServerBookingById(id: string): Booking | undefined {
-  return getServerBookings().find((b) => b.id === id);
 }
 
 export function updateServerBooking(booking: Booking): void {
@@ -140,25 +131,4 @@ export function getServerNotifications(): Notification[] {
 
 export function saveServerNotifications(notifications: Notification[]): void {
   writeJsonFile('notifications.json', notifications);
-}
-
-// ==========================================
-// Users Server Store
-// ==========================================
-
-export function getServerUsers(): User[] {
-  return readJsonFile<User[]>('users.json', SEED_USERS);
-}
-
-export function saveServerUsers(users: User[]): void {
-  writeJsonFile('users.json', users);
-}
-
-export function resetServerStore(): void {
-  saveServerCars(SEED_CARS);
-  saveServerBookings(SEED_BOOKINGS);
-  saveServerReviews(SEED_REVIEWS);
-  saveServerDisputes(SEED_DISPUTES);
-  saveServerNotifications(SEED_NOTIFICATIONS);
-  saveServerUsers(SEED_USERS);
 }

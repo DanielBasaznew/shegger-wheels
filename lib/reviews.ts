@@ -377,10 +377,3 @@ export function getCarRatingSummary(
     starCounts,
   };
 }
-
-/**
- * Retrieves all reviews for vehicles owned by a specific host.
- */
-export function getReviewsForOwner(ownerId: string): Review[] {
-  return getReviews().filter((r) => r.ownerId === ownerId);
-}
