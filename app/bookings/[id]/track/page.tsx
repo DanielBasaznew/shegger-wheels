@@ -19,13 +19,16 @@ export async function generateMetadata({ params }: TripTrackingPageProps): Promi
   const { id } = await params;
   return {
     title: `Live Trip Tracking #${id.toUpperCase()} | Shegger Wheels`,
-    description: 'Simulated real-time trip tracking, Addis Ababa corridor telematics, and lifecycle handover controls.',
+    description: 'Real-time trip tracking, Addis Ababa corridor telematics, and lifecycle handover controls.',
   };
 }
 
-export default async function TripTrackingPage({ params }: TripTrackingPageProps) {
+async function TripTrackingContent({ params }: TripTrackingPageProps) {
   const { id } = await params;
+  return <TripTrackingView bookingId={id} />;
+}
 
+export default function TripTrackingPage({ params }: TripTrackingPageProps) {
   return (
     <Suspense
       fallback={
@@ -39,7 +42,7 @@ export default async function TripTrackingPage({ params }: TripTrackingPageProps
         </div>
       }
     >
-      <TripTrackingView bookingId={id} />
+      <TripTrackingContent params={params} />
     </Suspense>
   );
 }

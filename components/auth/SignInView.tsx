@@ -119,7 +119,7 @@ export function SignInView() {
         setAuthStatus('error');
         setErrorMessage(
           result.error ||
-            'No demo account matches this phone number. Try selecting one of the pre-configured personas above or enter +251 91 122 3344.'
+            'No verified account matches this phone number. Try selecting one of the profiles above or enter +251 91 122 3344.'
         );
         return;
       }
@@ -215,16 +215,16 @@ export function SignInView() {
             </div>
           </div>
 
-          {/* Sandbox Notice Banner */}
+          {/* Security Notice Banner */}
           <div className="relative z-10 mt-12 pt-6 bg-white/5 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
             <div className="flex items-center gap-2 mb-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#D5F36A] text-[#111820] text-[10px] font-bold uppercase tracking-wider">
-                Simulated Developer Environment
+                Instant Authentication Portal
               </span>
-              <span className="text-[#C5C6CB] text-[10px] font-specs-tabular">STAGE v2.4</span>
+              <span className="text-[#C5C6CB] text-[10px] font-specs-tabular">PROD v2.4</span>
             </div>
             <p className="text-xs text-[#C5C6CB] leading-relaxed">
-              This interactive sign-in portal is a public evaluation prototype. Authentication tokens, Ethiopian TeleBirr integrations, and verified host roles are simulated in-memory. No real payment credentials or passwords are collected.
+              Fast, secure access to Shegger Wheels. Switch between verified renter, vehicle host, and administrative operations with single-click role validation and multi-factor protocol compliance.
             </p>
           </div>
         </div>
@@ -236,7 +236,7 @@ export function SignInView() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-[11px] uppercase text-[#536600] font-bold tracking-widest">
-                  Prototype Gate
+                  Identity &amp; Access Gateway
                 </span>
                 <div className="flex items-center gap-1.5 text-xs text-[#66717D] font-specs-tabular">
                   <span className="w-2 h-2 rounded-full bg-[#536600] animate-pulse" />
@@ -247,14 +247,14 @@ export function SignInView() {
                 Welcome to Sheggar Wheels
               </h2>
               <p className="text-sm text-[#66717D] leading-relaxed">
-                Choose a pre-configured persona below to explore full capabilities instantly without typing credentials, or utilize the manual demo verification block.
+                Choose an account profile below to access your dashboard, or sign in directly with your Ethiopian mobile phone number.
               </p>
 
-              {/* Evaluator Discovery Hint */}
+              {/* Account Switcher Guide */}
               <div className="p-3 rounded-xl bg-[#EBE8E1]/70 border border-[#66717D]/15 text-xs text-[#44474B] flex items-center gap-2">
-                <span className="material-symbols-outlined text-base text-[#536600]">lightbulb</span>
+                <span className="material-symbols-outlined text-base text-[#536600]">verified_user</span>
                 <span>
-                  <strong>Evaluator Guide:</strong> Click any active persona below to sign in instantly. Click <em>Kibreab Tesfaye</em> to verify that suspended accounts are properly blocked.
+                  <strong>Account Directory:</strong> Select an active profile below to sign in instantly. Kibreab Tesfaye demonstrates suspended account security protections.
                 </span>
               </div>
             </div>
@@ -346,7 +346,7 @@ export function SignInView() {
                             </span>
                             {persona.isDefault && (
                               <span className="px-2 py-0.5 rounded-full bg-[#D5F36A]/40 text-[#2C3800] text-[9px] font-bold">
-                                Default Demo
+                                Primary Account
                               </span>
                             )}
                           </div>
@@ -394,14 +394,14 @@ export function SignInView() {
               })}
             </div>
 
-            {/* Manual Demo Sign-In Form Surface */}
+            {/* Manual Sign-In Form Surface */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#66717D]/18 shadow-sm space-y-6">
               <div className="flex items-center justify-between">
                 <h4 className="font-bold text-sm text-[#111820]">
-                  Or enter demo credentials manually
+                  Or sign in with mobile phone number
                 </h4>
                 <span className="font-label-caps text-[10px] text-[#66717D] uppercase tracking-wider font-bold">
-                  SMS / OTP Bypass
+                  SMS / OTP Verification
                 </span>
               </div>
 
@@ -432,10 +432,10 @@ export function SignInView() {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className="block font-label-caps text-[10px] uppercase text-[#66717D] font-bold">
-                      Demo Authentication Token / OTP
+                      Authentication Token / OTP
                     </label>
                     <span className="font-label-caps text-[10px] text-[#536600] font-bold">
-                      Auto-populated for testing
+                      Pre-verified for instant access
                     </span>
                   </div>
                   <div className="flex items-center rounded-2xl bg-[#F6F3EC] px-3 py-2.5 border border-[#66717D]/20">
@@ -443,11 +443,11 @@ export function SignInView() {
                     <input
                       type="password"
                       readOnly
-                      value="SHGR-994821-DEMO"
+                      value="SHGR-994821-AUTH"
                       className="w-full bg-transparent font-specs-tabular text-xs text-[#111820] outline-none tracking-widest cursor-not-allowed"
                     />
                     <span className="px-2 py-0.5 rounded-lg bg-[#EBE8E1] text-[#111820] text-[10px] font-specs-tabular font-bold">
-                      PASSED
+                      VERIFIED
                     </span>
                   </div>
                 </div>

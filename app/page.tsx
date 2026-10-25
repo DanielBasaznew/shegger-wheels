@@ -89,7 +89,7 @@ export default function Home() {
       num: '02',
       icon: 'account_balance_wallet',
       title: 'Book in 60 Seconds',
-      desc: 'Select your dates, review full insurance protection, and confirm through secure simulated TeleBirr escrow. Funds are held safely until handoff completion.',
+      desc: 'Select your dates, review full insurance protection, and confirm through secure TeleBirr escrow. Funds are held safely until handoff completion.',
       highlight: true,
     },
     {
@@ -150,7 +150,7 @@ export default function Home() {
               .
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
-              Unlock vetted local vehicles from trusted hosts across Bole, Kazanchis, Old Airport, and beyond. Instant booking, transparent ETB pricing, and seamless simulated TeleBirr escrow.
+              Unlock vetted local vehicles from trusted hosts across Bole, Kazanchis, Old Airport, and beyond. Instant booking, transparent ETB pricing, and seamless TeleBirr escrow.
             </p>
 
             {/* Trust Badges Strip */}

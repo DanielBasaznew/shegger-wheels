@@ -1131,7 +1131,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                     onClick={handleProceedToBooking}
                     className="w-full py-4 px-6 rounded-full bg-[#D5F36A] hover:bg-[#C8E85B] text-[#111820] font-bold text-sm tracking-tight text-center transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none select-none"
                   >
-                    <span>Proceed to Demo Checkout</span>
+                    <span>Proceed to Checkout</span>
                     <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                   </button>
 

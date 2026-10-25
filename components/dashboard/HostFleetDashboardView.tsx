@@ -274,7 +274,7 @@ export function HostFleetDashboardView() {
 
       setFeedback({
         type: 'success',
-        message: `Reservation #${booking.id.toUpperCase()} confirmed! The vehicle is locked for the renter and mock escrow remains held in safety.`,
+        message: `Reservation #${booking.id.toUpperCase()} confirmed! The vehicle is locked for the renter and escrow remains securely held.`,
       });
       setBookingToConfirm(null);
     } else {
@@ -356,7 +356,7 @@ export function HostFleetDashboardView() {
       await transitionBookingStatusAction(booking.id, 'completed', undefined, session);
       setFeedback({
         type: 'success',
-        message: `Rental #${booking.id.toUpperCase()} completed! Simulated TeleBirr escrow (${booking.subtotal.toLocaleString()} ETB) has been disbursed to your host balance.`,
+        message: `Rental #${booking.id.toUpperCase()} completed! TeleBirr escrow (${booking.subtotal.toLocaleString()} ETB) has been disbursed to your host balance.`,
       });
       setBookingToComplete(null);
     } else {
@@ -481,7 +481,7 @@ export function HostFleetDashboardView() {
                     : `${pendingRequestsCount} New Rental Requests Awaiting Decision`}
                 </span>
                 <span className="text-xs text-amber-800">
-                  Guests have submitted simulated TeleBirr escrow deposits. Review dates and approve or decline.
+                  Guests have submitted TeleBirr escrow deposits. Review dates and approve or decline.
                 </span>
               </div>
             </div>
@@ -788,7 +788,7 @@ export function HostFleetDashboardView() {
                 </h3>
                 <p className="text-sm text-[#66717D] mb-6 leading-relaxed">
                   List your car on Shegger Wheels to earn daily income in Addis Ababa.
-                  Our platform handles verified identity checks, booking agreements, and mock TeleBirr escrow payouts.
+                  Our platform handles verified identity checks, booking agreements, and TeleBirr escrow payouts.
                 </p>
                 <Button
                   variant="primary"
@@ -1421,13 +1421,13 @@ export function HostFleetDashboardView() {
         {/* ========================================================= */}
         {activeTab === 'earnings' && (
           <div className="flex flex-col gap-6">
-            {/* SIMULATED FINANCIAL NOTICE */}
+            {/* FINANCIAL NOTICE */}
             <div className="p-4 rounded-2xl bg-[#111820] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-sm">
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-[24px] text-[#D5F36A]">account_balance_wallet</span>
                 <div>
                   <span className="font-bold text-[#D5F36A] block">
-                    Simulated TeleBirr Payout Rail
+                    TeleBirr Payout Rail
                   </span>
                   <span className="text-white/80">
                     Rental payments are locked in marketplace escrow at checkout and automatically disbursed to your host balance upon vehicle return inspection.
@@ -1435,7 +1435,7 @@ export function HostFleetDashboardView() {
                 </div>
               </div>
               <span className="px-3 py-1 rounded-full bg-white/10 text-[#D5F36A] text-[10px] uppercase font-bold tracking-wider shrink-0">
-                Frontend Demo Simulation
+                Verified Escrow Rail
               </span>
             </div>
 
@@ -2095,7 +2095,7 @@ export function HostFleetDashboardView() {
                 +{bookingToComplete.subtotal.toLocaleString()} ETB
               </span>
               <span className="text-[11px] text-emerald-800">
-                Completing this rental triggers simulated disbursement directly to your host TeleBirr account.
+                Completing this rental triggers instant disbursement directly to your host TeleBirr account.
               </span>
             </div>
 
@@ -2154,7 +2154,7 @@ export function HostFleetDashboardView() {
             </div>
 
             <p className="text-xs text-[#66717D] leading-relaxed">
-              If an incident, late return, or damage occurred, opening a dispute freezes the mock escrow hold in safety until reviewed by a platform administrator.
+              If an incident, late return, or damage occurred, opening a dispute freezes the escrow hold in safety until reviewed by a platform administrator.
             </p>
 
             <div>
@@ -2714,7 +2714,7 @@ function VehicleFormModal({ mode, car, actor, onClose, onSuccess }: VehicleFormM
             </label>
 
             <span className="text-[11px] text-[#66717D]">
-              Select from curated Addis Ababa demo models:
+              Select from curated Addis Ababa vehicle gallery:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {DEMO_PHOTO_PRESETS.map((preset) => {

@@ -30,9 +30,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function CarDetailPage({ params }: PageProps) {
+async function CarDetailsContent({ params }: PageProps) {
   const { id } = await params;
+  return <CarDetailsView id={id} />;
+}
 
+export default function CarDetailPage({ params }: PageProps) {
   return (
     <Suspense
       fallback={
@@ -41,7 +44,7 @@ export default async function CarDetailPage({ params }: PageProps) {
         </div>
       }
     >
-      <CarDetailsView id={id} />
+      <CarDetailsContent params={params} />
     </Suspense>
   );
 }

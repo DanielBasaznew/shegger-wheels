@@ -19,13 +19,16 @@ export async function generateMetadata({ params }: BookingPageProps): Promise<Me
   const { id } = await params;
   return {
     title: `Booking Receipt #${id.toUpperCase()} | Shegger Wheels`,
-    description: 'Itemized rental booking receipt and simulated TeleBirr escrow ledger for Shegger Wheels.',
+    description: 'Itemized rental booking receipt and TeleBirr escrow ledger for Shegger Wheels.',
   };
 }
 
-export default async function BookingReceiptPage({ params }: BookingPageProps) {
+async function BookingReceiptContent({ params }: BookingPageProps) {
   const { id } = await params;
+  return <BookingDetailView bookingId={id} />;
+}
 
+export default function BookingReceiptPage({ params }: BookingPageProps) {
   return (
     <Suspense
       fallback={
@@ -33,13 +36,13 @@ export default async function BookingReceiptPage({ params }: BookingPageProps) {
           <div className="flex flex-col items-center gap-3">
             <div className="w-10 h-10 border-4 border-[#111820]/15 border-t-[#111820] rounded-full animate-spin" />
             <p className="text-xs font-semibold text-[#66717D]">
-              Loading Shegger Reservation Receipt...
+               Loading Shegger Reservation Receipt...
             </p>
           </div>
         </div>
       }
     >
-      <BookingDetailView bookingId={id} />
+      <BookingReceiptContent params={params} />
     </Suspense>
   );
 }

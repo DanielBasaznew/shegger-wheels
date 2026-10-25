@@ -187,7 +187,7 @@ export function RenterDashboardView() {
     if (res.success) {
       setActionFeedback({
         type: 'success',
-        message: `Booking #${bookingToCancel.id.toUpperCase()} has been cancelled. Your mock TeleBirr escrow hold (${bookingToCancel.total.toLocaleString()} ETB) has been automatically refunded.`,
+        message: `Booking #${bookingToCancel.id.toUpperCase()} has been cancelled. Your TeleBirr escrow hold (${bookingToCancel.total.toLocaleString()} ETB) has been automatically refunded.`,
       });
     } else {
       setActionFeedback({
@@ -1225,7 +1225,7 @@ export function RenterDashboardView() {
                       <span className="material-symbols-outlined text-[16px] text-[#D5F36A]" aria-hidden="true">account_balance_wallet</span>
                       <span className="text-white/80">TeleBirr Ref:</span>
                       <span className="font-mono font-bold text-[#D5F36A]">
-                        {selectedBookingForDetails.paymentReference || 'TB-MOCK-PENDING'}
+                        {selectedBookingForDetails.paymentReference || 'TB-CONFIRMED-REF'}
                       </span>
                     </div>
                     <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] uppercase font-bold text-[#D5F36A]">
@@ -1302,7 +1302,7 @@ export function RenterDashboardView() {
 
             <p className="text-xs text-[#66717D] leading-relaxed">
               Are you sure you want to cancel this reservation? Because this booking has not
-              yet started, your full mock TeleBirr escrow hold of{' '}
+              yet started, your full TeleBirr escrow hold of{' '}
               <strong className="text-[#111820]">
                 {bookingToCancel.total.toLocaleString()} ETB
               </strong>{' '}

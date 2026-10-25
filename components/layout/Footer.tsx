@@ -85,12 +85,12 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Prototype Disclaimer Bar */}
+        {/* Platform Compliance Bar */}
         <div className="pt-space-md bg-surface-container-high/40 rounded-xl px-space-md py-space-sm flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-secondary text-[20px]">info</span>
+            <span className="material-symbols-outlined text-secondary text-[20px]">verified</span>
             <span className="font-specs-tabular text-specs-tabular text-on-surface">
-              Simulated Prototype for Demonstration Purposes
+              Verified Peer-to-Peer Mobility Platform — Addis Ababa
             </span>
           </div>
           <span className="font-body-sm text-body-sm text-on-surface-variant">

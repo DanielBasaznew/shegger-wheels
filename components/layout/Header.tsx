@@ -65,7 +65,7 @@ export function Header() {
   const handleResetDemo = () => {
     if (typeof window !== 'undefined') {
       const confirmed = window.confirm(
-        'Reset Shegger Wheels demo data?\n\nThis restores initial baseline seeds (cars, bookings, reviews, notifications) without affecting unrelated browser storage.'
+        'Reset Shegger Wheels platform cache?\n\nThis restores baseline platform inventory (cars, bookings, reviews, notifications) without affecting unrelated browser data.'
       );
       if (confirmed) {
         resetDemoData();
@@ -271,7 +271,7 @@ export function Header() {
                       title="Restores seed cars, bookings, reviews, and notifications"
                     >
                       <span className="material-symbols-outlined text-[15px]">restart_alt</span>
-                      <span>Reset Demo Seed Data</span>
+                      <span>Reset Platform Cache</span>
                     </button>
                     <button
                       type="button"
@@ -291,7 +291,7 @@ export function Header() {
               className="hidden md:inline-flex items-center justify-center px-4 py-2 rounded-full font-title-md text-title-md text-on-surface bg-surface-container-high hover:bg-surface-container-highest hover:text-on-surface transition-colors"
               id="header-sign-in"
             >
-              Demo Sign In
+              Sign In
             </Link>
           )}
 
@@ -377,7 +377,7 @@ export function Header() {
                   className="w-full py-2 rounded-xl bg-[#F1EEE7] text-[#44474B] font-semibold text-xs flex items-center justify-center gap-1.5 mb-1.5 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">restart_alt</span>
-                  <span>Reset Demo Seed Data</span>
+                  <span>Reset Platform Cache</span>
                 </button>
                 <button
                   type="button"
@@ -398,7 +398,7 @@ export function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-4 py-2 rounded-full text-xs font-semibold bg-[#111820] text-white"
                 >
-                  Demo Sign In
+                  Sign In
                 </Link>
               </div>
             )}

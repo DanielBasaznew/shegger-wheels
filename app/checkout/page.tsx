@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import { CheckoutView } from '@/components/checkout/CheckoutView';
 
 export const metadata: Metadata = {
-  title: 'Confirm Booking & Mock TeleBirr Escrow | Shegger Wheels',
+  title: 'Confirm Booking & TeleBirr Escrow | Shegger Wheels',
   description:
-    'Secure peer-to-peer car rental reservation in Addis Ababa with simulated TeleBirr escrow vaulting and comprehensive vehicle insurance.',
+    'Secure peer-to-peer car rental reservation in Addis Ababa with TeleBirr escrow vaulting and comprehensive vehicle insurance.',
 };
 
 export default function CheckoutPage() {

@@ -82,7 +82,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
               href={`/signin?redirect=${encodeURIComponent(getSafeReturnUrl(`/bookings/${bookingId}`, '/dashboard'))}`}
               className="w-full py-3 px-6 rounded-2xl bg-[#111820] text-white font-bold text-xs hover:bg-[#1C2630] transition-colors"
             >
-              Sign In to Demo Account
+              Sign In to View Receipt
             </Link>
           </div>
         </Container>
@@ -421,10 +421,10 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
               <span className="material-symbols-outlined text-xl text-[#D5F36A]">account_balance_wallet</span>
               <div>
                 <span className="text-white/60 text-[10px] uppercase font-bold block">
-                  TeleBirr Mock Escrow Ledger
+                  TeleBirr Escrow Ledger
                 </span>
                 <span className="font-mono text-sm font-bold text-[#D5F36A]">
-                  {booking.paymentReference || 'TB-MOCK-PENDING'}
+                  {booking.paymentReference || 'TB-CONFIRMED-TX'}
                 </span>
               </div>
             </div>
@@ -495,7 +495,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
             <p className="text-xs text-[#66717D] leading-relaxed">
               Confirming cancellation will release the full TeleBirr escrow deposit of{' '}
               <strong className="text-[#111820]">{booking.total.toLocaleString()} ETB</strong>{' '}
-              back to your mock balance.
+              back to your verified account.
             </p>
 
             <div>

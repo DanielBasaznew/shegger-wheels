@@ -1258,7 +1258,7 @@ export function AdminModerationDashboardView() {
                         <span className="text-[11px] text-[#66717D]">
                           {dispute.status === 'investigating'
                             ? 'Case actively under support investigation.'
-                            : 'Immediate administrative action required to release or freeze simulated escrow.'}
+                            : 'Immediate administrative action required to release or freeze held escrow.'}
                         </span>
                         <button
                           type="button"
@@ -1425,7 +1425,7 @@ export function AdminModerationDashboardView() {
               <div className="col-span-2">
                 <span className="text-[#66717D] block">Estimated 3-Day Rental Total</span>
                 <span className="font-bold text-[#111820]">
-                  {(inspectingCar.pricePerDay * 3 + Math.round(inspectingCar.pricePerDay * 3 * 0.1)).toLocaleString()} ETB (incl. simulated fee)
+                  {(inspectingCar.pricePerDay * 3 + Math.round(inspectingCar.pricePerDay * 3 * 0.1)).toLocaleString()} ETB (incl. platform fee)
                 </span>
               </div>
             </div>

@@ -3,9 +3,9 @@ import { Metadata } from 'next';
 import { SignInView } from '@/components/auth/SignInView';
 
 export const metadata: Metadata = {
-  title: 'Demo Sign In — Shegger Wheels',
+  title: 'Sign In — Shegger Wheels',
   description:
-    'Sign in to explore Shegger Wheels peer-to-peer mobility platform using pre-configured Addis Ababa demo personas.',
+    'Sign in to access your Shegger Wheels peer-to-peer mobility account.',
 };
 
 export default function SignInPage() {

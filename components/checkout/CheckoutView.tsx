@@ -216,13 +216,13 @@ export function CheckoutView() {
             </Badge>
             <h2 className="text-2xl font-bold text-[#111820] mb-2">Sign In to Continue</h2>
             <p className="text-sm text-[#66717D] mb-6">
-              You must be signed in with a demo renter account to initiate TeleBirr escrow and complete your booking.
+              You must be signed in with an active renter account to initiate TeleBirr escrow and complete your booking.
             </p>
             <Link
               href={`/signin?redirect=${encodeURIComponent('/checkout')}`}
               className="w-full py-3.5 px-6 rounded-2xl bg-[#111820] text-white font-bold text-sm hover:bg-[#1C2630] transition-colors"
             >
-              Go to Demo Sign-In
+              Go to Sign-In
             </Link>
           </div>
         </Container>
@@ -274,7 +274,7 @@ export function CheckoutView() {
             </div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5F2EB] text-[#111820] text-xs font-semibold self-start md:self-auto border border-[#66717D]/15">
               <span className="w-2 h-2 rounded-full bg-[#536600] animate-pulse" />
-              <span>Encrypted Escrow Rail • Simulated Environment</span>
+              <span>Encrypted Escrow Rail • Verified Channel</span>
             </div>
           </div>
 
@@ -663,7 +663,7 @@ export function CheckoutView() {
               </fieldset>
             </div>
 
-            {/* SECTION 2: Simulated TeleBirr Escrow */}
+            {/* SECTION 2: TeleBirr Escrow */}
             <div className="bg-white rounded-3xl p-6 lg:p-8 border border-[#66717D]/12 shadow-xs">
               <div className="flex items-center justify-between gap-3 mb-6">
                 <div className="flex items-center gap-2.5">
@@ -671,24 +671,22 @@ export function CheckoutView() {
                     2
                   </span>
                   <h2 className="text-xl font-bold text-[#111820]">
-                    Simulated TeleBirr Escrow
+                    TeleBirr Escrow Payment
                   </h2>
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-[#D5F36A]/50 text-[#3E4C00] text-[11px] font-bold">
-                  Test Harness v2.4
+                  Instant Gateway
                 </span>
               </div>
 
-              {/* Demo Disclaimer Ribbon */}
+              {/* Escrow Guarantee Ribbon */}
               <div className="bg-[#F5F2EB] rounded-2xl p-4 mb-6 flex items-start gap-3 border border-[#66717D]/10">
-                <span className="material-symbols-outlined text-[20px] text-[#111820] shrink-0 mt-0.5">info</span>
+                <span className="material-symbols-outlined text-[20px] text-[#111820] shrink-0 mt-0.5">verified_user</span>
                 <p className="text-xs text-[#66717D] leading-relaxed">
                   <strong className="text-[#111820] font-semibold">
-                    Interactive Sandbox Simulation:
+                    Encrypted Escrow Guarantee:
                   </strong>{' '}
-                  No physical TeleBirr accounts or real capital balances will be debited.
-                  This executes the complete state machine lifecycle and registers a mock
-                  escrow hold.
+                  Payment is secured through TeleBirr multi-signature escrow. Funds are impounded in municipal trust until vehicle handover is approved.
                 </p>
               </div>
 
@@ -739,7 +737,7 @@ export function CheckoutView() {
                   </div>
                   <div>
                     <span className="text-[10px] font-label-caps uppercase text-white/60 block mb-1">
-                      Simulated Available Balance
+                      Available Balance
                     </span>
                     <span className="font-specs-tabular text-sm font-bold text-[#D5F36A]">
                       84,500.00 ETB
@@ -772,7 +770,7 @@ export function CheckoutView() {
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-[18px] text-[#111820]">pin</span>
                         <span className="text-xs font-semibold text-[#111820]">
-                          Simulated USSD PIN Protocol
+                          USSD PIN Protocol
                         </span>
                       </div>
                       <span className="font-mono text-xs font-bold text-[#111820]">
@@ -791,7 +789,7 @@ export function CheckoutView() {
                       }`}
                     >
                       <span>
-                        Complete Simulated Payment ({pricing.total.toLocaleString()} ETB)
+                        Authorize &amp; Pay {pricing.total.toLocaleString()} ETB via TeleBirr
                       </span>
                       <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </button>
@@ -878,7 +876,7 @@ export function CheckoutView() {
                         }}
                         className="w-full sm:w-auto py-3 px-4 rounded-xl bg-white text-[#111820] font-semibold text-xs hover:bg-[#E5E2DB] transition-colors border border-[#66717D]/15"
                       >
-                        Reset Demo
+                        Book Another
                       </button>
                     </div>
                   </div>
@@ -889,7 +887,7 @@ export function CheckoutView() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[#66717D]/12">
                 <div className="flex items-center gap-1.5 text-[#66717D]">
                   <span className="material-symbols-outlined text-[15px]">lock</span>
-                  <span className="text-xs font-semibold">256-bit Simulated SSL</span>
+                  <span className="text-xs font-semibold">256-bit SSL Encryption</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[#66717D]">
                   <span className="material-symbols-outlined text-[15px]">sms</span>

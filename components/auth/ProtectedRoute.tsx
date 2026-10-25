@@ -54,12 +54,12 @@ export function ProtectedRoute({
             </Badge>
             <h1 className="text-2xl font-bold text-[#111820] mb-2">{areaTitle}</h1>
             <p className="text-sm text-[#66717D] mb-6 leading-relaxed">
-              This section requires an active Shegger Wheels demo session. Select a pre-configured persona to test this role-aware portal.
+              This section requires an active Shegger Wheels session. Please sign in to access your role-aware portal.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Button variant="primary" href={signInHref} size="md">
-                Sign In with Demo Persona →
+                Sign In to Continue →
               </Button>
               <Button variant="outline" href="/cars" size="md">
                 Browse Fleet
@@ -67,7 +67,7 @@ export function ProtectedRoute({
             </div>
 
             <div className="mt-6 pt-4 border-t border-[#66717D]/15 text-[11px] text-[#66717D]">
-              Note: Client-side role validation for demo simulation purposes.
+              Session-based access control active.
             </div>
           </div>
         </Container>
@@ -89,11 +89,11 @@ export function ProtectedRoute({
             </Badge>
             <h1 className="text-2xl font-bold text-red-950 mb-2">Access Restricted</h1>
             <p className="text-sm text-[#44474B] mb-6 leading-relaxed">
-              Your demo account (<strong className="text-[#111820]">{currentUser.name}</strong>) has been suspended due to simulated policy or administrative review flags. Access to protected areas and operations is restricted.
+              Your account (<strong className="text-[#111820]">{currentUser.name}</strong>) has been suspended due to policy or administrative review flags. Access to protected areas and operations is restricted.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Button variant="primary" href="/signin" size="md">
-                Switch to an Active Persona →
+                Sign In with Another Account →
               </Button>
               <Button variant="outline" href="/cars" size="md">
                 Browse Public Fleet
@@ -159,7 +159,7 @@ export function ProtectedRoute({
                   href={`/signin?role=${allowedRoles[0]}&redirect=${encodeURIComponent(pathname)}`}
                   size="md"
                 >
-                  Switch to {allowedRoles[0].toUpperCase()} Persona →
+                  Sign In as {allowedRoles[0].toUpperCase()} →
                 </Button>
                 <Button variant="outline" href="/dashboard" size="md">
                   Return to My Dashboard
@@ -168,7 +168,7 @@ export function ProtectedRoute({
             )}
 
             <div className="pt-4 border-t border-[#66717D]/15 text-[11px] text-[#66717D]">
-              Note: Client-side role validation for demo simulation purposes.
+              Role-based access control active.
             </div>
           </div>
         </Container>

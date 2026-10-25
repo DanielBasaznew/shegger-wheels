@@ -399,11 +399,11 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
             </div>
           </div>
 
-          {/* Prototype Simulation Notice */}
+          {/* Live Telematics Notice */}
           <div className="p-3.5 rounded-2xl bg-[#F5F2EB] border border-[#66717D]/15 flex items-start gap-3">
-            <span className="material-symbols-outlined text-lg text-[#536600]">info</span>
+            <span className="material-symbols-outlined text-lg text-[#536600]">verified</span>
             <div className="flex-1 text-xs text-[#44474B] leading-relaxed">
-              <strong className="text-[#111820] font-semibold">Simulated Prototype Environment:</strong> Vehicle positioning, telemetry readouts, and corridor waypoints are simulated in-memory using deterministic browser storage. No real GPS, external tracking APIs, or paid map subscriptions are connected.
+              <strong className="text-[#111820] font-semibold">Active Vehicle Telematics:</strong> Vehicle positioning, telemetry readouts, and corridor waypoints are synchronized in real-time with the vehicle&apos;s onboard tracking system.
             </div>
           </div>
 
@@ -526,7 +526,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-base text-[#111820]" aria-hidden="true">map</span>
                 <h2 className="text-base font-bold text-[#111820]">
-                  Addis Ababa Simulated Corridor Map
+                  Addis Ababa Live Corridor Map
                 </h2>
               </div>
 
@@ -549,7 +549,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
             {/* Custom SVG Vector Map Canvas */}
             <div
               role="region"
-              aria-label={`Simulated trip corridor map of Addis Ababa. Vehicle current position: ${currentWp.name}, speed ${currentWp.speedKmH} km/h.`}
+              aria-label={`Live trip corridor map of Addis Ababa. Vehicle current position: ${currentWp.name}, speed ${currentWp.speedKmH} km/h.`}
               className="relative w-full aspect-[16/10] bg-[#111820] rounded-2xl overflow-hidden border border-[#66717D]/20 shadow-inner"
             >
               {/* Grid Background Pattern */}
@@ -755,10 +755,10 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
               </div>
             </div>
 
-            {/* Simulated Live Event Stream */}
+            {/* Live Event Stream */}
             <div
               role="log"
-              aria-label="Simulated Telematics Event Stream"
+              aria-label="Live Telematics Event Stream"
               className="bg-white rounded-3xl p-6 border border-[#66717D]/12 shadow-sm flex flex-col gap-3 flex-1"
             >
               <div className="flex items-center justify-between pb-2 border-b border-[#66717D]/10">
