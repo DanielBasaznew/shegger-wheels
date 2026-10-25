@@ -438,8 +438,56 @@ export function getCars(): Car[] {
   return loaded;
 }
 
+export function cleanSlug(text: string): string {
+  return String(text || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function getCarSlug(car: Pick<Car, 'year' | 'make' | 'model' | 'neighbourhood'>): string {
+  const hood = car.neighbourhood ? `in-${cleanSlug(car.neighbourhood)}` : '';
+  return cleanSlug(`${car.year}-${car.make}-${car.model}-${hood}`);
+}
+
+export function getCarBySlugOrId(param: string): Car | undefined {
+  if (!param) return undefined;
+  const raw = String(param).trim();
+  let decoded = raw;
+  try {
+    decoded = decodeURIComponent(raw).trim();
+  } catch {
+    decoded = raw;
+  }
+  const cleanParam = cleanSlug(decoded);
+  const cars = getCars();
+
+  // 1. Direct ID match
+  const byId = cars.find((c) => c.id.toLowerCase() === decoded.toLowerCase() || c.id === raw);
+  if (byId) return byId;
+
+  // 2. Exact car slug match (e.g. 2022-toyota-rav4-hybrid-in-bole)
+  const bySlug = cars.find((c) => getCarSlug(c) === cleanParam);
+  if (bySlug) return bySlug;
+
+  // 3. Short slug match (e.g. 2022-toyota-rav4-hybrid)
+  const byShortSlug = cars.find(
+    (c) => cleanSlug(`${c.year}-${c.make}-${c.model}`) === cleanParam
+  );
+  if (byShortSlug) return byShortSlug;
+
+  // 4. Match make + model
+  const byMakeModel = cars.find(
+    (c) => cleanSlug(`${c.make}-${c.model}`) === cleanParam
+  );
+  if (byMakeModel) return byMakeModel;
+
+  return undefined;
+}
+
 export function getCarById(id: string): Car | undefined {
-  return getCars().find((c) => c.id === id);
+  return getCarBySlugOrId(id);
 }
 
 export function saveCar(car: Car): boolean {

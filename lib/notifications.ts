@@ -7,7 +7,7 @@
  */
 
 import { Notification, NotificationType, Booking, Car, Review, UserRole } from './types';
-import { saveNotification, getUserById, getCarById } from './storage';
+import { saveNotification, getUserById, getCarById, getCarSlug } from './storage';
 import { getSafeReturnUrl } from './auth';
 
 // ==========================================
@@ -368,7 +368,7 @@ export function notifyListingModerated(car: Car, action: 'approve' | 'reject', r
     message: isApproved
       ? `Congratulations! Your listing for ${carTitle} has been verified and is now live for bookings.`
       : `Your listing for ${carTitle} was not approved. Reason: ${reason || 'Does not meet marketplace standards.'}`,
-    link: isApproved ? `/cars/${car.id}` : `/dashboard/host`,
+    link: isApproved ? `/cars/${getCarSlug(car)}` : `/dashboard/host`,
     carId: car.id,
   });
 }

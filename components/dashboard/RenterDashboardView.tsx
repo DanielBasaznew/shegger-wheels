@@ -8,6 +8,7 @@ import { Booking, BookingStatus, Car, User } from '@/lib/types';
 import {
   getUserById,
   isOptimizableImage,
+  getCarSlug,
 } from '@/lib/storage';
 import {
   formatDisplayDate,
@@ -653,7 +654,7 @@ export function RenterDashboardView() {
                       </button>
                     ) : (
                       <Link
-                        href={`/cars/${spotlightCar.id}`}
+                        href={`/cars/${getCarSlug(spotlightCar)}`}
                         className="py-2.5 px-3 rounded-xl bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] font-bold text-xs flex items-center justify-center gap-1.5 transition-colors text-center"
                       >
                         <span className="material-symbols-outlined text-[16px]">directions_car</span>
@@ -925,7 +926,7 @@ export function RenterDashboardView() {
 
                               {car && (b.status === 'completed' || b.status === 'reviewed') && (
                                 <Link
-                                  href={`/cars/${car.id}`}
+                                  href={`/cars/${getCarSlug(car)}`}
                                   className="px-3 py-1.5 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] font-bold text-xs transition-colors"
                                 >
                                   Re-book

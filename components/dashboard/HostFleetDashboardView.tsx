@@ -15,7 +15,7 @@ import {
   BookingStatus,
   Review,
 } from '@/lib/types';
-import { getUserById, isOptimizableImage } from '@/lib/storage';
+import { getUserById, isOptimizableImage, getCarSlug } from '@/lib/storage';
 import {
   createCarListing,
   updateCarListing,
@@ -952,7 +952,7 @@ export function HostFleetDashboardView() {
                             )}
 
                             <Link
-                              href={`/cars/${car.id}`}
+                              href={`/cars/${getCarSlug(car)}`}
                               className="py-2 px-3 rounded-xl border border-[#66717D]/25 hover:border-[#111820] text-[#111820] text-xs font-bold transition-colors text-center shrink-0"
                             >
                               View ↗
@@ -1770,7 +1770,7 @@ export function HostFleetDashboardView() {
                         <div className="flex items-center gap-3">
                           {car && (
                             <Link
-                              href={`/cars/${car.id}`}
+                              href={`/cars/${getCarSlug(car)}`}
                               className="text-xs font-bold text-[#111820] hover:underline flex items-center gap-1.5"
                             >
                               <span className="material-symbols-outlined text-[15px]">directions_car</span>

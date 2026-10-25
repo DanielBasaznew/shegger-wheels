@@ -13,74 +13,10 @@ import {
 } from '@/lib/bookings';
 import { useCars, useBookings, useBooking, useSession } from '@/lib/swr';
 import { transitionBookingStatusAction } from '@/app/actions';
+import MapPanel from '@/components/map/MapPanel';
+import { TRIP_WAYPOINTS } from '@/components/map/map-constants';
 
-// Addis Ababa Simulated Telematics Waypoints along major corridor
-interface Waypoint {
-  id: string;
-  name: string;
-  subcity: string;
-  x: number; // SVG % 0-100
-  y: number; // SVG % 0-100
-  speedKmH: number;
-  statusText: string;
-}
-
-const ADDIS_WAYPOINTS: Waypoint[] = [
-  {
-    id: 'wp_bole',
-    name: 'Bole Medhanialem Corridor',
-    subcity: 'Bole Subcity',
-    x: 75,
-    y: 72,
-    speedKmH: 45,
-    statusText: 'Cruising along Bole Road towards Meskel Square',
-  },
-  {
-    id: 'wp_meskel',
-    name: 'Meskel Square Interchange',
-    subcity: 'Kirkos Subcity',
-    x: 52,
-    y: 50,
-    speedKmH: 32,
-    statusText: 'Navigating central roundabout, normal traffic flow',
-  },
-  {
-    id: 'wp_kazanchis',
-    name: 'Kazanchis Business District',
-    subcity: 'Kirkos Subcity',
-    x: 62,
-    y: 40,
-    speedKmH: 28,
-    statusText: 'Proceeding along ECA road towards Aware',
-  },
-  {
-    id: 'wp_piassa',
-    name: 'Piassa & Churchill Avenue',
-    subcity: 'Arada Subcity',
-    x: 44,
-    y: 32,
-    speedKmH: 38,
-    statusText: 'Ascending Churchill Avenue corridor',
-  },
-  {
-    id: 'wp_sarbet',
-    name: 'Sarbet & Mexico Square',
-    subcity: 'Kirkos Subcity',
-    x: 35,
-    y: 60,
-    speedKmH: 42,
-    statusText: 'Passing South Africa Embassy road towards Gotera',
-  },
-  {
-    id: 'wp_cmc',
-    name: 'CMC & Megenagna Arterial',
-    subcity: 'Yeka Subcity',
-    x: 82,
-    y: 35,
-    speedKmH: 52,
-    statusText: 'Express transit corridor active',
-  },
-];
+const ADDIS_WAYPOINTS = TRIP_WAYPOINTS;
 
 interface TripTrackingViewProps {
   bookingId: string;
@@ -561,131 +497,14 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
               )}
             </div>
 
-            {/* Custom SVG Vector Map Canvas */}
-            <div
-              role="region"
-              aria-label={`Live trip corridor map of Addis Ababa. Vehicle current position: ${currentWp.name}, speed ${currentWp.speedKmH} km/h.`}
-              className="relative w-full aspect-[16/10] bg-[#111820] rounded-2xl overflow-hidden border border-[#66717D]/20 shadow-inner"
-            >
-              {/* Grid Background Pattern */}
-              <svg className="absolute inset-0 w-full h-full opacity-15" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#66717D" strokeWidth="0.5" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-              </svg>
-
-              {/* Vector Road Arterials & Corridors */}
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                {/* Ring Road and Major Arterials */}
-                <path
-                  d="M 15 20 Q 50 10 85 25 Q 90 60 75 85 Q 40 90 20 75 Z"
-                  fill="none"
-                  stroke="#2C353F"
-                  strokeWidth="2.5"
-                  strokeDasharray="2 1"
-                />
-                {/* Churchill / Bole Diagonal Corridor */}
-                <path
-                  d="M 44 32 L 52 50 L 75 72"
-                  fill="none"
-                  stroke={isOnRoad ? '#D5F36A' : '#44474B'}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                {/* Kazanchis to CMC branch */}
-                <path
-                  d="M 52 50 L 62 40 L 82 35"
-                  fill="none"
-                  stroke="#44474B"
-                  strokeWidth="1.5"
-                />
-                {/* Mexico to Sarbet branch */}
-                <path
-                  d="M 52 50 L 35 60 L 25 75"
-                  fill="none"
-                  stroke="#44474B"
-                  strokeWidth="1.5"
-                />
-
-                {/* Fixed Waypoint Nodes */}
-                {ADDIS_WAYPOINTS.map((wp, idx) => (
-                  <g key={wp.id} className="cursor-pointer">
-                    <circle
-                      cx={wp.x}
-                      cy={wp.y}
-                      r={idx === activeWaypointIndex && isOnRoad ? '3.5' : '2'}
-                      fill={idx === activeWaypointIndex && isOnRoad ? '#D5F36A' : '#66717D'}
-                      className="transition-all duration-300"
-                    />
-                    <text
-                      x={wp.x}
-                      y={wp.y - 3}
-                      fill="#FFFFFF"
-                      fontSize="2.5"
-                      textAnchor="middle"
-                      className="font-bold select-none opacity-80"
-                    >
-                      {wp.name.split(' ')[0]}
-                    </text>
-                  </g>
-                ))}
-
-                {/* Animated Vehicle Beacon when on-road */}
-                {isOnRoad && (
-                  <g className="transition-all duration-700 ease-in-out">
-                    <circle
-                      cx={currentWp.x}
-                      cy={currentWp.y}
-                      r="6"
-                      fill="#D5F36A"
-                      opacity="0.3"
-                      className="animate-ping"
-                    />
-                    <circle
-                      cx={currentWp.x}
-                      cy={currentWp.y}
-                      r="3.5"
-                      fill="#D5F36A"
-                      stroke="#111820"
-                      strokeWidth="1"
-                    />
-                  </g>
-                )}
-              </svg>
-
-              {/* Map Floating HUD Overlay */}
-              <div className="absolute top-3 left-3 bg-[#111820]/90 backdrop-blur-md rounded-xl p-2.5 border border-white/10 text-white flex flex-col gap-0.5 max-w-[200px]">
-                <span className="text-[9px] font-label-caps uppercase text-[#D5F36A] font-bold">
-                  Active Corridor Waypoint
-                </span>
-                <span className="text-xs font-bold truncate">
-                  {isOnRoad ? currentWp.name : isTripFinished ? 'Trip Concluded' : 'Vehicle Parked at Hub'}
-                </span>
-                <span className="text-[10px] text-white/70">
-                  {isOnRoad ? currentWp.subcity : car?.neighbourhood || 'Addis Ababa'}
-                </span>
-              </div>
-
-              {/* Speed & Altitude HUD */}
-              <div className="absolute bottom-3 right-3 bg-[#111820]/90 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/10 text-white flex items-center gap-3">
-                <div className="flex flex-col text-right">
-                  <span className="text-[9px] text-white/60 font-mono">Sim. Speed</span>
-                  <span className="text-sm font-bold font-specs-tabular text-[#D5F36A]">
-                    {isOnRoad ? `${currentWp.speedKmH} km/h` : '0 km/h'}
-                  </span>
-                </div>
-                <div className="h-6 w-[1px] bg-white/20" />
-                <div className="flex flex-col text-right">
-                  <span className="text-[9px] text-white/60 font-mono">Elevation</span>
-                  <span className="text-sm font-bold font-specs-tabular text-white">
-                    2,355 m
-                  </span>
-                </div>
-              </div>
-            </div>
+            {/* Interactive Leaflet OpenStreetMap View */}
+            <MapPanel
+              booking={booking}
+              car={car}
+              activeWaypointIndex={activeWaypointIndex}
+              isSimulating={isSimulating}
+              onSelectWaypoint={setActiveWaypointIndex}
+            />
 
             {/* Waypoint Corridor Progression Bar */}
             <div className="flex items-center gap-1.5 overflow-x-auto py-1 text-xs">

@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { HomeSearchWidget } from '@/components/home/HomeSearchWidget';
-import { isOptimizableImage } from '@/lib/storage';
+import { isOptimizableImage, getCarSlug } from '@/lib/storage';
 import { useCars } from '@/lib/swr';
 
 export default function Home() {
@@ -30,6 +30,7 @@ export default function Home() {
 
     return {
       id: car.id,
+      slug: getCarSlug(car),
       title: `${car.make} ${car.model}`,
       category: `${car.transmission} • ${car.seats} Seats`,
       tag,
@@ -310,7 +311,7 @@ export default function Home() {
                   <span className="font-body-sm text-[11px] text-on-surface-variant">{car.note}</span>
                 </div>
                 <Link
-                  href={`/cars/${car.id}`}
+                  href={`/cars/${car.slug || car.id}`}
                   className="px-4 py-2 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-surface-container-highest hover:text-on-surface transition-colors shadow-xs"
                 >
                   Rent

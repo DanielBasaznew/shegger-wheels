@@ -35,6 +35,9 @@ import {
   writeSession,
   removeSession,
   isDemoSession,
+  cleanSlug,
+  getCarSlug,
+  getCarBySlugOrId,
 } from './storage';
 import {
   SEED_USERS,
@@ -294,17 +297,24 @@ export function useCars(config?: Partial<SWRConfiguration>) {
   };
 }
 
-export function useCar(carId: string | null | undefined, config?: Partial<SWRConfiguration>) {
+export function useCar(carIdOrSlug: string | null | undefined, config?: Partial<SWRConfiguration>) {
+  const normalizedKey = carIdOrSlug ? cleanSlug(carIdOrSlug) : null;
   const { data, error, isLoading, mutate: mutateCar } = useSWR<Car | undefined>(
-    carId ? `shegger:car:${carId}` : null,
+    normalizedKey ? `shegger:car:${normalizedKey}` : null,
     async () => {
-      if (!carId) return undefined;
+      if (!carIdOrSlug) return undefined;
       const all = await fetchCarsFromApi();
-      return all.find((c) => c.id === carId);
+      const cleanParam = cleanSlug(carIdOrSlug);
+      return all.find(
+        (c) =>
+          c.id.toLowerCase() === carIdOrSlug.toLowerCase() ||
+          getCarSlug(c) === cleanParam ||
+          cleanSlug(`${c.year}-${c.make}-${c.model}`) === cleanParam
+      );
     },
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: carId ? SEED_CARS.find((c) => c.id === carId) : undefined,
+      fallbackData: carIdOrSlug ? getCarBySlugOrId(carIdOrSlug) : undefined,
       ...config,
     }
   );

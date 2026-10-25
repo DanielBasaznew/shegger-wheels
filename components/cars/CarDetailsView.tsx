@@ -8,12 +8,16 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { VehicleCard } from '@/components/cars/VehicleCard';
+import { ShareVehicleModal } from '@/components/cars/ShareVehicleModal';
+import NeighbourhoodMapPanel from '@/components/map/NeighbourhoodMapPanel';
 import { User, Review } from '@/lib/types';
 import {
   getUserById,
   getCurrentSession,
   setCheckoutDraft,
   isOptimizableImage,
+  getCarSlug,
+  cleanSlug,
 } from '@/lib/storage';
 import { SEED_USERS } from '@/lib/seeds';
 import { getCarRatingSummary } from '@/lib/reviews';
@@ -58,7 +62,29 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
   // Load cars with reactive SWR and 1-hour cache validation
   const { cars: allCars } = useCars();
-  const car = allCars.find((c) => c.id === id);
+  const car = useMemo(() => {
+    const normalizedParam = cleanSlug(id);
+    return (
+      allCars.find(
+        (c) =>
+          c.id.toLowerCase() === id.toLowerCase() ||
+          getCarSlug(c) === normalizedParam ||
+          cleanSlug(`${c.year}-${c.make}-${c.model}`) === normalizedParam ||
+          cleanSlug(`${c.make}-${c.model}`) === normalizedParam
+      ) || allCars.find((c) => c.id === id)
+    );
+  }, [allCars, id]);
+
+  // Seamlessly synchronize browser address bar to canonical slug when accessed via car ID
+  useEffect(() => {
+    if (typeof window !== 'undefined' && car) {
+      const canonicalSlug = getCarSlug(car);
+      const currentPath = window.location.pathname;
+      if (currentPath.toLowerCase() === `/cars/${car.id.toLowerCase()}`) {
+        window.history.replaceState(null, '', `/cars/${canonicalSlug}${window.location.search}`);
+      }
+    }
+  }, [car]);
 
   // Today string for min date
   const todayStr = useMemo(() => formatDateString(new Date()), []);
@@ -83,6 +109,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
   const [endDate, setEndDate] = useState(defaultEndStr);
   const [handoverOption, setHandoverOption] = useState<'pickup' | 'delivery'>('pickup');
   const [isCopied, setIsCopied] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
@@ -193,21 +220,18 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
   // Handle share click
   const handleShare = () => {
-    if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2500);
-    }
+    setIsShareModalOpen(true);
   };
 
   // Keyboard accessibility for modals (Escape to dismiss, Arrow keys for gallery)
   useEffect(() => {
-    if (!isContactModalOpen && !isGalleryModalOpen) return;
+    if (!isContactModalOpen && !isGalleryModalOpen && !isShareModalOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isContactModalOpen) setIsContactModalOpen(false);
         if (isGalleryModalOpen) setIsGalleryModalOpen(false);
+        if (isShareModalOpen) setIsShareModalOpen(false);
       } else if (isGalleryModalOpen) {
         if (e.key === 'ArrowLeft') {
           setActivePhotoIdx((prev) => (prev - 1 + photosList.length) % photosList.length);
@@ -219,7 +243,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isContactModalOpen, isGalleryModalOpen, photosList.length]);
+  }, [isContactModalOpen, isGalleryModalOpen, isShareModalOpen, photosList.length]);
 
   // Handle booking CTA click
   const handleProceedToBooking = () => {
@@ -779,6 +803,14 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
                       Bole International Airport (ADD) Terminal 2 or Kazanchis/Bole hotel delivery available for an optional 400 ETB concierge fee.
                     </p>
                   </div>
+                </div>
+
+                {/* Interactive Leaflet Neighbourhood Hub Map */}
+                <div className="mt-2">
+                  <NeighbourhoodMapPanel
+                    neighbourhood={car.neighbourhood}
+                    carName={`${car.year} ${car.make} ${car.model}`}
+                  />
                 </div>
               </section>
 
@@ -1384,6 +1416,15 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Social Card Share Preview Modal */}
+      {car && (
+        <ShareVehicleModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          car={car}
+        />
       )}
     </div>
   );

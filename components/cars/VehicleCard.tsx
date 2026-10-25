@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Car } from '@/lib/types';
-import { getUserById, isOptimizableImage } from '@/lib/storage';
+import { getUserById, isOptimizableImage, getCarSlug } from '@/lib/storage';
 
 export interface VehicleCardProps {
   car: Car;
@@ -142,7 +142,7 @@ export function VehicleCard({
           </div>
 
           <Link
-            href={`/cars/${car.id}`}
+            href={`/cars/${getCarSlug(car)}`}
             id={`view-details-${car.id}`}
             aria-label={`View details for ${car.make} ${car.model}`}
             className="px-4 py-2.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer"

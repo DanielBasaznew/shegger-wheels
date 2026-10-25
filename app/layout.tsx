@@ -11,10 +11,42 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700", "800"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'https://shegger-wheels-cyan.vercel.app');
+
+const baseUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`;
+
 export const metadata: Metadata = {
-  title: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
+  metadataBase: new URL(baseUrl),
+  title: {
+    template: "%s · Shegger Wheels",
+    default: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
+  },
   description:
-    "Peer-to-peer car rental marketplace for Addis Ababa. Rent verified vehicles directly from local owners or list your car to earn.",
+    "Peer-to-peer car rental marketplace for Addis Ababa. Rent verified vehicles directly from local owners with TeleBirr escrow protection.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
+    description:
+      "Peer-to-peer car rental marketplace for Addis Ababa. Rent verified vehicles directly from local owners with TeleBirr escrow protection.",
+    url: "/",
+    siteName: "Shegger Wheels",
+    locale: "en_ET",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
+    description:
+      "Peer-to-peer car rental marketplace for Addis Ababa. Rent verified vehicles directly from local owners with TeleBirr escrow protection.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

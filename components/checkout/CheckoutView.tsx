@@ -12,6 +12,8 @@ import {
   getCheckoutDraft,
   setCheckoutDraft,
   isOptimizableImage,
+  cleanSlug,
+  getCarSlug,
 } from '@/lib/storage';
 import {
   formatDateString,
@@ -89,7 +91,16 @@ export function CheckoutView() {
 
   // Selected car record
   const selectedCar = useMemo(() => {
-    return allCars.find((c) => c.id === carId) || null;
+    if (!carId) return null;
+    const cleanParam = cleanSlug(carId);
+    return (
+      allCars.find(
+        (c) =>
+          c.id.toLowerCase() === carId.toLowerCase() ||
+          getCarSlug(c) === cleanParam ||
+          cleanSlug(`${c.year}-${c.make}-${c.model}`) === cleanParam
+      ) || null
+    );
   }, [allCars, carId]);
 
   // Host record

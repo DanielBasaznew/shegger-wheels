@@ -9,6 +9,7 @@ import { Booking, Car, User } from '@/lib/types';
 import {
   getUserById,
   isOptimizableImage,
+  getCarSlug,
 } from '@/lib/storage';
 import {
   formatDisplayDate,
@@ -298,7 +299,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
               </div>
               {car && (
                 <Link
-                  href={`/cars/${car.id}#reviews-section`}
+                  href={`/cars/${getCarSlug(car)}#reviews-section`}
                   className="font-bold text-emerald-900 underline hover:text-emerald-950 shrink-0 inline-flex items-center gap-1"
                 >
                   <span>View Review</span>
@@ -451,7 +452,7 @@ export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
 
               {car && (
                 <Link
-                  href={`/cars/${car.id}`}
+                  href={`/cars/${getCarSlug(car)}`}
                   className="py-2.5 px-4 rounded-full bg-[#F5F2EB] hover:bg-[#EBE8E1] text-[#111820] font-bold text-xs transition-colors"
                 >
                   View Vehicle Listing
