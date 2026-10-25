@@ -969,18 +969,21 @@ export function getOwnerEarningsAnalytics(
   const bookings = (allBookingsInput || getBookings()).filter((b) => b.ownerId === ownerId);
   const cars = (allCarsInput || getCars()).filter((c) => c.ownerId === ownerId);
 
-  // 1. Completed Earnings: strictly completed or reviewed bookings with paid status
+  // 1. Completed Earnings: completed or reviewed bookings (or explicitly paid)
   const completedBookings = bookings.filter(
-    (b) => (b.status === 'completed' || b.status === 'reviewed') && b.paymentStatus === 'paid'
+    (b) => b.status === 'completed' || b.status === 'reviewed' || b.paymentStatus === 'paid'
   );
   const totalCompletedEarnings = completedBookings.reduce((sum, b) => sum + b.subtotal, 0);
 
   // 2. Held Escrow: in transit for ongoing, upcoming, or requested rentals
   const heldEscrowBookings = bookings.filter(
     (b) =>
-      b.paymentStatus === 'held_in_escrow' &&
       b.status !== 'cancelled' &&
-      b.status !== 'declined'
+      b.status !== 'declined' &&
+      b.status !== 'completed' &&
+      b.status !== 'reviewed' &&
+      b.paymentStatus !== 'paid' &&
+      b.paymentStatus !== 'refunded'
   );
   const heldEscrowAmount = heldEscrowBookings.reduce((sum, b) => sum + b.subtotal, 0);
 
@@ -1005,13 +1008,16 @@ export function getOwnerEarningsAnalytics(
   const vehicleBreakdown: VehicleUtilizationMetric[] = cars.map((car) => {
     const carBookings = bookings.filter((b) => b.carId === car.id);
     const carCompleted = carBookings.filter(
-      (b) => (b.status === 'completed' || b.status === 'reviewed') && b.paymentStatus === 'paid'
+      (b) => b.status === 'completed' || b.status === 'reviewed' || b.paymentStatus === 'paid'
     );
     const carHeld = carBookings.filter(
       (b) =>
-        b.paymentStatus === 'held_in_escrow' &&
         b.status !== 'cancelled' &&
-        b.status !== 'declined'
+        b.status !== 'declined' &&
+        b.status !== 'completed' &&
+        b.status !== 'reviewed' &&
+        b.paymentStatus !== 'paid' &&
+        b.paymentStatus !== 'refunded'
     );
 
     const activeBooking = carBookings.find(

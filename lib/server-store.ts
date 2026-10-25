@@ -79,7 +79,23 @@ export function updateServerCar(car: Car): void {
 // ==========================================
 
 export function getServerBookings(): Booking[] {
-  return readJsonFile<Booking[]>('bookings.json', SEED_BOOKINGS);
+  const bookings = readJsonFile<Booking[]>('bookings.json', SEED_BOOKINGS);
+  let modified = false;
+  const healed = bookings.map((b) => {
+    if ((b.status === 'completed' || b.status === 'reviewed') && b.paymentStatus !== 'paid') {
+      modified = true;
+      return { ...b, paymentStatus: 'paid' as const };
+    }
+    if ((b.status === 'declined' || b.status === 'cancelled') && b.paymentStatus !== 'refunded') {
+      modified = true;
+      return { ...b, paymentStatus: 'refunded' as const };
+    }
+    return b;
+  });
+  if (modified) {
+    writeJsonFile('bookings.json', healed);
+  }
+  return healed;
 }
 
 export function saveServerBookings(bookings: Booking[]): void {

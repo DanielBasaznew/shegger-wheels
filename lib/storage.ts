@@ -455,11 +455,27 @@ export function saveCar(car: Car): boolean {
 
 // Bookings
 export function getBookings(): Booking[] {
-  return readStorage<Booking[]>(
+  const items = readStorage<Booking[]>(
     STORAGE_KEYS.BOOKINGS,
     SEED_BOOKINGS,
     (v): v is Booking[] => isArrayWithItems(v, isBooking)
   );
+  let modified = false;
+  const healed = items.map((b) => {
+    if ((b.status === 'completed' || b.status === 'reviewed') && b.paymentStatus !== 'paid') {
+      modified = true;
+      return { ...b, paymentStatus: 'paid' as const };
+    }
+    if ((b.status === 'declined' || b.status === 'cancelled') && b.paymentStatus !== 'refunded') {
+      modified = true;
+      return { ...b, paymentStatus: 'refunded' as const };
+    }
+    return b;
+  });
+  if (modified && typeof window !== 'undefined') {
+    writeStorage(STORAGE_KEYS.BOOKINGS, healed);
+  }
+  return healed;
 }
 
 export function getBookingById(id: string): Booking | undefined {

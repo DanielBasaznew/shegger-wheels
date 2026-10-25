@@ -275,8 +275,19 @@ export async function transitionBookingStatusAction(
     );
     if (b) {
       b.status = targetStatus;
+      if (targetStatus === 'completed' || targetStatus === 'reviewed') {
+        b.paymentStatus = 'paid';
+      } else if (targetStatus === 'cancelled' || targetStatus === 'declined') {
+        b.paymentStatus = 'refunded';
+      }
       if (reason) {
-        b.cancellationReason = reason;
+        if (targetStatus === 'declined') {
+          b.declineReason = reason;
+        } else if (targetStatus === 'cancelled') {
+          b.cancellationReason = reason;
+        } else if (targetStatus === 'disputed') {
+          b.disputeReason = reason;
+        }
       }
       b.updatedAt = new Date().toISOString();
       saveServerBookings(bookings);
