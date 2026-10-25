@@ -61,7 +61,11 @@ export function getServerCars(): Car[] {
   let updated = false;
   const migrated = cars.map((car) => {
     const seed = seedMap.get(car.id);
-    if (seed && (car.featuredImage?.includes('images.unsplash.com') || car.photos?.some((p) => p.includes('images.unsplash.com')))) {
+    if (
+      seed &&
+      (car.featuredImage !== seed.featuredImage ||
+        JSON.stringify(car.photos) !== JSON.stringify(seed.photos))
+    ) {
       updated = true;
       return {
         ...car,

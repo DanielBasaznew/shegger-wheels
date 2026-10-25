@@ -91,6 +91,9 @@ export const SEED_CARS: Car[] = [
     pricePerDay: 4500,
     photos: [
       '/cars/toyota-rav4-hybrid.jpg',
+      '/cars/toyota-rav4-cockpit.jpg',
+      '/cars/toyota-rav4-side.jpg',
+      '/cars/toyota-rav4-rear.jpg',
     ],
     featuredImage: '/cars/toyota-rav4-hybrid.jpg',
     description: 'Immaculate condition Toyota RAV4 Hybrid with great fuel efficiency. Ideal for city commutes and family weekend outings around Addis Ababa and Bishoftu.',

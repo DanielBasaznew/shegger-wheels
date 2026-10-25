@@ -206,18 +206,20 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
     const list = [...car.photos];
     if (list.length === 0 && car.featuredImage) list.push(car.featuredImage);
 
-    // Supplement with contextual vehicle perspectives to fulfill the 4-tile Stitch gallery
+    // Ensure 4 items for the 4-tile Stitch gallery using the car's own perspectives
     if (list.length === 1) {
       list.push(
-        '/cars/toyota-rav4-hybrid.jpg',
-        '/cars/hyundai-tucson.jpg',
-        '/hero/hero-luxury-suv.jpg'
+        list[0],
+        list[0],
+        list[0]
       );
     } else if (list.length === 2) {
       list.push(
-        '/cars/toyota-rav4-hybrid.jpg',
-        '/hero/hero-luxury-suv.jpg'
+        list[1],
+        list[0]
       );
+    } else if (list.length === 3) {
+      list.push(list[0]);
     }
     return list;
   }, [car]);
