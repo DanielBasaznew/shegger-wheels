@@ -470,12 +470,12 @@ const VALID_TRANSITIONS: Record<BookingStatus, Partial<Record<BookingStatus, Tra
     declined: {
       allowedActors: ['owner', 'admin'],
       paymentEffect: 'refunded',
-      description: 'Owner declines rental request. Mock escrow is released/refunded.',
+      description: 'Owner declines rental request. TeleBirr escrow is released/refunded.',
     },
     cancelled: {
       allowedActors: ['renter', 'admin'],
       paymentEffect: 'refunded',
-      description: 'Renter cancels pending request. Mock escrow is refunded.',
+      description: 'Renter cancels pending request. TeleBirr escrow is refunded.',
     },
   },
   confirmed: {
@@ -486,14 +486,14 @@ const VALID_TRANSITIONS: Record<BookingStatus, Partial<Record<BookingStatus, Tra
     cancelled: {
       allowedActors: ['renter', 'owner', 'admin'],
       paymentEffect: 'refunded',
-      description: 'Trip cancelled prior to handover. Mock escrow refunded.',
+      description: 'Trip cancelled prior to handover. TeleBirr escrow refunded.',
     },
   },
   in_progress: {
     completed: {
       allowedActors: ['owner', 'renter', 'admin'],
       paymentEffect: 'paid',
-      description: 'Vehicle returned & inspected. Mock escrow disbursed to owner.',
+      description: 'Vehicle returned & inspected. TeleBirr escrow disbursed to owner.',
     },
     disputed: {
       allowedActors: ['renter', 'owner', 'admin'],

@@ -348,11 +348,13 @@ export function useBooking(bookingId: string | null | undefined, config?: Partia
     async () => {
       if (!bookingId) return undefined;
       const all = await fetchBookingsFromApi();
-      return all.find((b) => b.id === bookingId);
+      return all.find((b) => b.id.toLowerCase() === bookingId.toLowerCase() || b.id === bookingId);
     },
     {
       ...DEFAULT_SWR_OPTIONS,
-      fallbackData: bookingId ? SEED_BOOKINGS.find((b) => b.id === bookingId) : undefined,
+      fallbackData: bookingId
+        ? SEED_BOOKINGS.find((b) => b.id.toLowerCase() === bookingId.toLowerCase() || b.id === bookingId)
+        : undefined,
       ...config,
     }
   );

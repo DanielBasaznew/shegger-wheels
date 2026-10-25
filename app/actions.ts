@@ -270,7 +270,9 @@ export async function transitionBookingStatusAction(
 
   if (targetStatus) {
     const bookings = getServerBookings();
-    const b = bookings.find((item) => item.id === bookingId);
+    const b = bookings.find(
+      (item) => item.id.toLowerCase() === bookingId.toLowerCase() || item.id === bookingId
+    );
     if (b) {
       b.status = targetStatus;
       if (reason) {

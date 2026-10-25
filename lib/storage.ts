@@ -463,12 +463,15 @@ export function getBookings(): Booking[] {
 }
 
 export function getBookingById(id: string): Booking | undefined {
-  return getBookings().find((b) => b.id === id);
+  if (!id) return undefined;
+  return getBookings().find((b) => b.id.toLowerCase() === id.toLowerCase() || b.id === id);
 }
 
 export function saveBooking(booking: Booking): boolean {
   const bookings = getBookings();
-  const index = bookings.findIndex((b) => b.id === booking.id);
+  const index = bookings.findIndex(
+    (b) => b.id.toLowerCase() === booking.id.toLowerCase() || b.id === booking.id
+  );
   if (index >= 0) {
     bookings[index] = { ...booking, updatedAt: new Date().toISOString() };
   } else {

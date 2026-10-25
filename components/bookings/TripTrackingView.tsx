@@ -12,6 +12,7 @@ import {
   transitionBookingStatus,
 } from '@/lib/bookings';
 import { useCars, useBookings, useBooking, useSession } from '@/lib/swr';
+import { transitionBookingStatusAction } from '@/app/actions';
 
 // Addis Ababa Simulated Telematics Waypoints along major corridor
 interface Waypoint {
@@ -91,7 +92,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
 
   // SWR Real-Time Polling: Polls trip telemetry every 5s while active.
   // Polling automatically and permanently stops when the trip reaches a terminal state (completed/declined) matching the Addis Eats pattern.
-  const { booking: polledBooking } = useBooking(bookingId, {
+  const { booking: polledBooking, mutate: mutateBooking } = useBooking(bookingId, {
     refreshInterval: (latest) => {
       if (!isSimulating) return 0;
       if (latest?.status === 'completed' || latest?.status === 'declined') return 0;
@@ -101,7 +102,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
     dedupingInterval: 2000,
   });
 
-  const { bookings: allBookings } = useBookings();
+  const { bookings: allBookings, mutate: mutateBookings } = useBookings();
   const { cars: allCars } = useCars();
   const { session } = useSession();
 
@@ -205,7 +206,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
   }, [booking]);
 
   // FSM Action: Start Trip (Handover verification)
-  const handleStartTrip = () => {
+  const handleStartTrip = async () => {
     if (!booking || !session) return;
     setIsProcessing(true);
     setActionFeedback(null);
@@ -216,8 +217,14 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
       role: actorRole,
     });
 
-    setIsProcessing(false);
-    if (result.success) {
+    if (result.success && result.booking) {
+      try {
+        await transitionBookingStatusAction(booking.id, 'in_progress', undefined, session);
+      } catch (err) {
+        console.error('Failed to dispatch server status transition:', err);
+      }
+      await mutateBooking(result.booking, { revalidate: true });
+      await mutateBookings();
       setActionFeedback({
         type: 'success',
         message: 'Vehicle handover confirmed! Trip started and live telematics activated.',
@@ -228,10 +235,11 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
         message: result.error || 'Failed to start trip.',
       });
     }
+    setIsProcessing(false);
   };
 
   // FSM Action: Complete Trip (Return inspection)
-  const handleCompleteTrip = () => {
+  const handleCompleteTrip = async () => {
     if (!booking || !session) return;
     setIsProcessing(true);
     setActionFeedback(null);
@@ -242,8 +250,14 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
       role: actorRole,
     });
 
-    setIsProcessing(false);
-    if (result.success) {
+    if (result.success && result.booking) {
+      try {
+        await transitionBookingStatusAction(booking.id, 'completed', undefined, session);
+      } catch (err) {
+        console.error('Failed to dispatch server status transition:', err);
+      }
+      await mutateBooking(result.booking, { revalidate: true });
+      await mutateBookings();
       setActionFeedback({
         type: 'success',
         message: 'Return inspection finalized! Trip marked completed and security deposit release initiated.',
@@ -254,6 +268,7 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
         message: result.error || 'Failed to complete trip.',
       });
     }
+    setIsProcessing(false);
   };
 
   // 1. Not Found State
