@@ -31,13 +31,14 @@ flowchart LR
 | Storage Key | Storage Mechanism | Schema / Entity | Lifetime & Purge Triggers |
 |---|---|---|---|
 | `sw_users_v1` | `localStorage` | `User[]` | Persists across sessions. Reset only on user browser clear or `resetDemoData()`. |
-| `sw_cars_v1` | `localStorage` | `Car[]` | Persists across sessions. Includes all vehicle listings and owner associations. |
+| `sw_cars_v1` | `localStorage` | `Car[]` | Persists across sessions. Includes all vehicle listings and owner associations. Baseline seed models auto-merge on update. |
 | `sw_bookings_v1` | `localStorage` | `Booking[]` | Persists across sessions. Tracks complete booking lifecycle transitions. |
 | `sw_reviews_v1` | `localStorage` | `Review[]` | Persists across sessions. Linked to completed bookings and vehicles. |
 | `sw_disputes_v1` | `localStorage` | `Dispute[]` | Persists across sessions. Records disputes opened and resolution notes. |
 | `sw_announcements_v1` | `localStorage` | `Announcement[]` | Persists across sessions. Global broadcast announcements. |
-| `sw_session_v1` | `sessionStorage` | `DemoSession` | Cleared when browser tab/session closes or when user signs out via `clearCurrentSession()`. |
-| `sw_checkout_draft_v1` | `sessionStorage` | `CheckoutDraft` | Temporary date selection and cost calculation; cleared after checkout completion or cancel. |
+| `sw_notifications_v1` | `localStorage` | `Notification[]` | Persists across sessions. User notification alerts for bookings, reviews, and moderation. |
+| `sw_session_v1` | `localStorage` (mirrored in `sessionStorage`) | `DemoSession` | Active demo persona session. Persists across reloads/tabs; cleared when user signs out via `clearCurrentSession()`. |
+| `sw_checkout_draft_v1` | `localStorage` (mirrored in `sessionStorage`) | `CheckoutDraft` | In-flight date selection and cost calculation; cleared after checkout completion or cancel. |
 
 ---
 
@@ -183,3 +184,40 @@ interface Announcement {
 - **Client-Side Isolated**: Storage is confined to the individual browser profile/origin. Data does not synchronize across separate machines or private browsing tabs.
 - **User Modifiable**: `localStorage` is technically accessible via browser DevTools; hence, frontend checks demonstrate system architecture rather than production security.
 - **Simulated Transactions**: Financial transactions (TeleBirr, Chapa) and GPS tracking coordinates are strictly simulated without external financial or telematics APIs.
+
+---
+
+## 7. Client Data Layer — SWR Queries, Keys & Invalidation Rules
+
+Shegger Wheels employs **SWR** (`swr@^2.5.1`) for reactive state management, caching, deduplication, and zero-latency cross-tab synchronization.
+
+### 7.1 SWR Query Registry
+
+| Query Key | Hook | Default Deduping / Refresh Rule | One-Line Architectural Rationale |
+|---|---|---|---|
+| `'shegger:cars'` | `useCars(config?)` | `dedupingInterval: 3,600,000` (1 hr), `revalidateOnFocus: true` | Prevents redundant fleet recalculations while ensuring catalog refreshes if an admin or host adds a car in another tab. |
+| `'shegger:car:${id}'` | `useCar(id, config?)` | Conditional key (`null` when ID missing), `fallbackData: seed` | Eliminates first-paint spinner and avoids executing queries for unselected vehicle routes. |
+| `'shegger:bookings'` | `useBookings(config?)` | `dedupingInterval: 3,600,000` (1 hr), `keepPreviousData: true` | Provides immediate KPI counts in host/renter dashboards without screen flickering between state transitions. |
+| `'shegger:booking:${id}'` | `useBooking(id, config?)` | `refreshInterval: 5000` when trip is active (`in_progress`) | Automatically polls live trip telemetry and waypoint checkpoints every 5 seconds without manual `setInterval` boilerplate. |
+| `'shegger:reviews'` | `useReviews()` | `dedupingInterval: 3,600,000` (1 hr), `revalidateOnFocus: true` | Caches public vehicle ratings and updates across all vehicle cards immediately upon new review submission. |
+| `'shegger:reviews:${carId}'` | `useCarReviews(carId)` | Conditional key (`null` when `carId` missing) | Isolates reviews to the active vehicle details page, preventing unnecessary queries for unrelated cars. |
+| `'shegger:disputes'` | `useDisputes()` | `dedupingInterval: 3,600,000` (1 hr), `revalidateOnFocus: true` | Keeps admin mediation queues synchronized without high polling overhead. |
+| `'shegger:dispute:${id}'` | `useDispute(id)` | Conditional key (`null` when ID missing) | Loads single dispute record for modal inspection without fetching unrelated ledger rows. |
+| `'shegger:notifications:${userId}'` | `useNotifications(userId)` | Conditional key (`null` when logged out), `revalidateOnFocus: true` | Enforces tenant privacy by fetching alerts only for the active user ID and clears immediately on sign-out. |
+| `'shegger:session'` | `useSession()` | `revalidateOnFocus: true`, `fallbackData: getCurrentSession()` | Synchronizes authenticated persona and role switches instantaneously across open tabs via `BroadcastChannel`. |
+| `'shegger:users'` | `useUsers()` | `dedupingInterval: 3,600,000` (1 hr), `revalidateOnFocus: true` | Caches directory of Addis Ababa demo personas for role switches and dashboard lookups. |
+
+### 7.2 Core Data Fetching Patterns Applied
+
+1. **Stale-While-Revalidate (SWR)**:
+   - On first render, components render cached/seed data immediately via `fallbackData`, eliminating initial loading spinners.
+   - Background revalidation checks `localStorage` and smoothly updates the UI if values have changed.
+2. **Conditional Fetching (`null` keys)**:
+   - Hooks never execute under conditional `if` blocks. When an entity ID or session user is not available, `null` is passed as the SWR key to safely suspend execution without violating the Rules of Hooks.
+3. **Optimistic Updates & Mutation (`mutate`)**:
+   - Write operations (e.g. creating bookings, adding listings, submitting reviews) persist changes directly to `localStorage` and trigger `mutate('shegger:*')`.
+4. **Cross-Tab Synchronization (`BroadcastChannel`)**:
+   - Modern browsers broadcast state mutations via `new BroadcastChannel('shegger_wheels_sync')`, ensuring that if an admin approves a listing or a renter books a vehicle in Tab 1, Tab 2's SWR cache revalidates and reflects the update instantly.
+5. **Debouncing & `keepPreviousData`**:
+   - In `/cars`, search inputs and filter changes use `keepPreviousData: true`, preventing the fleet grid from flashing empty while typing a search query.
+

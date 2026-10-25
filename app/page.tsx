@@ -1,72 +1,48 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { HomeSearchWidget } from '@/components/home/HomeSearchWidget';
 import { isOptimizableImage } from '@/lib/storage';
+import { useCars } from '@/lib/swr';
 
 export default function Home() {
-  const featuredCars = [
-    {
-      id: 'car_04',
-      title: 'Toyota Land Cruiser Prado TXL',
-      category: 'SUV • 4x4',
-      tag: 'Top Rated',
-      tagClass: 'bg-secondary-fixed text-on-secondary-fixed',
-      location: 'Bole Atlas',
-      rating: '4.96',
-      trips: '38 trips',
-      specs: ['Automatic', '7 Seats', 'Diesel 3.0L'],
-      price: '9,500',
+  const { approvedCars } = useCars();
+  const fleetCount = approvedCars.length > 0 ? approvedCars.length : 14;
+
+  // Dynamically select top 4 featured cars from live approved cars
+  const featuredCars = approvedCars.slice(0, 4).map((car) => {
+    let tag = 'Popular Choice';
+    let tagClass = 'bg-surface-container-lowest text-on-surface';
+    if (car.year >= 2023) {
+      tag = 'New Model';
+      tagClass = 'bg-secondary-fixed text-on-secondary-fixed';
+    } else if (car.pricePerDay >= 9000) {
+      tag = 'Executive';
+      tagClass = 'bg-secondary-fixed text-on-secondary-fixed';
+    } else if (car.fuelType === 'Electric' || car.fuelType === 'Hybrid') {
+      tag = 'Eco Drive';
+      tagClass = 'bg-secondary-fixed text-on-secondary-fixed';
+    }
+
+    const firstPhoto = car.photos && car.photos[0] ? car.photos[0] : (car.featuredImage || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80');
+
+    return {
+      id: car.id,
+      title: `${car.make} ${car.model}`,
+      category: `${car.transmission} • ${car.seats} Seats`,
+      tag,
+      tagClass,
+      location: car.neighbourhood,
+      rating: '4.95',
+      trips: '28+ trips',
+      specs: [car.transmission, `${car.seats} Seats`, car.fuelType || 'Petrol'],
+      price: car.pricePerDay.toLocaleString(),
       note: 'Instant booking enabled',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDFnp69kiNhncQYlohiuSxGuvay_EiOViNYCLre2Ws7_RTtHEF1E3-O342TDEJIJquEh6BnrB_ujvm1p0YXwJK0wNBtJqXSCFDsMbNoleV4_c14_uIacBU5wP5cjpU6XKRxBW0Q7Mp6GKGL4_THNPiAM93-QEHI93t_Qg7nvJ74Fc397LO_3Zkrq0WLEt_rIZzvK9qa4BztOuLbKHWrkQxFNX4yuJQDV1mcyOW9yvP0r0WIHU5MJEBu',
-    },
-    {
-      id: 'car_02',
-      title: 'Hyundai Tucson 2.0L AWD',
-      category: 'Crossover AWD',
-      tag: 'Instant Book',
-      tagClass: 'bg-surface-container-lowest text-on-surface',
-      location: 'Kazanchis',
-      rating: '4.92',
-      trips: '24 trips',
-      specs: ['Automatic', '5 Seats', 'Petrol 2.0L'],
-      price: '4,800',
-      note: 'Free Kazanchis drop-off',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuC6kP2N1x11r9vokDpRStx9BEBkaxR_pU2Re7osJJSCKAbSCb85oz3yGUGc9td6EjGM1OU0kTtkJdwO73Yh0q6iYsq_N7EbWmHJzYy69KrxSFb2lWiR_wnFTCL95eQxzz1khbD1gy_IYTGPdUMCvIaztrEyANBd3Qn3XqT-bef1ZzodQIzKUzpH0VHDxjaFXTKRAOV-2SfeBsEB_6gPoLdMKiwIE27br_nUP8YkVnOzBe0uB61y9mbi',
-    },
-    {
-      id: 'car_03',
-      title: 'Suzuki Dzire Sedan',
-      category: 'City Sedan',
-      tag: 'Economy',
-      tagClass: 'bg-surface-container-lowest text-on-surface',
-      location: 'CMC Area',
-      rating: '4.88',
-      trips: '45 trips',
-      specs: ['Manual', '5 Seats', '18 km/L'],
-      price: '2,200',
-      note: 'Fuel saver favorite',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuC91_YPvkctFbAptznHVks0uK7RFBS0vEzN1yWFii3tI3gMVj2gMWL0ozANDAGb8fNJF97oh78UjbW9Wj1mzWDI8uYj9Qf0Ml1YfqH0iut0jk1EvgO8rtXlFlcf-ujgI8vMEOLH1pjBkjHvGzAeMlx34qICQRGzZ5nFNJeJfbUG6zr_ojyOH8yOPi7eC16g6vmxprizwvEzxE-G_Fw4GqrzU_2Eb9_SCP2SX1eG0vDAvN5wrbZ-ZUtP',
-    },
-    {
-      id: 'car_01',
-      title: 'Mercedes-Benz C200',
-      category: 'Executive Sedan',
-      tag: 'Executive Choice',
-      tagClass: 'bg-secondary-fixed text-on-secondary-fixed',
-      location: 'Old Airport',
-      rating: '4.98',
-      trips: '19 trips',
-      specs: ['Automatic', '5 Seats', 'Leather interior'],
-      price: '8,200',
-      note: 'Diaspora & VIP favorite',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCOCOZVlKukf0NXKDQ5kjrudJ56wXsDkPz9Vz_OxprzK3EY0ms-N9CifhjdPbjFm3_HLUKLfNGm_aoUpFBYuhI7BRkgp6CHaEJk3Lt_wobIYYRWjE-UR5xF6J0Yfc0l5A38p_1UjVKYB4RZoULabtVg6HrKwZDk6isTNy9XfPRlLK3CzJZdPqnm5c5FfkDiAP4Du9K99pzTZK4lpwIzXnTCjUGvXswSzzrCCFYXKHuZBYNTr7jgWR_S',
-    },
-  ];
+      image: firstPhoto,
+    };
+  });
 
   const hubs = [
     {
@@ -126,7 +102,7 @@ export default function Home() {
   ];
 
   const heroBlackSUV =
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuAkoQCVokNx-AtTfU36yH5-khyiPu33FhoYLPwIgmjQkMxXqJ3ZT62GA26ZZlPypMkny8lbc8fluY8mqm4gr2tDk41N8xIuSadKZ-NfAj_vDnniCUSXN1xTB_zcqtBgeJH4Jnp6ruhu58_mGzizTDc4mwttS4Yb0noIfBw6nzOmMcJ5BgTI1jEigZ4s-I2BvdUnHOPbadzeYdCH2QWtfBvu0U0vBGU4E95eQ3ljPOiy2ksJaoX1BS4i';
+    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80';
 
   return (
     <div className="flex flex-col w-full">
@@ -141,7 +117,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-space-md">
             <span className="hidden sm:inline font-specs-tabular text-specs-tabular text-on-surface-variant">
-              Live Fleet Availability: 84 Cars
+              Live Fleet Availability: {fleetCount} Cars
             </span>
             <Link
               href="/cars"
@@ -259,7 +235,7 @@ export default function Home() {
             className="inline-flex items-center gap-1 font-title-md text-title-md text-on-surface hover:text-secondary group transition-colors"
             href="/cars"
           >
-            <span>View all 84 cars</span>
+            <span>View all {fleetCount} cars</span>
             <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">
               trending_flat
             </span>

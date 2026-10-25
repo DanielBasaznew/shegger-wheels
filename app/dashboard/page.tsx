@@ -1,49 +1,17 @@
 'use client';
 
-import React, { useSyncExternalStore } from 'react';
+import React from 'react';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { RenterDashboardView } from '@/components/dashboard/RenterDashboardView';
 import { getUserById } from '@/lib/storage';
-import { DemoSession, User } from '@/lib/types';
+import { User } from '@/lib/types';
 import { switchActiveRole } from '@/lib/auth';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
-
-function subscribe(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-session-change', callback);
-  window.addEventListener('shegger-storage-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-session-change', callback);
-    window.removeEventListener('shegger-storage-change', callback);
-  };
-}
-
-let cachedSessionRaw = '';
-let cachedSession: DemoSession | null = null;
-
-function getSessionSnapshot(): DemoSession | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
-    if (raw !== cachedSessionRaw) {
-      cachedSessionRaw = raw;
-      cachedSession = raw ? JSON.parse(raw) : null;
-    }
-    return cachedSession;
-  } catch {
-    return null;
-  }
-}
-
-function getServerSnapshot(): DemoSession | null {
-  return null;
-}
+import { useSession } from '@/lib/swr';
 
 function DashboardContent() {
-  const session = useSyncExternalStore(subscribe, getSessionSnapshot, getServerSnapshot);
+  const { session } = useSession();
   const currentUser: User | null = session ? getUserById(session.userId) || null : null;
 
   if (!session || !currentUser) return null;

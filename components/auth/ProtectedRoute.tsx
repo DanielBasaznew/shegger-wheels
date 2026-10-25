@@ -1,36 +1,14 @@
 'use client';
 
-import React, { useSyncExternalStore } from 'react';
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { UserRole, DemoSession, User } from '@/lib/types';
+import { UserRole, User } from '@/lib/types';
 import { getUserById } from '@/lib/storage';
 import { switchActiveRole } from '@/lib/auth';
-
-function subscribe(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-session-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-session-change', callback);
-  };
-}
-
-function getSessionSnapshot(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return window.sessionStorage.getItem('sw_session_v1') || '';
-  } catch {
-    return '';
-  }
-}
-
-function getServerSnapshot(): string {
-  return '';
-}
+import { useSession } from '@/lib/swr';
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
@@ -44,21 +22,11 @@ export function ProtectedRoute({
   areaTitle = 'Protected Dashboard Area',
 }: ProtectedRouteProps) {
   const pathname = usePathname();
-  const sessionRaw = useSyncExternalStore(subscribe, getSessionSnapshot, getServerSnapshot);
+  const { session } = useSession();
 
-  let session: DemoSession | null = null;
   let currentUser: User | null = null;
-
-  if (sessionRaw) {
-    try {
-      session = JSON.parse(sessionRaw);
-      if (session) {
-        currentUser = getUserById(session.userId) || null;
-      }
-    } catch {
-      session = null;
-      currentUser = null;
-    }
+  if (session?.userId) {
+    currentUser = getUserById(session.userId) || null;
   }
 
   // 1. Signed Out Barrier

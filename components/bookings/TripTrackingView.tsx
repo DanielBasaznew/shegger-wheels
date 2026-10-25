@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
-import { Booking, Car, User, DemoSession } from '@/lib/types';
+import { Booking, Car, User } from '@/lib/types';
 import {
   getUserById,
 } from '@/lib/storage';
@@ -11,84 +11,7 @@ import {
   formatDisplayDate,
   transitionBookingStatus,
 } from '@/lib/bookings';
-import { SEED_BOOKINGS, SEED_CARS } from '@/lib/seeds';
-
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-storage-change', callback);
-  window.addEventListener('shegger-session-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-storage-change', callback);
-    window.removeEventListener('shegger-session-change', callback);
-  };
-}
-
-let cachedBookingsRaw = '';
-let cachedBookings: Booking[] = SEED_BOOKINGS;
-
-function getBookingsSnapshot(): Booking[] {
-  if (typeof window === 'undefined') return SEED_BOOKINGS;
-  try {
-    const raw = window.localStorage.getItem('sw_bookings_v1') || '';
-    if (raw !== cachedBookingsRaw) {
-      cachedBookingsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedBookings = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_BOOKINGS;
-    }
-    return cachedBookings;
-  } catch {
-    return SEED_BOOKINGS;
-  }
-}
-
-let cachedCarsRaw = '';
-let cachedCars: Car[] = SEED_CARS;
-
-function getCarsSnapshot(): Car[] {
-  if (typeof window === 'undefined') return SEED_CARS;
-  try {
-    const raw = window.localStorage.getItem('sw_cars_v1') || '';
-    if (raw !== cachedCarsRaw) {
-      cachedCarsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedCars = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_CARS;
-    }
-    return cachedCars;
-  } catch {
-    return SEED_CARS;
-  }
-}
-
-let cachedSessionRaw = '';
-let cachedSession: DemoSession | null = null;
-
-function getSessionSnapshot(): DemoSession | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
-    if (raw !== cachedSessionRaw) {
-      cachedSessionRaw = raw;
-      cachedSession = raw ? JSON.parse(raw) : null;
-    }
-    return cachedSession;
-  } catch {
-    return null;
-  }
-}
-
-function getServerBookingsSnapshot(): Booking[] {
-  return SEED_BOOKINGS;
-}
-
-function getServerCarsSnapshot(): Car[] {
-  return SEED_CARS;
-}
-
-function getServerSessionSnapshot(): DemoSession | null {
-  return null;
-}
+import { useCars, useBookings, useBooking, useSession } from '@/lib/swr';
 
 // Addis Ababa Simulated Telematics Waypoints along major corridor
 interface Waypoint {
@@ -163,25 +86,17 @@ interface TripTrackingViewProps {
 }
 
 export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
-  const allBookings = useSyncExternalStore(
-    subscribeToStorage,
-    getBookingsSnapshot,
-    getServerBookingsSnapshot
-  );
-  const allCars = useSyncExternalStore(
-    subscribeToStorage,
-    getCarsSnapshot,
-    getServerCarsSnapshot
-  );
-  const session = useSyncExternalStore(
-    subscribeToStorage,
-    getSessionSnapshot,
-    getServerSessionSnapshot
-  );
-
-  // Active waypoint simulation state
   const [activeWaypointIndex, setActiveWaypointIndex] = useState(0);
   const [isSimulating, setIsSimulating] = useState(true);
+
+  // Poll active trip data with SWR every 5s during active tracking (matching Day 41 pattern)
+  const { booking: polledBooking } = useBooking(bookingId, {
+    refreshInterval: isSimulating ? 5000 : 0,
+  });
+  const { bookings: allBookings } = useBookings();
+  const { cars: allCars } = useCars();
+  const { session } = useSession();
+
   const [telemetryLogs, setTelemetryLogs] = useState<Array<{ time: string; text: string }>>(() => [
     { time: '10:00 AM', text: `Booking #${bookingId.toUpperCase()} verified on Shegger Telematics Rail.` },
     { time: '10:01 AM', text: 'Telemetry corridor initialized for Addis Ababa.' },
@@ -191,8 +106,8 @@ export function TripTrackingView({ bookingId }: TripTrackingViewProps) {
 
   // Look up target booking
   const booking: Booking | undefined = useMemo(() => {
-    return allBookings.find((b) => b.id.toLowerCase() === bookingId.toLowerCase());
-  }, [allBookings, bookingId]);
+    return polledBooking || allBookings.find((b) => b.id.toLowerCase() === bookingId.toLowerCase());
+  }, [polledBooking, allBookings, bookingId]);
 
   // Look up car and host
   const car: Car | undefined = useMemo(() => {

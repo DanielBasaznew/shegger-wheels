@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
-import { Car, User, Booking, DemoSession } from '@/lib/types';
+import { Car, User, Booking } from '@/lib/types';
 import {
   getUserById,
   getCheckoutDraft,
@@ -22,68 +22,8 @@ import {
   createBooking,
 } from '@/lib/bookings';
 import { getSafeReturnUrl } from '@/lib/auth';
-import { SEED_CARS, SEED_USERS } from '@/lib/seeds';
-
-// Storage subscription for cars
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-}
-
-let cachedCarsRaw = '';
-let cachedCars: Car[] = SEED_CARS;
-
-function getCarsSnapshot(): Car[] {
-  if (typeof window === 'undefined') return SEED_CARS;
-  try {
-    const raw = window.localStorage.getItem('sw_cars_v1') || '';
-    if (raw !== cachedCarsRaw) {
-      cachedCarsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedCars = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_CARS;
-    }
-    return cachedCars;
-  } catch {
-    return SEED_CARS;
-  }
-}
-
-function getServerCarsSnapshot(): Car[] {
-  return SEED_CARS;
-}
-
-// Session subscription
-function subscribeToSession(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('shegger-session-change', callback);
-  window.addEventListener('storage', callback);
-  return () => {
-    window.removeEventListener('shegger-session-change', callback);
-    window.removeEventListener('storage', callback);
-  };
-}
-
-let cachedSessionRaw = '';
-let cachedSession: DemoSession | null = null;
-
-function getSessionSnapshot(): DemoSession | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
-    if (raw !== cachedSessionRaw) {
-      cachedSessionRaw = raw;
-      cachedSession = raw ? JSON.parse(raw) : null;
-    }
-    return cachedSession;
-  } catch {
-    return null;
-  }
-}
-
-function getServerSessionSnapshot(): DemoSession | null {
-  return null;
-}
+import { SEED_USERS } from '@/lib/seeds';
+import { useCars, useSession } from '@/lib/swr';
 
 // Client hydration subscription
 function subscribeClient() {
@@ -94,9 +34,9 @@ export function CheckoutView() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // 1. Storage subscriptions
-  const allCars = useSyncExternalStore(subscribeToStorage, getCarsSnapshot, getServerCarsSnapshot);
-  const session = useSyncExternalStore(subscribeToSession, getSessionSnapshot, getServerSessionSnapshot);
+  // 1. SWR reactive hooks backed by localStorage
+  const { cars: allCars } = useCars();
+  const { session } = useSession();
   const isClient = useSyncExternalStore(subscribeClient, () => true, () => false);
 
   // 2. Draft / Query State

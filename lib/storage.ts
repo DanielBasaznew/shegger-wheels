@@ -44,12 +44,47 @@ export const STORAGE_KEYS = {
   DISPUTES: 'sw_disputes_v1',
   ANNOUNCEMENTS: 'sw_announcements_v1',
   NOTIFICATIONS: 'sw_notifications_v1',
+  SESSION: 'sw_session_v1',
+  CHECKOUT_DRAFT: 'sw_checkout_draft_v1',
 } as const;
 
 export const SESSION_KEYS = {
   SESSION: 'sw_session_v1',
   CHECKOUT_DRAFT: 'sw_checkout_draft_v1',
 } as const;
+
+const KEY_ENTITY_MAP: Record<string, string> = {
+  [STORAGE_KEYS.USERS]: 'users',
+  [STORAGE_KEYS.CARS]: 'cars',
+  [STORAGE_KEYS.BOOKINGS]: 'bookings',
+  [STORAGE_KEYS.REVIEWS]: 'reviews',
+  [STORAGE_KEYS.DISPUTES]: 'disputes',
+  [STORAGE_KEYS.ANNOUNCEMENTS]: 'announcements',
+  [STORAGE_KEYS.NOTIFICATIONS]: 'notifications',
+  [STORAGE_KEYS.SESSION]: 'session',
+};
+
+/**
+ * Broadcasts data changes both within the current window and across browser tabs.
+ */
+export function broadcastStorageChange(key: string): void {
+  if (!isBrowser()) return;
+  const entity = KEY_ENTITY_MAP[key] || 'all';
+  try {
+    window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { key, entity } }));
+  } catch {
+    window.dispatchEvent(new Event('shegger-storage-change'));
+  }
+  if ('BroadcastChannel' in window) {
+    try {
+      const channel = new BroadcastChannel('shegger_wheels_sync');
+      channel.postMessage({ key, entity, timestamp: Date.now() });
+      channel.close();
+    } catch {
+      // Ignore in restricted environments
+    }
+  }
+}
 
 // ==========================================
 // SSR & Environment Utilities
@@ -109,11 +144,7 @@ export function writeStorage<T>(key: string, value: T): boolean {
   try {
     const serialized = JSON.stringify(value);
     window.localStorage.setItem(key, serialized);
-    try {
-      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { key } }));
-    } catch {
-      window.dispatchEvent(new Event('shegger-storage-change'));
-    }
+    broadcastStorageChange(key);
     return true;
   } catch (error) {
     console.error(`[Shegger Storage] Failed to write key "${key}":`, error);
@@ -128,11 +159,7 @@ export function removeStorage(key: string): void {
   if (!isBrowser()) return;
   try {
     window.localStorage.removeItem(key);
-    try {
-      window.dispatchEvent(new CustomEvent('shegger-storage-change', { detail: { key } }));
-    } catch {
-      window.dispatchEvent(new Event('shegger-storage-change'));
-    }
+    broadcastStorageChange(key);
   } catch (error) {
     console.warn(`[Shegger Storage] Failed to remove key "${key}":`, error);
   }
@@ -293,7 +320,7 @@ function isNotification(item: unknown): item is Notification {
   );
 }
 
-function isDemoSession(item: unknown): item is DemoSession {
+export function isDemoSession(item: unknown): item is DemoSession {
   if (!item || typeof item !== 'object') return false;
   const s = item as Partial<DemoSession>;
   return (
@@ -389,11 +416,24 @@ export function saveUser(user: User): boolean {
 
 // Cars
 export function getCars(): Car[] {
-  return readStorage<Car[]>(
+  const loaded = readStorage<Car[]>(
     STORAGE_KEYS.CARS,
     SEED_CARS,
     (v): v is Car[] => isArrayWithItems(v, isCar)
   );
+
+  // Auto-merge newly added baseline seed vehicles into existing client storage
+  if (isBrowser() && loaded.length > 0) {
+    const existingIds = new Set(loaded.map((c) => c.id));
+    const missingSeeds = SEED_CARS.filter((c) => !existingIds.has(c.id));
+    if (missingSeeds.length > 0) {
+      const merged = [...loaded, ...missingSeeds];
+      writeStorage(STORAGE_KEYS.CARS, merged);
+      return merged;
+    }
+  }
+
+  return loaded;
 }
 
 export function getCarById(id: string): Car | undefined {
@@ -640,49 +680,63 @@ export function deleteNotification(id: string, userId: string): boolean {
 }
 
 // ==========================================
-// Session State Access Methods (sessionStorage)
+// Session State Access Methods (localStorage & sessionStorage)
 // ==========================================
 
 export function getCurrentSession(): DemoSession | null {
-  return readSession<DemoSession | null>(SESSION_KEYS.SESSION, null, isDemoSession);
+  // If sessionStorage has an explicit session entry, evaluate it first (preserves test sandbox & corrupted recovery semantics)
+  if (isBrowser() && window.sessionStorage.getItem(SESSION_KEYS.SESSION) !== null) {
+    return readSession<DemoSession | null>(SESSION_KEYS.SESSION, null, isDemoSession);
+  }
+  // Otherwise read persistent cross-tab session from localStorage
+  return readStorage<DemoSession | null>(STORAGE_KEYS.SESSION, null, isDemoSession);
 }
 
 export function setCurrentSession(session: DemoSession): boolean {
-  const result = writeSession(SESSION_KEYS.SESSION, session);
-  if (result && isBrowser()) {
+  if (!session || !isDemoSession(session)) return false;
+  // Persist to localStorage for cross-tab persistence and sessionStorage for test sandboxes
+  const localSaved = writeStorage(STORAGE_KEYS.SESSION, session);
+  const sessionSaved = writeSession(SESSION_KEYS.SESSION, session);
+  if (isBrowser()) {
     try {
-      window.dispatchEvent(new Event('shegger-session-change'));
+      window.dispatchEvent(new CustomEvent('shegger-session-change', { detail: { session } }));
     } catch {
-      // Ignore if event constructor fails in non-standard environments
+      window.dispatchEvent(new Event('shegger-session-change'));
     }
   }
-  return result;
+  return localSaved || sessionSaved;
 }
 
 export function clearCurrentSession(): void {
+  removeStorage(STORAGE_KEYS.SESSION);
   removeSession(SESSION_KEYS.SESSION);
   if (isBrowser()) {
     try {
-      window.dispatchEvent(new Event('shegger-session-change'));
+      window.dispatchEvent(new CustomEvent('shegger-session-change', { detail: { session: null } }));
     } catch {
-      // Ignore if event constructor fails in non-standard environments
+      window.dispatchEvent(new Event('shegger-session-change'));
     }
   }
 }
 
 // ==========================================
-// Checkout Draft Access Methods (sessionStorage)
+// Checkout Draft Access Methods (localStorage & sessionStorage)
 // ==========================================
 
 export function getCheckoutDraft(): CheckoutDraft | null {
+  const fromLocal = readStorage<CheckoutDraft | null>(STORAGE_KEYS.CHECKOUT_DRAFT, null);
+  if (fromLocal) return fromLocal;
   return readSession<CheckoutDraft | null>(SESSION_KEYS.CHECKOUT_DRAFT, null);
 }
 
 export function setCheckoutDraft(draft: CheckoutDraft): boolean {
-  return writeSession(SESSION_KEYS.CHECKOUT_DRAFT, draft);
+  const localSaved = writeStorage(STORAGE_KEYS.CHECKOUT_DRAFT, draft);
+  const sessionSaved = writeSession(SESSION_KEYS.CHECKOUT_DRAFT, draft);
+  return localSaved || sessionSaved;
 }
 
 export function clearCheckoutDraft(): void {
+  removeStorage(STORAGE_KEYS.CHECKOUT_DRAFT);
   removeSession(SESSION_KEYS.CHECKOUT_DRAFT);
 }
 

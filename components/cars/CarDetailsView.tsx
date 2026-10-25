@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useSyncExternalStore, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,72 +10,14 @@ import { Badge } from '@/components/ui/Badge';
 import { VehicleCard } from '@/components/cars/VehicleCard';
 import { Car, User, Review } from '@/lib/types';
 import {
-  getCars,
   getUserById,
-  getReviews,
   getCurrentSession,
   setCheckoutDraft,
-  STORAGE_KEYS,
   isOptimizableImage,
 } from '@/lib/storage';
 import { SEED_CARS, SEED_USERS, SEED_REVIEWS } from '@/lib/seeds';
 import { getCarRatingSummary } from '@/lib/reviews';
-
-// SSR-safe storage synchronizer for cars
-let cachedStorageCars: Car[] = [];
-let lastRawCars = '';
-
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-}
-
-function getCarsSnapshot(): Car[] {
-  if (typeof window === 'undefined') {
-    return SEED_CARS;
-  }
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEYS.CARS) || '';
-    if (raw !== lastRawCars || cachedStorageCars.length === 0) {
-      lastRawCars = raw;
-      const loaded = getCars();
-      cachedStorageCars = loaded.length > 0 ? loaded : SEED_CARS;
-    }
-    return cachedStorageCars;
-  } catch {
-    return SEED_CARS;
-  }
-}
-
-function getServerCarsSnapshot(): Car[] {
-  return SEED_CARS;
-}
-
-// SSR-safe storage synchronizer for reviews
-let cachedStorageReviews: Review[] = [];
-let lastRawReviews = '';
-
-function getReviewsSnapshot(): Review[] {
-  if (typeof window === 'undefined') {
-    return SEED_REVIEWS;
-  }
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEYS.REVIEWS) || '';
-    if (raw !== lastRawReviews || cachedStorageReviews.length === 0) {
-      lastRawReviews = raw;
-      const loaded = getReviews();
-      cachedStorageReviews = loaded.length > 0 ? loaded : SEED_REVIEWS;
-    }
-    return cachedStorageReviews;
-  } catch {
-    return SEED_REVIEWS;
-  }
-}
-
-function getServerReviewsSnapshot(): Review[] {
-  return SEED_REVIEWS;
-}
+import { useCars, useReviews } from '@/lib/swr';
 
 // Format date helpers
 function formatDateString(date: Date): string {
@@ -114,8 +56,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Load all cars with SSR-safe synchronization
-  const allCars = useSyncExternalStore(subscribeToStorage, getCarsSnapshot, getServerCarsSnapshot);
+  // Load cars with reactive SWR and 1-hour cache validation
+  const { cars: allCars } = useCars();
   const car = allCars.find((c) => c.id === id);
 
   // Today string for min date
@@ -168,8 +110,8 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
     );
   }, [car]);
 
-  // Live reviews from storage
-  const allReviews = useSyncExternalStore(subscribeToStorage, getReviewsSnapshot, getServerReviewsSnapshot);
+  // Live reviews from reactive SWR
+  const { reviews: allReviews } = useReviews();
 
   // Filter reviews for this car
   const reviews: Review[] = useMemo(() => {

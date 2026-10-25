@@ -1,56 +1,19 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, useSyncExternalStore, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { VehicleCard } from '@/components/cars/VehicleCard';
 import { Car } from '@/lib/types';
-import { getCars, STORAGE_KEYS } from '@/lib/storage';
-import { SEED_CARS } from '@/lib/seeds';
-
-// SSR-safe synchronizer for client storage with referential stability
-let cachedStorageCars: Car[] = [];
-let lastRawCars = '';
-
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-}
-
-function getApprovedCarsSnapshot(): Car[] {
-  if (typeof window === 'undefined') {
-    return SEED_CARS.filter((c) => c.status === 'approved');
-  }
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEYS.CARS) || '';
-    if (raw !== lastRawCars || cachedStorageCars.length === 0) {
-      lastRawCars = raw;
-      const loaded = getCars().filter((c) => c.status === 'approved');
-      cachedStorageCars = loaded.length > 0 ? loaded : SEED_CARS.filter((c) => c.status === 'approved');
-    }
-    return cachedStorageCars;
-  } catch {
-    return SEED_CARS.filter((c) => c.status === 'approved');
-  }
-}
-
-const serverApprovedCars = SEED_CARS.filter((c) => c.status === 'approved');
-function getServerApprovedCarsSnapshot(): Car[] {
-  return serverApprovedCars;
-}
+import { useCars } from '@/lib/swr';
 
 function CatalogueContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Load cars with SSR-safe subscription
-  const allCars = useSyncExternalStore(
-    subscribeToStorage,
-    getApprovedCarsSnapshot,
-    getServerApprovedCarsSnapshot
-  );
+  // Load cars with reactive SWR and 1-hour cache validation
+  const { approvedCars: allCars } = useCars();
 
   // Filter States initialized from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');

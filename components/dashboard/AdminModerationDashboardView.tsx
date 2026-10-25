@@ -1,18 +1,16 @@
 'use client';
 
-import React, { useState, useMemo, useSyncExternalStore, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
   Car,
   CarStatus,
   User,
-  DemoSession,
   Dispute,
   DisputeStatus,
   Booking,
 } from '@/lib/types';
-import { SEED_CARS, SEED_USERS, SEED_DISPUTES, SEED_BOOKINGS } from '@/lib/seeds';
 import { getUserById, isOptimizableImage } from '@/lib/storage';
 import {
   moderateCarListing,
@@ -24,126 +22,7 @@ import {
   updateDisputeStatusByAdmin,
 } from '@/lib/bookings';
 
-// ==========================================
-// SSR-Safe Storage Synchronizers
-// ==========================================
-
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-storage-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-storage-change', callback);
-  };
-}
-
-let cachedCarsRaw = '';
-let cachedCars: Car[] = SEED_CARS;
-
-function getCarsSnapshot(): Car[] {
-  if (typeof window === 'undefined') return SEED_CARS;
-  try {
-    const raw = window.localStorage.getItem('sw_cars_v1') || '';
-    if (raw !== cachedCarsRaw) {
-      cachedCarsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedCars = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_CARS;
-    }
-    return cachedCars;
-  } catch {
-    return SEED_CARS;
-  }
-}
-
-let cachedUsersRaw = '';
-let cachedUsers: User[] = SEED_USERS;
-
-function getUsersSnapshot(): User[] {
-  if (typeof window === 'undefined') return SEED_USERS;
-  try {
-    const raw = window.localStorage.getItem('sw_users_v1') || '';
-    if (raw !== cachedUsersRaw) {
-      cachedUsersRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedUsers = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_USERS;
-    }
-    return cachedUsers;
-  } catch {
-    return SEED_USERS;
-  }
-}
-
-let cachedSessionRaw = '';
-let cachedSession: DemoSession | null = null;
-
-function getSessionSnapshot(): DemoSession | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
-    if (raw !== cachedSessionRaw) {
-      cachedSessionRaw = raw;
-      cachedSession = raw ? JSON.parse(raw) : null;
-    }
-    return cachedSession;
-  } catch {
-    return null;
-  }
-}
-
-function getServerCarsSnapshot(): Car[] {
-  return SEED_CARS;
-}
-function getServerUsersSnapshot(): User[] {
-  return SEED_USERS;
-}
-function getServerSessionSnapshot(): DemoSession | null {
-  return null;
-}
-
-let cachedDisputesRaw = '';
-let cachedDisputes: Dispute[] = SEED_DISPUTES;
-
-function getDisputesSnapshot(): Dispute[] {
-  if (typeof window === 'undefined') return SEED_DISPUTES;
-  try {
-    const raw = window.localStorage.getItem('sw_disputes_v1') || '';
-    if (raw !== cachedDisputesRaw) {
-      cachedDisputesRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedDisputes = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_DISPUTES;
-    }
-    return cachedDisputes;
-  } catch {
-    return SEED_DISPUTES;
-  }
-}
-
-let cachedBookingsRaw = '';
-let cachedBookings: Booking[] = SEED_BOOKINGS;
-
-function getBookingsSnapshot(): Booking[] {
-  if (typeof window === 'undefined') return SEED_BOOKINGS;
-  try {
-    const raw = window.localStorage.getItem('sw_bookings_v1') || '';
-    if (raw !== cachedBookingsRaw) {
-      cachedBookingsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedBookings = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_BOOKINGS;
-    }
-    return cachedBookings;
-  } catch {
-    return SEED_BOOKINGS;
-  }
-}
-
-function getServerDisputesSnapshot(): Dispute[] {
-  return SEED_DISPUTES;
-}
-
-function getServerBookingsSnapshot(): Booking[] {
-  return SEED_BOOKINGS;
-}
+import { useCars, useUsers, useSession, useDisputes, useBookings } from '@/lib/swr';
 
 // Preset administrative rejection reasons
 const PRESET_REJECTION_REASONS = [
@@ -155,11 +34,11 @@ const PRESET_REJECTION_REASONS = [
 ];
 
 export function AdminModerationDashboardView() {
-  const cars = useSyncExternalStore(subscribeToStorage, getCarsSnapshot, getServerCarsSnapshot);
-  const users = useSyncExternalStore(subscribeToStorage, getUsersSnapshot, getServerUsersSnapshot);
-  const session = useSyncExternalStore(subscribeToStorage, getSessionSnapshot, getServerSessionSnapshot);
-  const disputes = useSyncExternalStore(subscribeToStorage, getDisputesSnapshot, getServerDisputesSnapshot);
-  const bookings = useSyncExternalStore(subscribeToStorage, getBookingsSnapshot, getServerBookingsSnapshot);
+  const { cars } = useCars();
+  const { users } = useUsers();
+  const { session } = useSession();
+  const { disputes } = useDisputes();
+  const { bookings } = useBookings();
 
   // Section switcher: 'vehicles' vs 'disputes'
   const [activeSection, setActiveSection] = useState<'vehicles' | 'disputes'>('vehicles');

@@ -1,10 +1,11 @@
-'use client';
-
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useCars } from '@/lib/swr';
 
 export function HomeSearchWidget() {
   const router = useRouter();
+  const { approvedCars } = useCars();
+  const carCount = approvedCars.length > 0 ? approvedCars.length : 14;
   const [selectedHub, setSelectedHub] = useState('All');
   const [selectedClass, setSelectedClass] = useState('All');
   const [startDate, setStartDate] = useState('2026-10-24');
@@ -193,11 +194,11 @@ export function HomeSearchWidget() {
             onChange={(e) => setSelectedClass(e.target.value)}
             className="bg-transparent font-title-md text-title-md text-on-surface outline-hidden cursor-pointer w-full"
           >
-            <option value="All">All Vehicle Types (84)</option>
-            <option value="SUV">4x4 &amp; Luxury SUV (28)</option>
-            <option value="Automatic">Automatic Transmission (62)</option>
-            <option value="Sedan">Fuel-Efficient Sedans (34)</option>
-            <option value="EV">EV / Hybrid Fleet (12)</option>
+            <option value="All">All Vehicle Types ({carCount})</option>
+            <option value="SUV">4x4 &amp; Luxury SUV</option>
+            <option value="Automatic">Automatic Transmission</option>
+            <option value="Sedan">Fuel-Efficient Sedans</option>
+            <option value="EV">EV / Hybrid Fleet</option>
           </select>
         </div>
 
@@ -208,7 +209,7 @@ export function HomeSearchWidget() {
             id="home-search-submit"
             className="w-full flex items-center justify-center gap-2 bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim rounded-xl p-4 font-headline-sm text-headline-sm transition-transform active:scale-[0.99] shadow-md cursor-pointer"
           >
-            <span>Search 84+ Cars</span>
+            <span>Search {carCount}+ Cars</span>
             <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
           </button>
         </div>

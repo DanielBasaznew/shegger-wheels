@@ -11,4 +11,5 @@ export * from './auth';
 export * from './csv';
 export * from './reviews';
 export * from './notifications';
+export * from './swr';
 

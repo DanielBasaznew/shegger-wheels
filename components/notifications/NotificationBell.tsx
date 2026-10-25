@@ -1,48 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Notification, NotificationType } from '@/lib/types';
 import {
-  getNotificationsForUser,
   markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
 } from '@/lib/storage';
-
-function subscribe(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-notification-change', callback);
-  window.addEventListener('shegger-session-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-notification-change', callback);
-    window.removeEventListener('shegger-session-change', callback);
-  };
-}
-
-function getSessionSnapshot(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return window.sessionStorage.getItem('sw_session_v1') || '';
-  } catch {
-    return '';
-  }
-}
-
-function getNotificationsSnapshot(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return window.localStorage.getItem('sw_notifications_v1') || '';
-  } catch {
-    return '';
-  }
-}
-
-function getServerSnapshot(): string {
-  return '';
-}
+import { useSession, useNotifications } from '@/lib/swr';
 
 function formatRelativeTime(isoString: string): string {
   if (!isoString) return '';
@@ -140,24 +106,9 @@ export function NotificationBell() {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const sessionRaw = useSyncExternalStore(subscribe, getSessionSnapshot, getServerSnapshot);
-  const notificationsRaw = useSyncExternalStore(subscribe, getNotificationsSnapshot, getServerSnapshot);
-
-  const userId = useMemo(() => {
-    if (!sessionRaw) return null;
-    try {
-      const parsed = JSON.parse(sessionRaw);
-      return (parsed?.userId as string) || null;
-    } catch {
-      return null;
-    }
-  }, [sessionRaw]);
-
-  const notifications = useMemo(() => {
-    if (!userId) return [];
-    return getNotificationsForUser(userId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, notificationsRaw]);
+  const { session } = useSession();
+  const userId = session?.userId || null;
+  const { notifications, unreadCount } = useNotifications(userId);
 
   const bellButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -188,7 +139,6 @@ export function NotificationBell() {
     return null;
   }
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
   const displayedNotifications =
     filter === 'unread' ? notifications.filter((n) => !n.read) : notifications;
 

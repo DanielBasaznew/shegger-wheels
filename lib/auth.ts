@@ -239,6 +239,19 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     isDefault: true,
   },
   {
+    id: 'user_renter_01', // Sara Hailu (Pure Renter)
+    name: 'Sara Hailu',
+    initials: 'SH',
+    role: 'Verified Renter Only',
+    systemRole: 'renter',
+    phone: '+251922334455',
+    displayPhone: '92 233 4455',
+    badge: 'Verified Renter',
+    subtitle: 'Dedicated Renter Persona (2 Active Bookings • Reviewed Trips)',
+    description: 'Pure renter profile with verified booking privileges, trip tracking, and review submission without owner/admin clutter.',
+    status: 'active',
+  },
+  {
     id: 'user_owner_02', // Abebe Kebede (Superhost)
     name: 'Abebe Kebede',
     initials: 'AK',

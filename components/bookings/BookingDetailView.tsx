@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useMemo, useSyncExternalStore } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
-import { Booking, Car, User, DemoSession } from '@/lib/types';
+import { Booking, Car, User } from '@/lib/types';
 import {
   getUserById,
   isOptimizableImage,
@@ -15,108 +15,18 @@ import {
   cancelBookingByRenter,
 } from '@/lib/bookings';
 import { getSafeReturnUrl } from '@/lib/auth';
-import { SEED_BOOKINGS, SEED_CARS } from '@/lib/seeds';
 import { SubmitReviewModal } from '@/components/reviews/SubmitReviewModal';
 import { isBookingReviewable } from '@/lib/reviews';
-
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-storage-change', callback);
-  window.addEventListener('shegger-session-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-storage-change', callback);
-    window.removeEventListener('shegger-session-change', callback);
-  };
-}
-
-let cachedBookingsRaw = '';
-let cachedBookings: Booking[] = SEED_BOOKINGS;
-
-function getBookingsSnapshot(): Booking[] {
-  if (typeof window === 'undefined') return SEED_BOOKINGS;
-  try {
-    const raw = window.localStorage.getItem('sw_bookings_v1') || '';
-    if (raw !== cachedBookingsRaw) {
-      cachedBookingsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedBookings = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_BOOKINGS;
-    }
-    return cachedBookings;
-  } catch {
-    return SEED_BOOKINGS;
-  }
-}
-
-let cachedCarsRaw = '';
-let cachedCars: Car[] = SEED_CARS;
-
-function getCarsSnapshot(): Car[] {
-  if (typeof window === 'undefined') return SEED_CARS;
-  try {
-    const raw = window.localStorage.getItem('sw_cars_v1') || '';
-    if (raw !== cachedCarsRaw) {
-      cachedCarsRaw = raw;
-      const loaded = raw ? JSON.parse(raw) : [];
-      cachedCars = Array.isArray(loaded) && loaded.length > 0 ? loaded : SEED_CARS;
-    }
-    return cachedCars;
-  } catch {
-    return SEED_CARS;
-  }
-}
-
-let cachedSessionRaw = '';
-let cachedSession: DemoSession | null = null;
-
-function getSessionSnapshot(): DemoSession | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem('sw_session_v1') || '';
-    if (raw !== cachedSessionRaw) {
-      cachedSessionRaw = raw;
-      cachedSession = raw ? JSON.parse(raw) : null;
-    }
-    return cachedSession;
-  } catch {
-    return null;
-  }
-}
-
-function getServerBookingsSnapshot(): Booking[] {
-  return SEED_BOOKINGS;
-}
-
-function getServerCarsSnapshot(): Car[] {
-  return SEED_CARS;
-}
-
-function getServerSessionSnapshot(): DemoSession | null {
-  return null;
-}
+import { useCars, useBookings, useSession } from '@/lib/swr';
 
 interface BookingDetailViewProps {
   bookingId: string;
 }
 
 export function BookingDetailView({ bookingId }: BookingDetailViewProps) {
-
-  const allBookings = useSyncExternalStore(
-    subscribeToStorage,
-    getBookingsSnapshot,
-    getServerBookingsSnapshot
-  );
-  const allCars = useSyncExternalStore(
-    subscribeToStorage,
-    getCarsSnapshot,
-    getServerCarsSnapshot
-  );
-  const session = useSyncExternalStore(
-    subscribeToStorage,
-    getSessionSnapshot,
-    getServerSessionSnapshot
-  );
+  const { bookings: allBookings } = useBookings();
+  const { cars: allCars } = useCars();
+  const { session } = useSession();
 
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);

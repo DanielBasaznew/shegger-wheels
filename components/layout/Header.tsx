@@ -1,38 +1,16 @@
 'use client';
 
-import React, { useState, useSyncExternalStore, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { getUserById, resetDemoData, isOptimizableImage } from '@/lib/storage';
+import { resetDemoData, isOptimizableImage } from '@/lib/storage';
 import { User, DemoSession, UserRole } from '@/lib/types';
 import { signOutDemoUser, switchActiveRole } from '@/lib/auth';
+import { useSession } from '@/lib/swr';
 
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { BrandLogo } from '@/components/ui/BrandLogo';
-
-function subscribe(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  window.addEventListener('shegger-session-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('shegger-session-change', callback);
-  };
-}
-
-function getSessionSnapshot(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return window.sessionStorage.getItem('sw_session_v1') || '';
-  } catch {
-    return '';
-  }
-}
-
-function getServerSnapshot(): string {
-  return '';
-}
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,21 +19,8 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const sessionRaw = useSyncExternalStore(subscribe, getSessionSnapshot, getServerSnapshot);
-  let session: DemoSession | null = null;
-  let currentUser: User | null = null;
-
-  if (sessionRaw) {
-    try {
-      session = JSON.parse(sessionRaw);
-      if (session) {
-        currentUser = getUserById(session.userId) || null;
-      }
-    } catch {
-      session = null;
-      currentUser = null;
-    }
-  }
+  // Reactive session across tabs and local storage
+  const { session, user: currentUser } = useSession();
 
   const userButtonRef = useRef<HTMLButtonElement>(null);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
