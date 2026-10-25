@@ -100,7 +100,7 @@ export function Header() {
             href="/"
             className="flex items-center gap-space-sm group"
             id="header-brand-logo"
-            aria-label="Sheggar Wheels Homepage"
+            aria-label="Shegger Wheels Homepage"
           >
             <BrandLogo size="md" />
           </Link>

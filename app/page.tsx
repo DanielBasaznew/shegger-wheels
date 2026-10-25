@@ -97,7 +97,7 @@ export default function Home() {
       num: '03',
       icon: 'key',
       title: 'Key Handover & Drive',
-      desc: 'Meet your verified host in Bole or Kazanchis, complete a rapid 4-point mobile photo check-in, and cruise with 24/7 dedicated Sheggar roadside support.',
+      desc: 'Meet your verified host in Bole or Kazanchis, complete a rapid 4-point mobile photo check-in, and cruise with 24/7 dedicated Shegger roadside support.',
       highlight: false,
     },
   ];
@@ -113,7 +113,7 @@ export default function Home() {
           <div className="flex items-center gap-space-xs text-on-surface">
             <span className="inline-flex w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0" />
             <span className="font-specs-tabular text-specs-tabular text-on-surface">
-              New in Sheggar: TeleBirr Escrow direct verification active across 6 metropolitan hubs
+              New in Shegger: TeleBirr Escrow direct verification active across 6 metropolitan hubs
             </span>
           </div>
           <div className="flex items-center gap-space-md">
@@ -364,7 +364,7 @@ export default function Home() {
             Simple, Transparent &amp; Secure
           </div>
           <h2 className="font-headline-lg text-headline-lg text-on-surface tracking-tight">
-            How Sheggar Wheels Works
+            How Shegger Wheels Works
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant mt-2">
             Skip traditional rental bureaucracies. Experience peer-to-peer automotive mobility built specifically for Ethiopian roadways and verified payments.

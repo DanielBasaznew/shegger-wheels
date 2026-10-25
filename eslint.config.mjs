@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "scratch/**",
+    "stitch_sheggar_wheels_mobility_platform/**",
+    "public/**",
   ]),
 ]);
 

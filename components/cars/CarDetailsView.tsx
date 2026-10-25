@@ -1130,7 +1130,7 @@ export function CarDetailsView({ id }: CarDetailsViewProps) {
 
                     <div className="flex items-center justify-between text-[#111820]">
                       <span className="text-[#66717D] flex items-center gap-1">
-                        <span>Sheggar Comprehensive Protection</span>
+                        <span>Shegger Comprehensive Protection</span>
                         <span className="material-symbols-outlined text-[#536600] text-[15px]" title="Zero excess collision & liability">
                           check_circle
                         </span>

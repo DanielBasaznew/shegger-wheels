@@ -7,6 +7,9 @@ export const size = {
 };
 export const contentType = 'image/png';
 
+const HERO_IMAGE_URL =
+  'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80';
+
 export default async function OpenGraphImage() {
   return new ImageResponse(
     (
@@ -17,13 +20,40 @@ export default async function OpenGraphImage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: '72px 80px',
+          padding: '64px 72px',
           backgroundColor: '#111820',
           color: '#ffffff',
           fontFamily: 'sans-serif',
           position: 'relative',
         }}
       >
+        {/* Hero Background Image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={HERO_IMAGE_URL}
+          alt="Shegger Wheels Hero Luxury SUV"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+
+        {/* Cinematic Dark Gradient Overlay */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(17, 24, 32, 0.78)',
+          }}
+        />
+
         {/* Top Header Row */}
         <div
           style={{
@@ -31,6 +61,7 @@ export default async function OpenGraphImage() {
             justifyContent: 'space-between',
             alignItems: 'center',
             width: '100%',
+            position: 'relative',
           }}
         >
           {/* Brand Logo & Name */}
@@ -87,12 +118,12 @@ export default async function OpenGraphImage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: 'rgba(213, 243, 106, 0.12)',
-              border: '1.5px solid rgba(213, 243, 106, 0.4)',
+              backgroundColor: 'rgba(17, 24, 32, 0.9)',
+              border: '1.5px solid rgba(213, 243, 106, 0.6)',
               borderRadius: '999px',
               padding: '12px 24px',
               color: '#D5F36A',
-              fontSize: '15px',
+              fontSize: '14px',
               fontWeight: 800,
               letterSpacing: '1px',
               textTransform: 'uppercase',
@@ -103,11 +134,18 @@ export default async function OpenGraphImage() {
         </div>
 
         {/* Center Tagline */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            position: 'relative',
+          }}
+        >
           <div
             style={{
               display: 'flex',
-              fontSize: '22px',
+              fontSize: '20px',
               fontWeight: 700,
               color: '#D5F36A',
               letterSpacing: '1px',
@@ -119,7 +157,7 @@ export default async function OpenGraphImage() {
 
           <div
             style={{
-              fontSize: '68px',
+              fontSize: '60px',
               fontWeight: 900,
               color: '#ffffff',
               letterSpacing: '-2px',
@@ -131,13 +169,13 @@ export default async function OpenGraphImage() {
 
           <div
             style={{
-              fontSize: '26px',
-              color: '#8A99A8',
+              fontSize: '24px',
+              color: '#E0E7EE',
               lineHeight: 1.4,
-              maxWidth: '920px',
+              maxWidth: '960px',
             }}
           >
-            Rent directly from verified local vehicle hosts. Secure payment escrow, zero hidden fees, and transparent handover inspections.
+            Rent directly from verified local hosts with instant booking, zero deposit on verified ID, and transparent TeleBirr escrow protection.
           </div>
         </div>
 
@@ -147,9 +185,10 @@ export default async function OpenGraphImage() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            borderTop: '2px solid rgba(255, 255, 255, 0.12)',
-            paddingTop: '28px',
+            borderTop: '2px solid rgba(255, 255, 255, 0.18)',
+            paddingTop: '24px',
             width: '100%',
+            position: 'relative',
           }}
         >
           <div style={{ display: 'flex', gap: '32px' }}>
@@ -181,3 +220,4 @@ export default async function OpenGraphImage() {
     size
   );
 }
+

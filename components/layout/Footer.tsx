@@ -94,7 +94,7 @@ export function Footer() {
             </span>
           </div>
           <span className="font-body-sm text-body-sm text-on-surface-variant">
-            © 2025 Sheggar Wheels P2P Inc. Addis Ababa, Ethiopia. All rights reserved.
+            © 2025 Shegger Wheels P2P Inc. Addis Ababa, Ethiopia. All rights reserved.
           </span>
         </div>
       </div>

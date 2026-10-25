@@ -460,7 +460,7 @@ export function RenterDashboardView() {
           <div className="bg-white p-5 rounded-2xl border border-[#66717D]/12 shadow-xs flex flex-col justify-between gap-4">
             <div className="flex items-center justify-between text-[#66717D]">
               <span className="text-[11px] font-label-caps uppercase tracking-wider font-bold">
-                Sheggar Trust Tier
+                Shegger Trust Tier
               </span>
               <div className="w-8 h-8 rounded-lg bg-[#F5F2EB] flex items-center justify-center">
                 <span className="material-symbols-outlined text-[#66717D] text-lg">verified_user</span>
@@ -1032,7 +1032,7 @@ export function RenterDashboardView() {
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-sm font-bold text-white">
-                24/7 Sheggar Dispatch
+                24/7 Shegger Dispatch
               </span>
               <span className="text-xs text-white/70">
                 Dial 9988 or +251 11 661 0022

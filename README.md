@@ -1,4 +1,4 @@
-# Sheggar Wheels (ሸገር ዊልስ) — Peer-to-Peer Car Rental Marketplace
+# Shegger Wheels (ሸገር ዊልስ) — Peer-to-Peer Car Rental Marketplace
 
 > **Addis Ababa Peer-to-Peer Automotive Mobility Platform**  
 > An interactive, responsive, frontend-only marketplace connecting local car owners with verified renters across Addis Ababa, Ethiopia. Built with Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS using the bespoke **Urban Motion** design language.
@@ -24,7 +24,7 @@
 
 ## Overview
 
-**Sheggar Wheels** is a peer-to-peer automotive mobility marketplace tailored to the urban landscape of Addis Ababa. The platform empowers vehicle owners to monetize their personal vehicles and enables renters (locals, business travelers, and diaspora visitors) to book verified cars directly from individual hosts in key neighbourhoods like Bole, Kazanchis, CMC, Old Airport, and Sarbet.
+**Shegger Wheels** is a peer-to-peer automotive mobility marketplace tailored to the urban landscape of Addis Ababa. The platform empowers vehicle owners to monetize their personal vehicles and enables renters (locals, business travelers, and diaspora visitors) to book verified cars directly from individual hosts in key neighbourhoods like Bole, Kazanchis, CMC, Old Airport, and Sarbet.
 
 Designed around the **Urban Motion** design system, the interface blends high-contrast functionality with a warm mineral aesthetic:
 - **Obsidian Dark** (`#111820`) for prominent contrast and structural containers.
@@ -37,7 +37,7 @@ Designed around the **Urban Motion** design system, the interface blends high-co
 
 ## Key Features & User Roles
 
-Sheggar Wheels supports three distinct user personas, each with tailored views and role-based permissions:
+Shegger Wheels supports three distinct user personas, each with tailored views and role-based permissions:
 
 ### 1. Renter
 - **Explore & Filter:** Search vehicles by keyword, Addis Ababa neighbourhood, daily price range, transmission (Automatic / Manual), category, and seating capacity.
@@ -212,7 +212,7 @@ If demo records become heavily modified during testing, restore the initial base
 2. Click **"Reset Demo Data"**.
 3. Confirm the prompt to restore seed cars, bookings, reviews, disputes, and notifications to their original default state.
 
-*(The reset operation is strictly isolated to Sheggar Wheels keys and does not affect unrelated browser storage).*
+*(The reset operation is strictly isolated to Shegger Wheels keys and does not affect unrelated browser storage).*
 
 ---
 
@@ -239,7 +239,7 @@ If demo records become heavily modified during testing, restore the initial base
 
 ## Simulated TeleBirr Escrow & Features
 
-To deliver a complete car rental marketplace experience without handling real financial transactions, Sheggar Wheels simulates local Ethiopian payment and verification mechanisms:
+To deliver a complete car rental marketplace experience without handling real financial transactions, Shegger Wheels simulates local Ethiopian payment and verification mechanisms:
 
 1. **Simulated TeleBirr & CBE Birr Escrow:**
    - Real payment credentials or passwords are **never** requested or collected.

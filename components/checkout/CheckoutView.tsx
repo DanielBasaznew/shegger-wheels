@@ -208,7 +208,7 @@ export function CheckoutView() {
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-[#111820]/15 border-t-[#111820] rounded-full animate-spin" />
           <p className="text-sm font-semibold text-[#66717D]">
-            Initializing Sheggar Escrow Rails...
+            Initializing Shegger Escrow Rails...
           </p>
         </div>
       </div>
@@ -765,7 +765,7 @@ export function CheckoutView() {
                     <span className="font-specs-tabular font-bold text-[#D5F36A]">
                       {pricing.total.toLocaleString()} ETB
                     </span>{' '}
-                    are impounded into Sheggar Municipal Vault. Escrow release to Host{' '}
+                    are impounded into Shegger Municipal Vault. Escrow release to Host{' '}
                     {host.name} is strictly withheld until in-person QR handoff
                     confirmation at vehicle pickup.
                   </p>
@@ -816,7 +816,7 @@ export function CheckoutView() {
                     </h3>
                     <p className="text-xs text-[#66717D] max-w-sm mx-auto">
                       Negotiating multi-sig smart escrow lock between Ethio Telecom API
-                      and Sheggar Transit vault.
+                      and Shegger Transit vault.
                     </p>
                     <div className="w-full max-w-xs h-1.5 bg-[#E5E2DB] rounded-full overflow-hidden mx-auto mt-2">
                       <div className="h-full bg-[#111820] rounded-full w-3/4 animate-pulse" />
@@ -1066,7 +1066,7 @@ export function CheckoutView() {
                 <span className="material-symbols-outlined text-[20px] text-[#B9674B] shrink-0">verified_user</span>
                 <div>
                   <span className="text-xs font-bold text-[#111820] block mb-0.5">
-                    Sheggar Handover Guarantee
+                    Shegger Handover Guarantee
                   </span>
                   <p className="text-[11px] leading-relaxed text-[#66717D]">
                     If the vehicle condition does not match listing upon in-person
@@ -1111,7 +1111,7 @@ export function CheckoutView() {
             </div>
             <p className="text-xs text-[#66717D] leading-relaxed">
               At pickup, you and host {host.name.split(' ')[0]} scan each other&apos;s
-              Sheggar app to execute the vehicle inspection and unlock the TeleBirr escrow
+              Shegger app to execute the vehicle inspection and unlock the TeleBirr escrow
               vault.
             </p>
           </div>

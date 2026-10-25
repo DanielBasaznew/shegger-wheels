@@ -93,7 +93,7 @@ export function BrandLogo({
             inverted ? 'text-white' : 'text-on-surface'
           }`}
         >
-          Sheggar Wheels
+          Shegger Wheels
         </span>
         {showBadge && (
           <span

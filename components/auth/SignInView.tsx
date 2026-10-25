@@ -154,7 +154,7 @@ export function SignInView() {
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-lg tracking-tight text-white">
-                  SHEGGAR <span className="text-[#D5F36A]">WHEELS</span>
+                  SHEGGER <span className="text-[#D5F36A]">WHEELS</span>
                 </span>
                 <span className="font-label-caps text-[10px] uppercase text-[#7D848F] tracking-widest">
                   Urban Carsharing Protocol
@@ -182,7 +182,7 @@ export function SignInView() {
                   <span className="material-symbols-outlined text-xl">verified_user</span>
                 </div>
                 <div>
-                  <p className="font-bold text-sm text-white">Verified Hosts across 6 Sheggar Hubs</p>
+                  <p className="font-bold text-sm text-white">Verified Hosts across 6 Shegger Hubs</p>
                   <p className="text-xs text-[#C5C6CB]">
                     Bole International, Kazanchis, Old Airport, Sarbet, CMC, and Piassa terminal hubs.
                   </p>
@@ -244,7 +244,7 @@ export function SignInView() {
                 </div>
               </div>
               <h2 className="text-3xl font-bold text-[#111820] tracking-tight">
-                Welcome to Sheggar Wheels
+                Welcome to Shegger Wheels
               </h2>
               <p className="text-sm text-[#66717D] leading-relaxed">
                 Choose an account profile below to access your dashboard, or sign in directly with your Ethiopian mobile phone number.

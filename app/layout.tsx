@@ -21,6 +21,9 @@ const siteUrl =
 
 const baseUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`;
 
+const HERO_IMAGE_URL =
+  'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80';
+
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
@@ -40,14 +43,24 @@ export const metadata: Metadata = {
     siteName: "Shegger Wheels",
     locale: "en_ET",
     type: "website",
+    images: [
+      {
+        url: HERO_IMAGE_URL,
+        width: 1200,
+        height: 630,
+        alt: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Shegger Wheels — Peer-to-Peer Car Rental in Addis Ababa",
     description:
       "Peer-to-peer car rental marketplace for Addis Ababa. Rent verified vehicles directly from local owners with TeleBirr escrow protection.",
+    images: [HERO_IMAGE_URL],
   },
 };
+
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -57,12 +70,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.variable} h-full scroll-smooth antialiased`}
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
       </head>
+
       <body className="min-h-full flex flex-col bg-[#F5F2EB] text-[#111820] font-sans selection:bg-[#D5F36A] selection:text-[#111820]">
         <a
           href="#main-content"
